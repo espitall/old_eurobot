@@ -34,9 +34,8 @@ void com_init(BaseType_t comPriority)
 
       char taskName[configMAX_TASK_NAME_LEN];
       snprintf(taskName, configMAX_TASK_NAME_LEN, "c%s", ith_name[i]);
-      //xTaskCreate(com_task, taskName, 100, (void *) &dev[i], comPriority, 0);
+      xTaskCreate(com_task, taskName, 100, (void *) &dev[i], comPriority, 0);
     }
   }
-  xTaskCreate(com_task, "test", 100, (void *) &dev[0], comPriority, 0);
 }
 

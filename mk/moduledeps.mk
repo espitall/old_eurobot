@@ -23,8 +23,7 @@ define append_module_deps
 include $(AVARIX_DIR)/modules/$(1)/config.mk
 next_modules += $$(MODULES)
 endef
-next_modules :=
-$(foreach m,$(new_modules),$(eval $(call append_module_deps,$m)))
+next_modules := $(foreach m,$(new_modules),$(eval $(call append_module_deps,$m)))
 
 # remove duplicates and already processed modules
 next_modules := $(strip $(filter-out $(all_modules),$(sort $(next_modules))))

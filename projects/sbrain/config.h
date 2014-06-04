@@ -1,0 +1,7 @@
+#ifndef CONFIG_H
+#define CONFIG_H
+
+#define SCHED_HEARTBEAT_PRIORITY  1
+#define SCHED_COM_PRIORITY        2
+
+#endif// CONFIG_H

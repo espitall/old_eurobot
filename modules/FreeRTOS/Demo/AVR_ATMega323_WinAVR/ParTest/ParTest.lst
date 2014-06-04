@@ -1,0 +1,327 @@
+   1               		.file	"ParTest.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   9               		.text
+  10               	.Ltext0:
+ 147               	.global	vParTestInitialise
+ 149               	vParTestInitialise:
+ 150               		.stabd	46,0,0
+   1:ParTest/ParTest.c **** /*
+   2:ParTest/ParTest.c ****     FreeRTOS V8.0.1 - Copyright (C) 2014 Real Time Engineers Ltd. 
+   3:ParTest/ParTest.c ****     All rights reserved
+   4:ParTest/ParTest.c **** 
+   5:ParTest/ParTest.c ****     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
+   6:ParTest/ParTest.c **** 
+   7:ParTest/ParTest.c ****     ***************************************************************************
+   8:ParTest/ParTest.c ****      *                                                                       *
+   9:ParTest/ParTest.c ****      *    FreeRTOS provides completely free yet professionally developed,    *
+  10:ParTest/ParTest.c ****      *    robust, strictly quality controlled, supported, and cross          *
+  11:ParTest/ParTest.c ****      *    platform software that has become a de facto standard.             *
+  12:ParTest/ParTest.c ****      *                                                                       *
+  13:ParTest/ParTest.c ****      *    Help yourself get started quickly and support the FreeRTOS         *
+  14:ParTest/ParTest.c ****      *    project by purchasing a FreeRTOS tutorial book, reference          *
+  15:ParTest/ParTest.c ****      *    manual, or both from: http://www.FreeRTOS.org/Documentation        *
+  16:ParTest/ParTest.c ****      *                                                                       *
+  17:ParTest/ParTest.c ****      *    Thank you!                                                         *
+  18:ParTest/ParTest.c ****      *                                                                       *
+  19:ParTest/ParTest.c ****     ***************************************************************************
+  20:ParTest/ParTest.c **** 
+  21:ParTest/ParTest.c ****     This file is part of the FreeRTOS distribution.
+  22:ParTest/ParTest.c **** 
+  23:ParTest/ParTest.c ****     FreeRTOS is free software; you can redistribute it and/or modify it under
+  24:ParTest/ParTest.c ****     the terms of the GNU General Public License (version 2) as published by the
+  25:ParTest/ParTest.c ****     Free Software Foundation >>!AND MODIFIED BY!<< the FreeRTOS exception.
+  26:ParTest/ParTest.c **** 
+  27:ParTest/ParTest.c ****     >>!   NOTE: The modification to the GPL is included to allow you to     !<<
+  28:ParTest/ParTest.c ****     >>!   distribute a combined work that includes FreeRTOS without being   !<<
+  29:ParTest/ParTest.c ****     >>!   obliged to provide the source code for proprietary components     !<<
+  30:ParTest/ParTest.c ****     >>!   outside of the FreeRTOS kernel.                                   !<<
+  31:ParTest/ParTest.c **** 
+  32:ParTest/ParTest.c ****     FreeRTOS is distributed in the hope that it will be useful, but WITHOUT ANY
+  33:ParTest/ParTest.c ****     WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+  34:ParTest/ParTest.c ****     FOR A PARTICULAR PURPOSE.  Full license text is available from the following
+  35:ParTest/ParTest.c ****     link: http://www.freertos.org/a00114.html
+  36:ParTest/ParTest.c **** 
+  37:ParTest/ParTest.c ****     1 tab == 4 spaces!
+  38:ParTest/ParTest.c **** 
+  39:ParTest/ParTest.c ****     ***************************************************************************
+  40:ParTest/ParTest.c ****      *                                                                       *
+  41:ParTest/ParTest.c ****      *    Having a problem?  Start by reading the FAQ "My application does   *
+  42:ParTest/ParTest.c ****      *    not run, what could be wrong?"                                     *
+  43:ParTest/ParTest.c ****      *                                                                       *
+  44:ParTest/ParTest.c ****      *    http://www.FreeRTOS.org/FAQHelp.html                               *
+  45:ParTest/ParTest.c ****      *                                                                       *
+  46:ParTest/ParTest.c ****     ***************************************************************************
+  47:ParTest/ParTest.c **** 
+  48:ParTest/ParTest.c ****     http://www.FreeRTOS.org - Documentation, books, training, latest versions,
+  49:ParTest/ParTest.c ****     license and Real Time Engineers Ltd. contact details.
+  50:ParTest/ParTest.c **** 
+  51:ParTest/ParTest.c ****     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
+  52:ParTest/ParTest.c ****     including FreeRTOS+Trace - an indispensable productivity tool, a DOS
+  53:ParTest/ParTest.c ****     compatible FAT file system, and our tiny thread aware UDP/IP stack.
+  54:ParTest/ParTest.c **** 
+  55:ParTest/ParTest.c ****     http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High
+  56:ParTest/ParTest.c ****     Integrity Systems to sell under the OpenRTOS brand.  Low cost OpenRTOS
+  57:ParTest/ParTest.c ****     licenses offer ticketed support, indemnification and middleware.
+  58:ParTest/ParTest.c **** 
+  59:ParTest/ParTest.c ****     http://www.SafeRTOS.com - High Integrity Systems also provide a safety
+  60:ParTest/ParTest.c ****     engineered and independently SIL3 certified version for use in safety and
+  61:ParTest/ParTest.c ****     mission critical applications that require provable dependability.
+  62:ParTest/ParTest.c **** 
+  63:ParTest/ParTest.c ****     1 tab == 4 spaces!
+  64:ParTest/ParTest.c **** */
+  65:ParTest/ParTest.c **** 
+  66:ParTest/ParTest.c **** /* 
+  67:ParTest/ParTest.c **** Changes from V2.0.0
+  68:ParTest/ParTest.c **** 
+  69:ParTest/ParTest.c **** 	+ Use scheduler suspends in place of critical sections.
+  70:ParTest/ParTest.c **** 
+  71:ParTest/ParTest.c **** Changes from V2.6.0
+  72:ParTest/ParTest.c **** 
+  73:ParTest/ParTest.c **** 	+ Replaced the inb() and outb() functions with direct memory
+  74:ParTest/ParTest.c **** 	  access.  This allows the port to be built with the 20050414 build of
+  75:ParTest/ParTest.c **** 	  WinAVR.
+  76:ParTest/ParTest.c **** */
+  77:ParTest/ParTest.c **** 
+  78:ParTest/ParTest.c **** #include "FreeRTOS.h"
+  79:ParTest/ParTest.c **** #include "task.h"
+  80:ParTest/ParTest.c **** #include "partest.h"
+  81:ParTest/ParTest.c **** 
+  82:ParTest/ParTest.c **** /*-----------------------------------------------------------
+  83:ParTest/ParTest.c ****  * Simple parallel port IO routines.
+  84:ParTest/ParTest.c ****  *-----------------------------------------------------------*/
+  85:ParTest/ParTest.c **** 
+  86:ParTest/ParTest.c **** #define partstALL_BITS_OUTPUT			( ( unsigned char ) 0xff )
+  87:ParTest/ParTest.c **** #define partstALL_OUTPUTS_OFF			( ( unsigned char ) 0xff )
+  88:ParTest/ParTest.c **** #define partstMAX_OUTPUT_LED			( ( unsigned char ) 7 )
+  89:ParTest/ParTest.c **** 
+  90:ParTest/ParTest.c **** static volatile unsigned char ucCurrentOutputValue = partstALL_OUTPUTS_OFF; /*lint !e956 File scope
+  91:ParTest/ParTest.c **** 
+  92:ParTest/ParTest.c **** /*-----------------------------------------------------------*/
+  93:ParTest/ParTest.c **** 
+  94:ParTest/ParTest.c **** void vParTestInitialise( void )
+  95:ParTest/ParTest.c **** {
+ 152               	.LM0:
+ 153               	.LFBB1:
+ 154               	/* prologue: function */
+ 155               	/* frame size = 0 */
+ 156               	/* stack size = 0 */
+ 157               	.L__stack_usage = 0
+  96:ParTest/ParTest.c **** 	ucCurrentOutputValue = partstALL_OUTPUTS_OFF;
+ 159               	.LM1:
+ 160 0000 8FEF      		ldi r24,lo8(-1)
+ 161 0002 8093 0000 		sts ucCurrentOutputValue,r24
+  97:ParTest/ParTest.c **** 
+  98:ParTest/ParTest.c **** 	/* Set port B direction to outputs.  Start with all output off. */
+  99:ParTest/ParTest.c **** 	DDRB = partstALL_BITS_OUTPUT;
+ 163               	.LM2:
+ 164 0006 87BB      		out 0x17,r24
+ 100:ParTest/ParTest.c **** 	PORTB = ucCurrentOutputValue;
+ 166               	.LM3:
+ 167 0008 8091 0000 		lds r24,ucCurrentOutputValue
+ 168 000c 88BB      		out 0x18,r24
+ 169 000e 0895      		ret
+ 171               	.Lscope1:
+ 173               		.stabd	78,0,0
+ 177               	.global	vParTestSetLED
+ 179               	vParTestSetLED:
+ 180               		.stabd	46,0,0
+ 101:ParTest/ParTest.c **** }
+ 102:ParTest/ParTest.c **** /*-----------------------------------------------------------*/
+ 103:ParTest/ParTest.c **** 
+ 104:ParTest/ParTest.c **** void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
+ 105:ParTest/ParTest.c **** {
+ 182               	.LM4:
+ 183               	.LFBB2:
+ 184 0010 1F93      		push r17
+ 185 0012 CF93      		push r28
+ 186 0014 DF93      		push r29
+ 187               	/* prologue: function */
+ 188               	/* frame size = 0 */
+ 189               	/* stack size = 3 */
+ 190               	.L__stack_usage = 3
+ 106:ParTest/ParTest.c **** unsigned char ucBit = ( unsigned char ) 1;
+ 107:ParTest/ParTest.c **** 
+ 108:ParTest/ParTest.c **** 	if( uxLED <= partstMAX_OUTPUT_LED )
+ 192               	.LM5:
+ 193 0016 8830      		cpi r24,lo8(8)
+ 194 0018 00F4      		brsh .L2
+ 195 001a 162F      		mov r17,r22
+ 109:ParTest/ParTest.c **** 	{
+ 110:ParTest/ParTest.c **** 		ucBit <<= uxLED;	
+ 197               	.LM6:
+ 198 001c C1E0      		ldi r28,lo8(1)
+ 199 001e D0E0      		ldi r29,0
+ 200 0020 00C0      		rjmp 2f
+ 201               		1:
+ 202 0022 CC0F      		lsl r28
+ 203               		2:
+ 204 0024 8A95      		dec r24
+ 205 0026 02F4      		brpl 1b
+ 111:ParTest/ParTest.c **** 
+ 112:ParTest/ParTest.c **** 		vTaskSuspendAll();
+ 207               	.LM7:
+ 208 0028 0E94 0000 		call vTaskSuspendAll
+ 113:ParTest/ParTest.c **** 		{
+ 114:ParTest/ParTest.c **** 			if( xValue == pdTRUE )
+ 115:ParTest/ParTest.c **** 			{
+ 116:ParTest/ParTest.c **** 				ucBit ^= ( unsigned char ) 0xff;
+ 117:ParTest/ParTest.c **** 				ucCurrentOutputValue &= ucBit;
+ 210               	.LM8:
+ 211 002c 8091 0000 		lds r24,ucCurrentOutputValue
+ 114:ParTest/ParTest.c **** 			{
+ 213               	.LM9:
+ 214 0030 1130      		cpi r17,lo8(1)
+ 215 0032 01F4      		brne .L4
+ 116:ParTest/ParTest.c **** 				ucCurrentOutputValue &= ucBit;
+ 217               	.LM10:
+ 218 0034 C095      		com r28
+ 220               	.LM11:
+ 221 0036 C823      		and r28,r24
+ 222 0038 00C0      		rjmp .L6
+ 223               	.L4:
+ 118:ParTest/ParTest.c **** 			}
+ 119:ParTest/ParTest.c **** 			else
+ 120:ParTest/ParTest.c **** 			{
+ 121:ParTest/ParTest.c **** 				ucCurrentOutputValue |= ucBit;
+ 225               	.LM12:
+ 226 003a C82B      		or r28,r24
+ 227               	.L6:
+ 228 003c C093 0000 		sts ucCurrentOutputValue,r28
+ 122:ParTest/ParTest.c **** 			}
+ 123:ParTest/ParTest.c **** 
+ 124:ParTest/ParTest.c **** 			PORTB = ucCurrentOutputValue;
+ 230               	.LM13:
+ 231 0040 8091 0000 		lds r24,ucCurrentOutputValue
+ 232 0044 88BB      		out 0x18,r24
+ 233               	/* epilogue start */
+ 125:ParTest/ParTest.c **** 		}
+ 126:ParTest/ParTest.c **** 		xTaskResumeAll();
+ 127:ParTest/ParTest.c **** 	}
+ 128:ParTest/ParTest.c **** }
+ 235               	.LM14:
+ 236 0046 DF91      		pop r29
+ 237 0048 CF91      		pop r28
+ 238 004a 1F91      		pop r17
+ 126:ParTest/ParTest.c **** 	}
+ 240               	.LM15:
+ 241 004c 0C94 0000 		jmp xTaskResumeAll
+ 242               	.L2:
+ 243               	/* epilogue start */
+ 245               	.LM16:
+ 246 0050 DF91      		pop r29
+ 247 0052 CF91      		pop r28
+ 248 0054 1F91      		pop r17
+ 249 0056 0895      		ret
+ 251               	.Lscope2:
+ 253               		.stabd	78,0,0
+ 256               	.global	vParTestToggleLED
+ 258               	vParTestToggleLED:
+ 259               		.stabd	46,0,0
+ 129:ParTest/ParTest.c **** /*-----------------------------------------------------------*/
+ 130:ParTest/ParTest.c **** 
+ 131:ParTest/ParTest.c **** void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
+ 132:ParTest/ParTest.c **** {
+ 261               	.LM17:
+ 262               	.LFBB3:
+ 263 0058 CF93      		push r28
+ 264 005a DF93      		push r29
+ 265               	/* prologue: function */
+ 266               	/* frame size = 0 */
+ 267               	/* stack size = 2 */
+ 268               	.L__stack_usage = 2
+ 133:ParTest/ParTest.c **** unsigned char ucBit;
+ 134:ParTest/ParTest.c **** 
+ 135:ParTest/ParTest.c **** 	if( uxLED <= partstMAX_OUTPUT_LED )
+ 270               	.LM18:
+ 271 005c 8830      		cpi r24,lo8(8)
+ 272 005e 00F4      		brsh .L8
+ 136:ParTest/ParTest.c **** 	{
+ 137:ParTest/ParTest.c **** 		ucBit = ( ( unsigned char ) 1 ) << uxLED;
+ 274               	.LM19:
+ 275 0060 C1E0      		ldi r28,lo8(1)
+ 276 0062 D0E0      		ldi r29,0
+ 277 0064 00C0      		rjmp 2f
+ 278               		1:
+ 279 0066 CC0F      		lsl r28
+ 280               		2:
+ 281 0068 8A95      		dec r24
+ 282 006a 02F4      		brpl 1b
+ 138:ParTest/ParTest.c **** 
+ 139:ParTest/ParTest.c **** 		vTaskSuspendAll();
+ 284               	.LM20:
+ 285 006c 0E94 0000 		call vTaskSuspendAll
+ 140:ParTest/ParTest.c **** 		{
+ 141:ParTest/ParTest.c **** 			if( ucCurrentOutputValue & ucBit )
+ 287               	.LM21:
+ 288 0070 8091 0000 		lds r24,ucCurrentOutputValue
+ 289 0074 8C23      		and r24,r28
+ 290 0076 01F0      		breq .L10
+ 142:ParTest/ParTest.c **** 			{
+ 143:ParTest/ParTest.c **** 				ucCurrentOutputValue &= ~ucBit;
+ 292               	.LM22:
+ 293 0078 8091 0000 		lds r24,ucCurrentOutputValue
+ 294 007c C095      		com r28
+ 295 007e C823      		and r28,r24
+ 296 0080 00C0      		rjmp .L12
+ 297               	.L10:
+ 144:ParTest/ParTest.c **** 			}
+ 145:ParTest/ParTest.c **** 			else
+ 146:ParTest/ParTest.c **** 			{
+ 147:ParTest/ParTest.c **** 				ucCurrentOutputValue |= ucBit;
+ 299               	.LM23:
+ 300 0082 8091 0000 		lds r24,ucCurrentOutputValue
+ 301 0086 C82B      		or r28,r24
+ 302               	.L12:
+ 303 0088 C093 0000 		sts ucCurrentOutputValue,r28
+ 148:ParTest/ParTest.c **** 			}
+ 149:ParTest/ParTest.c **** 
+ 150:ParTest/ParTest.c **** 			PORTB = ucCurrentOutputValue;
+ 305               	.LM24:
+ 306 008c 8091 0000 		lds r24,ucCurrentOutputValue
+ 307 0090 88BB      		out 0x18,r24
+ 308               	/* epilogue start */
+ 151:ParTest/ParTest.c **** 		}
+ 152:ParTest/ParTest.c **** 		xTaskResumeAll();			
+ 153:ParTest/ParTest.c **** 	}
+ 154:ParTest/ParTest.c **** }
+ 310               	.LM25:
+ 311 0092 DF91      		pop r29
+ 312 0094 CF91      		pop r28
+ 152:ParTest/ParTest.c **** 	}
+ 314               	.LM26:
+ 315 0096 0C94 0000 		jmp xTaskResumeAll
+ 316               	.L8:
+ 317               	/* epilogue start */
+ 319               	.LM27:
+ 320 009a DF91      		pop r29
+ 321 009c CF91      		pop r28
+ 322 009e 0895      		ret
+ 324               	.Lscope3:
+ 326               		.stabd	78,0,0
+ 327               		.data
+ 330               	ucCurrentOutputValue:
+ 331 0000 FF        		.byte	-1
+ 333               		.text
+ 335               	.Letext0:
+ 336               		.ident	"GCC: (GNU) 4.9.0"
+ 337               	.global __do_copy_data
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 ParTest.c
+     /tmp/ccPXHhrt.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/ccPXHhrt.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/ccPXHhrt.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/ccPXHhrt.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/ccPXHhrt.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/ccPXHhrt.s:149    .text:0000000000000000 vParTestInitialise
+     /tmp/ccPXHhrt.s:330    .data:0000000000000000 ucCurrentOutputValue
+     /tmp/ccPXHhrt.s:179    .text:0000000000000010 vParTestSetLED
+     /tmp/ccPXHhrt.s:258    .text:0000000000000058 vParTestToggleLED
+
+UNDEFINED SYMBOLS
+vTaskSuspendAll
+xTaskResumeAll
+__do_copy_data

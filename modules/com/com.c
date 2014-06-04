@@ -4,6 +4,8 @@
 
 Peripheral_Descriptor_t dev[COM_ITH_NUMBER];
 
+char buf[256];
+
 void com_task(void * p)
 {
   Peripheral_Descriptor_t * ith = (Peripheral_Descriptor_t *)p;
@@ -14,6 +16,24 @@ void com_task(void * p)
     uint8_t recv;
     if(FreeRTOS_read( *ith, &recv, 1 ) == 1)
     {
+    }
+  }
+}
+
+void com_print(com_print_lvl_t lvl, char * fmt, ...)
+{
+  va_list args;
+  va_start(args, fmt);
+  int len = vsnprintf(buf, 256, fmt, args); 
+  va_end(args);
+
+  char *ptr = buf;
+  while(len > 0)
+  {
+    if(FreeRTOS_write(dev[0], ptr, 1) == 1)
+    {
+      ptr += 1;
+      len -= 1;
     }
   }
 }

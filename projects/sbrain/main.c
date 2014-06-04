@@ -18,6 +18,13 @@ void led_heartbeat(void * p)
   }
 }
 
+uint32_t com_get_ith(com_packet_header_t * header)
+{
+  //always route packet to interface 0
+  (void)header;
+  return (1 << 0);
+}
+
 int main(void)
 {
   clock_init();

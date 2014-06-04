@@ -6,4 +6,6 @@
 
 #define MOTORS_PWM_PERIOD        1600
 
+#define COM_ID  0x00
+
 #endif// CONFIG_H

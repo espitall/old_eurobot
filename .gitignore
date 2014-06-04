@@ -2,3 +2,4 @@ build
 *.eep
 *.hex
 *.elf
+*.swp

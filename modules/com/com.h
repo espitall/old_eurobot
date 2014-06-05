@@ -3,6 +3,16 @@
 
 #include <FreeRTOS/module.h> 
 
+#define COM_MAX_PAYLOAD_LENGTH 256
+
+typedef enum
+{
+  COM_SBRAIN = 0,
+  COM_PBRAIN,
+
+  COM_BROADCAST = 0xff,
+} com_node_id_t;
+
 typedef enum 
 {
   COM_DEBUG,
@@ -13,6 +23,7 @@ typedef enum
 
 typedef enum 
 {
+  COM_PAYLOAD_SYSTEM = 0x00,
   COM_PAYLOAD_LOG = 0x01,
 } com_payload_id_t;
 
@@ -27,9 +38,16 @@ typedef struct
   uint16_t payload_crc;
 } com_packet_header_t;
 
-void com_init(BaseType_t comPriority);
+void com_init(BaseType_t com_recv_priority, BaseType_t com_send_priority);
+
+uint8_t * com_request_write_buffer(uint8_t dest, uint8_t payload_id);
+void com_release_write_buffer(uint8_t size);
+
 void com_print(com_print_lvl_t lvl, char * fmt, ...);
 
-uint32_t com_get_ith(com_packet_header_t * header);
+
+//user function prototype
+uint32_t com_get_ith_hook(com_packet_header_t * header);
+void com_write_hook(void);
 
 #endif// COM_H

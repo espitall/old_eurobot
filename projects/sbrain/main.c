@@ -13,22 +13,20 @@ void led_heartbeat(void * p)
   while(1) 
   {
     PORTQ.OUTTGL = (1 << 3);
-    com_print(COM_DEBUG, "debug %d", cnt++);
-    vTaskDelay(300);
-    com_print(COM_INFO, "info %d", cnt++);
-    vTaskDelay(300);
-    com_print(COM_WARNING, "warn %d", cnt++);
-    vTaskDelay(300);
-    com_print(COM_ERROR, "error %d", cnt++);
-    vTaskDelay(300);
+    com_print(COM_DEBUG, "heartbeat %d", cnt++);
+    vTaskDelay(500);
   }
 }
 
-uint32_t com_get_ith(com_packet_header_t * header)
+uint32_t com_get_ith_hook(com_packet_header_t * header)
 {
   //always route packet to interface 0
   (void)header;
   return (1 << 0);
+}
+
+void com_write_hook(void)
+{
 }
 
 int main(void)
@@ -44,10 +42,9 @@ int main(void)
   PORTQ.OUTCLR = (1 << 3);
 
 
-
   //initialize modules
   motors_init();
-  com_init(SCHED_COM_PRIORITY);
+  com_init(SCHED_COM_RECV_PRIORITY, SCHED_COM_SEND_PRIORITY);
   xTaskCreate(led_heartbeat, "heartbeat", 200, 0, SCHED_HEARTBEAT_PRIORITY, 0);
 
 

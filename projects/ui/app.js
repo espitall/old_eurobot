@@ -42,6 +42,16 @@ if(process.argv[2] && process.argv[2][0] == '/') {
     //  console.log('results ' + results);
     //});
   });
+
+  robotControl.on("sendToBot",function (message){
+    console.log("message vers le robot : ",message);
+    serialPort.write(message);
+  });
+
+  uiControl.on("sendToBot",function (data){
+    robotControl.sendToBot(data);
+  });
+
 }
 else {
   //use TCP
@@ -113,7 +123,7 @@ robotControl.on("sendToUi",function (type,message){
 io.sockets.on('connection', function (socket) {
   console.log("Client connecté");
 
-  socket.on('commande', function (socket) {
-    uiControl.receiv(socket);
+  socket.on('command', function (socket) {
+    uiControl.receive(socket);
   });
 });

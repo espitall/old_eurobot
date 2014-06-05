@@ -232,7 +232,7 @@ RobotControl.prototype.decodePayloadLog = function(payload) {
     })
     .vars;
 
-  console.log("\n",payload,"\n",decodePayload.ackniveau,"\n",decodePayload.message.toString());
+  //console.log("\n",payload,"\n",decodePayload.ackniveau,"\n",decodePayload.message.toString());
 
   return {"niveau":decodePayload.ackniveau&0x7,"message":decodePayload.message.toString()} ;
 };
@@ -572,43 +572,32 @@ RobotControl.prototype.encode = function (data) {
   // data (?)
   // data CRC (2)
   if(typeof paquet.data !== "undefined") {
-    var paquetHeader = new Buffer(8);
-    var paquetB = new Buffer(10 + paquet.data.length);
+    var paquetHeader = new Buffer(9);
 
-    paquetHeader.write("P");
-    paquetHeader.writeUInt16LE(paquet.data.length,1);
-    paquetHeader.writeUInt8(paquet.source,3);
-    paquetHeader.writeUInt8(paquet.destination,4);
-    paquetHeader.writeUInt8(paquet.type,5);
-    paquetHeader.writeUInt16LE(this.calculCrc(paquetHeader.slice(1,6)),6);
-    paquetB = Buffer.concat([paquetHeader,paquet.data],10+paquet.data.length);
-    paquetB.writeUInt16LE(this.calculCrc(paquet.data),8+paquet.data.length);
+    paquetHeader.write("P",0);
+    paquetHeader.writeUInt8(paquet.data.length,1);
+    paquetHeader.writeUInt8(paquet.source,2);
+    paquetHeader.writeUInt8(paquet.destination,3);
+    paquetHeader.writeUInt8(paquet.type,4);
+    paquetHeader.writeUInt16LE(this.calculCrc(paquetHeader.slice(0,5)),5);
+    paquetHeader.writeUInt16LE(this.calculCrc(paquet.data),7);
+    return  Buffer.concat([paquetHeader,paquet.data]);
 
-    return paquetB ;
   } else {
     return ;
   }
 };
-
 
 RobotControl.prototype.sendToBot = function(data) {
   var message = this.encode(data);
   if(message) {
     this.emit("sendToBot",message);
   }
-  //this.encode(type,message);
 };
+
 RobotControl.prototype.sendToUi = function(type,message) {
   this.emit("sendToUi",type,message);
 };
 
 
-exports.RobotControl = RobotControl ;
-/*
-export.send = function(message) {
-//Encode PPP
-
-
-  console.log("envoie de",message);
-
-};*/
+exports.RobotControl = RobotControl;

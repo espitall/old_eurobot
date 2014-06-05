@@ -18,6 +18,7 @@ var pppPayloads = {
     PAYLOAD_ADDRESS : {
         sbrain : 0x00,
         pbrain : 0x01,
+        UI: 0x80,
         BROADCAST : 0xff
     },
 

@@ -10,16 +10,13 @@ function UiControl() {
 
 sys.inherits(UiControl, events.EventEmitter);
 
-
-
-UiControl.prototype.receiv = function(message) {
-    //console.log("commande",message);
+UiControl.prototype.receive = function(message) {
     switch (message.id) {
 
         case "reset":
             this.sendToBot({
                 "type":ppp.PAYLOAD_TYPE.SYSTEM,
-                "destination":ppp.PAYLOAD_ADDRESS.Hreidmarr_strategie,
+                "destination":ppp.PAYLOAD_ADDRESS.BROADCAST,
                 "payloadData":{
                     "identifiant" : ppp.PAYLOAD_SYSTEM_ID.reset,
                     "sens":0,
@@ -27,6 +24,21 @@ UiControl.prototype.receiv = function(message) {
                 }
             });
         break;
+
+        case "stop":
+            this.sendToBot({
+                "type":ppp.PAYLOAD_TYPE.SYSTEM,
+                "destination":ppp.PAYLOAD_ADDRESS.BROADCAST,
+                "payloadData":{
+                    "identifiant" : ppp.PAYLOAD_SYSTEM_ID.stop,
+                    "sens":0,
+                    "donnee" : ""
+                }
+            });
+        break;
+
+
+        /*
         case "name":
             this.sendToBot({"type":"bonjour"});
         break;
@@ -48,6 +60,7 @@ UiControl.prototype.receiv = function(message) {
         case "test":
             this.sendToBot({"type":"bonjour"});
         break;
+        */
         default:
         break;
 
@@ -304,7 +317,7 @@ UiControl.prototype.gestionStrat =function(message) {
 
 
 UiControl.prototype.sendToBot = function(data) {
-    this.emit("sendToBot",data);
+  this.emit("sendToBot",data);
 };
 
 

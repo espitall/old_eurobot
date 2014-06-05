@@ -1,101 +1,70 @@
-﻿<!doctype html>
+<!doctype html>
 <html ng-app="PlasteamUI">
 <head>
-    <meta charset="UTF-8">
-    <title>Plas'team</title>
-    <script src="javascripts/libs/angular/angular.min.js"></script>
-    <link rel="stylesheet" href="stylesheets/base.css">
-    <link rel="stylesheet" href="stylesheets/style.css">
+<meta charset="UTF-8">
+<title>Plas'team</title>
+<script src="javascripts/libs/angular/angular.min.js"></script>
+<link rel="stylesheet" href="stylesheets/base.css">
+<link rel="stylesheet" href="stylesheets/style.css">
 </head>
 <body>
 
 <div id="wrapper">
 
-    <header>
-        <div class="headerelm" id="leftheader">
-          <h1>Plas'team</h1>
-
-        </div>
-        <logger class="headerelm"></logger>
-        <div ng-controller="LogCtrl" class="logger" id="rightheader">
-            <h3>Filtre : </h3>
-            <input ng-model="error" type="checkbox"/>Erreur</br>
-            <input ng-model="warning" type="checkbox"/>Warning</br>
-            <input ng-model="info" type="checkbox"/>Info</br>
-            <input ng-model="debug" type="checkbox"/>Debug</br>
-            <div class="separateur"></div>
-            <input ng-model="config.autoScroll" type="checkbox"/>AutoScroll
-            <button ng-click="clearlog()">Clear</button>
-        </div>
-    </header>
-
-
-    <div id="maincontainer">
-        <div id="main">
-    <tabs>
-        <pane heading="Commandes">
-            <commandes></commandes>
-        </pane>
-        <pane heading="Archi">
-            <asservissement robot="archi"></asservissement>
-        </pane>
-        <pane heading="Duchesse">
-            <asservissement robot="duchesse"></asservissement>
-        </pane>
-        <pane heading="Icarus">
-            <icarus></icarus>
-        </pane>
-        <pane heading="Carte">
-            <carte></carte>
-        </pane>
-    </tabs>
-            <div class="clear"></div>
-        </div><!-- </main> -->
-
-
-        <div id="rightwidget">
-
-          <div ng-controller="HeadControl" id="divers">
-            <button ng-click="reset()">Reset</button>
-            <button>ARRET</button>
-          </div>
-
-
-            <div ng-controller="StratControl" id="strategie" class="widgetbox">
-                <h2>Strategie</h2>
-                <div class="widgetcontent">
-                    <button ng-click="start()" class="image icon-start"></button>
-                </div>
-            </div>
-            <div class="widgetbox">
-                <h2>Icarus</h2>
-                <div class="widgetcontent">
-                    <icarussvg class="centrered"></icarussvg>
-                </div>
-            </div>
-        </div>
+  <header>
+    <div class="headerelm" id="leftheader">
+      <h1>Plas'team</h1>
 
     </div>
+    <logger class="headerelm"></logger>
+    <div ng-controller="LogCtrl" class="logger" id="rightheader">
+      <h3>Filtre : </h3>
+      <input ng-model="error" type="checkbox"/>Erreur</br>
+      <input ng-model="warning" type="checkbox"/>Warning</br>
+      <input ng-model="info" type="checkbox"/>Info</br>
+      <input ng-model="debug" type="checkbox"/>Debug</br>
+      <div class="separateur"></div>
+      <input ng-model="config.autoScroll" type="checkbox"/>AutoScroll
+      <button ng-click="clearlog()">Clear</button>
+    </div>
+  </header>
+
+
+  <div id="maincontainer">
+
+    <div id="main">
+      <div class="clear"></div>
+    </div><!-- </main> -->
+
+    <div id="rightwidget">
+      <div ng-controller="HeadCtrl" id="divers">
+        <button ng-click="reset()">Reset</button>
+        <button ng-click="stop()">ARRET</button>
+      </div>
+    </div>
+
+  </div>
 
 </div>
 </body>
 
 <script src="javascripts/app.js"></script>
 <script src="/socket.io/socket.io.js"></script>
+<!--
 
-<script src="javascripts/libs/jquery.min.js"></script>
 <script src="javascripts/libs/jquery.knob.js"></script>
 <script src="javascripts/libs/flotr2.min.js"></script>
 
-<script src="javascripts/Services/services.js"></script>
-<script src="javascripts/Directives/directives.js"></script>
 <script src="javascripts/Directives/directives-templates.js"></script>
 <script src="javascripts/Directives/directive-graph.js"></script>
 <script src="javascripts/Directives/directives-asservissement.js"></script>
-<script src="javascripts/Controllers/controllers.js"></script>
+-->
 
-
-
+<script src="javascripts/libs/jquery.min.js"></script>
+<script src="javascripts/directives/directives.js"></script>
+<script src="javascripts/services/services.js"></script>
+<script src="javascripts/controllers/controllers.js"></script>
 
 
 </html>
+

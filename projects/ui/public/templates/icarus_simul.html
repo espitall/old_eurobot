@@ -1,0 +1,36 @@
+<div>
+<svg xmlns="http://www.w3.org/2000/svg" ng-attr-height="{{container_height}}" ng-attr-width="{{container_width}}">
+  <rect ng-attr-x="{{bras_haut_width}}"  ng-attr-height="{{robot_height}}" ng-attr-width="{{robot_width}}" fill="#ddd" />
+  <rect
+  x="0"
+  ng-attr-y="{{offset_bras_haut}}"
+  ng-attr-width="{{bras_haut_width}}"
+  height="10"
+  ng-attr-transform="rotate({{angle_bras_haut_gauche}},{{bras_haut_width}},{{offset_bras_haut}})"
+  fill="#AEAEFB"
+  />
+  <rect
+  ng-attr-x="{{x_bras_droit}}"
+  ng-attr-y="{{offset_bras_haut}}"
+  ng-attr-width="{{bras_haut_width}}"
+  height="10"
+  ng-attr-transform="rotate({{angle_bras_haut_droit}},{{x_bras_droit}},{{offset_bras_haut}})"
+  fill="#AEAEFB" />
+  <rect
+  ng-attr-x="{{x_bras_droit}}"
+  ng-attr-y="{{offset_bras_bas}}"
+  ng-attr-width="{{bras_bas_width}}"
+  height="10"
+  ng-attr-transform="rotate({{angle_bras_bas_droit}},{{x_bras_droit}},{{offset_bras_bas}})"
+  fill="#FF8080"
+  style="fill-opacity:0.5"/>
+  <rect
+  ng-attr-x="{{bras_haut_width - bras_bas_width}} "
+  ng-attr-y="{{offset_bras_bas}}"
+  ng-attr-width="{{bras_bas_width}}"
+  height="10"
+  ng-attr-transform="rotate({{angle_bras_bas_gauche}},{{bras_haut_width}},{{offset_bras_bas}})"
+  fill="#FF8080"
+  style="fill-opacity:0.5"/>
+</svg>
+</div>

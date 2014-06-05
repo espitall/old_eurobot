@@ -1,0 +1,20 @@
+<div id="carte" ng-controller="CarteCtrl">
+
+
+
+<svg xmlns="http://www.w3.org/2000/svg" height="622px" width="416px">
+  <image width="416px" height="622px"
+     x="0" y="0"
+     xlink:href="images/carte/fond.png" />
+
+  <image width="48px" height="48px"
+     ng-attr-x="{{robot1.x}}" ng-attr-y="{{robot1.y}}"
+     ng-attr-transform="rotate({{robot1.a}},{{robot1.x}},{{robot1.y}})"
+     xlink:href="images/carte/robot1.png" />
+  <image width="48px" height="48px"
+     ng-attr-x="{{robot2.x}}" ng-attr-y="{{robot2.y}}"
+     ng-attr-transform="rotate({{robot2.a}},{{robot2.x}},{{robot2.y}})"
+     xlink:href="images/carte/robot2.png" />
+
+</svg>
+</div>

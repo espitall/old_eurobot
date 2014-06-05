@@ -1,0 +1,326 @@
+
+#wrapper {width:1000px;margin: 2px auto;}
+
+header {
+	background:#333;
+	margin-bottom:10px;
+	border:1px solid #222;
+	box-shadow:1px 1px 3px #666;
+	border-radius: 3px;
+	height:155px;
+}
+
+
+header h1 {
+	color:#ececec;
+	text-shadow:1px 1px 1px #111 ;
+	font-size:3.4em;
+	padding: 0 10px;
+}
+
+
+.headerelm {
+height: 155px;
+border-left: 1px solid #444;
+border-right: 1px solid #272727;
+float:left;
+position:relative;
+
+}
+
+
+
+#rightheader {
+	float:right;
+	width:150px;
+	border-left:none;
+}
+
+#maincontainer {
+	clear:both;
+	position:relative;
+	background: white;
+}
+#main {
+	line-height: 21px;
+	border-radius: 0 2px 2px 2px;
+	box-shadow: 1px 0 1px #EEE;
+	border-bottom: 1px solid #ECECEC;
+	width:715px;
+}
+
+#main h2 {
+padding-bottom:10px;
+
+}
+
+
+#rightwidget {
+	width: 280px;
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+.widgetbox {
+	background: #fff;
+	border-radius: 2px;
+	margin-bottom: 10px;
+	box-shadow: 1px 1px 2px #EEE;
+}
+
+.widgetbox h2 {
+background: #222;
+border-radius: 2px 2px 0 0;
+font-size: 18px;
+letter-spacing: 0.8px;
+font-family: 'BebasNeueRegular', Arial, Helvetica, sans-serif;
+font-weight: normal;
+padding: 0 0 0 10px;
+color: #fff;
+}
+
+.widgetcontent {
+	border: 1px solid #DDD;
+	border-top: 0;
+	padding: 10px;
+	line-height: 21px;
+	border-radius: 0 0 2px 2px;
+}
+.centrered {
+	margin: 0 auto;
+	display: block;
+}
+
+
+.largegraph {
+	width:100%;
+	height:380px;
+}
+
+.graph {
+	width:50%;
+	height:185px;
+}
+.tailleAuto {}
+
+.largegraph , .graph {
+	float:left;
+}
+.divgraph {
+	border:1px solid #ddd;
+	/*box-shadow: 0px 0px 20px rgba(204, 204, 204, 0.13) inset;*/
+	/*width:95%;
+	height:90%;*/
+	width: 600px;
+	height:350px;
+	display: block;
+}
+
+.commandes {
+	/*margin: 0 100px 15px 0px;*/
+}
+
+.commandes label {
+	color:#333;
+	text-align: right;
+	width: 70px;
+	display: inline-block;
+	/*font-weight: bold;*/
+}
+.commandes input {
+	width:100px;
+	margin: 4px 0 ;
+}
+.commandes input[type="checkbox"] {
+	width: 20px;
+}
+
+.commandes ul {
+list-style:none;
+}
+.commandes li span {
+display:inline-block;
+margin:0;
+width:27px;
+height:14px;
+border:1px solid #b8b8b8;
+top:3px
+}
+
+.brute {background:#00A8F0}
+.filtre {background:#C0D800}
+.retour {background:#CB4B4B}
+.sortie {background:#4DA74D}
+
+
+
+#carte canvas {
+	position: absolute;
+	left:20px;
+}
+.elementscarte {
+	left:-9999px;
+}
+
+
+
+
+
+.logger {
+	color : #eee;
+}
+
+.separateur {
+	margin:2px 0 4px 0 ;
+	border-bottom: 1px solid #555;
+	height: 1px;
+	width: 100%;
+}
+
+#log > div {
+	min-height:96%;
+	border:none;
+	width:567px;
+	background:#555;
+	resize:none;
+	padding:0.5%;
+	font:12px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+#log p {
+	background-repeat: no-repeat;
+	padding: 2px 0 2px 20px;
+	border-bottom: 1px solid rgba(153, 153, 153, 0.2);
+	line-height: 14px;
+	font-family:"Courier New"
+}
+
+.error {background-image:url(../images/error.png);color:#F15656}
+.warning {background-image:url(../images/warning.png);color:#F0B00E}
+.info {background-image:url(../images/info.png);color:#62AED1}
+.debug {color:#888}
+
+
+
+#log {overflow-y:auto;overflow-x:hidden}
+
+/* Let's get this party started */
+#log::-webkit-scrollbar {
+    width: 12px;
+}
+
+/* Track */
+#log::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+
+/* Handle */
+#log::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background: rgba(172, 172, 172, 0.8);
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+}
+#log::-webkit-scrollbar-thumb:window-inactive {
+	background: rgba(110, 110, 110, 0.8);
+}
+
+
+
+.actionneurs a {
+	display: block;
+	position: relative;
+	margin: 15px 0;
+	}
+
+.inline {
+	display: inline-block;
+	margin: 0 10px;
+}
+.actionneurs .marged {
+	margin-left: 25px;
+	border-left: 1px solid #EEE;
+	padding-left: 25px;
+}
+
+.actionneurs .blocks {
+	padding: 20px 20px 0 20px;
+	border: 1px solid #D2D2D2;
+	border-radius: 5px;
+	background: #f8f8f8;
+	margin: 10px;
+}
+
+.actionneurs span {
+	position: relative;
+	top: -30px;
+}
+
+.push-right {float: right}
+.push-left {float: left}
+
+
+
+/************
+
+ICONES
+
+************/
+
+
+
+.icon-start {background-image:url(../images/icones/start.png)}
+.icon-pause {background-image:url(../images/icones/pause.png)}
+.icon-reprendre {background-image:url(../images/icones/reprendre.png)}
+
+.icon-arrow-up {background-image:url(../images/icones/arrow_up.png)}
+.icon-arrow-down {background-image:url(../images/icones/arrow_down.png)}
+
+/************
+
+DRAGGABLE
+
+************/
+
+.draggable {
+	cursor: move;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+.dragStart {
+	background: #FBE1E1
+}
+
+.dragOver {
+	border:dashed 4px #888;
+	border-radius: 10px;
+
+}
+.dropDiv {
+	width: 500px;
+	height: 150px;
+	padding: 20px;
+	display: block;
+	color: #ccc;
+	font-size: 1.2em;
+	font-weight: bold;
+}
+.dropDiv.hidden {
+	display: none;
+}
+
+.popup {
+position: fixed;
+display: block;
+padding: 20px;
+background: #fefefe;
+z-index: 99999;
+border: 1px #D1D1D1 solid;
+border-radius: 10px;
+box-shadow: 0 0 8px #BBB;
+}

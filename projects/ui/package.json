@@ -1,0 +1,15 @@
+{
+  "name": "AddancUi",
+  "description":"Serveur de controle et de supervision du robot Addanc",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node app"
+  },
+  "dependencies": {
+    "express": "3.x",
+    "binary" : "*",
+    "serialport" : "*",
+    "socket.io":"latest"
+  }
+}

@@ -1,0 +1,21 @@
+<div ng-controller="CommandesCtrl" class="commandes">
+    <div>
+        <h2>Archi</h2>
+        <fieldset>
+            <form ng-submit="setD('archi')">Goto D : <input ng-model="archi.d"/><input class="button" type="submit" value="Go"/></form>
+            <form ng-submit="setA('archi')">Goto A : <input ng-model="archi.a"/><input class="button" type="submit" value="Go"/></form>
+            <form ng-submit="setXY('archi')">Goto X : <input ng-model="archi.x"/> Y :<input ng-model="archi.y" /><input class="button" type="submit" value="Go"/></form>
+            <form ng-submit="setXYA('archi')">Goto X : <input ng-model="archi.x"/> Y :<input ng-model="archi.y"/> A :<input ng-model="archi.a" /><input class="button" type="submit" value="Go"/></form>
+        </fieldset>
+
+    </div>
+    <div>
+        <h2>Duchesse</h2>
+        <fieldset>
+            <form ng-submit="setD('duchesse')">Goto D : <input ng-model="duchesse.d"/><input class="button" type="submit" value="Go"/></form>
+            <form ng-submit="setA('duchesse')">Goto A : <input ng-model="duchesse.a"/><input class="button" type="submit" value="Go"/></form>
+            <form ng-submit="setXY('duchesse')">Goto X : <input ng-model="duchesse.x"/> Y :<input ng-model="duchesse.y" /><input class="button" type="submit" value="Go"/></form>
+            <form ng-submit="setXYA('duchesse')">Goto X : <input ng-model="duchesse.x"/> Y :<input ng-model="duchesse.y"/> A :<input ng-model="duchesse.a" /><input class="button" type="submit" value="Go"/></form>
+        </fieldset>
+    </div>
+</div>

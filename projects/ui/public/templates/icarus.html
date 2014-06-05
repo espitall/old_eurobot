@@ -1,0 +1,55 @@
+<div ng-controller="IcarusActionneursCtrl" class="actionneurs">
+    <div class="inline">
+        <h2>Icarus Gauche</h2>
+            <a><strong>Position : </strong><button ng-click="setEtatIcarusGauche()" ng-class="{'icon-arrow-up':!icarusGauche.position,'icon-arrow-down':icarusGauche.position}" class="image"></button></a>
+            <div>
+                <h4>Bras Haut</h4>
+                <div class="inline">
+                    <h5>Angle Vertical</h5>
+                    <knob on-change="changeAngle('gauche','haut.vertical')" color="#66CC66" value="icarusGauche.angle.haut.vertical"></knob>
+                </div>
+                <div class="inline">
+                    <h5>Angle Horizontal</h5>
+                    <knob on-change="changeAngle('gauche','haut.horizontal')" value="icarusGauche.angle.haut.horizontal"></knob>
+                </div>
+            </div>
+            <div>
+                <h4>Bras Bas</h4>
+                <div class="inline">
+                    <h5>Angle Vertical</h5>
+                    <knob on-change="changeAngle('gauche','bas.vertical')" color="#66CC66" value="icarusGauche.angle.bas.vertical"></knob>
+                </div>
+                <div class="inline">
+                    <h5>Angle Horizontal</h5>
+                    <knob on-change="changeAngle('gauche','bas.horizontal')" value="icarusGauche.angle.bas.horizontal" ></knob>
+                </div>
+            </div>
+    </div>
+    <div class="inline marged">
+        <h2>Icarus Droit</h2>
+            <a><strong>Position : </strong><button ng-click="setEtatIcarusDroit()" ng-class="{'icon-arrow-up':!icarusDroit.position,'icon-arrow-down':icarusDroit.position}" class="image"></button></a>
+
+            <div>
+                <h4>Bras Haut</h4>
+                <div class="inline">
+                    <h5>Angle Vertical</h5>
+                    <knob value="icarusDroit.angle.haut.vertical" color="#66CC66" ></knob>
+                </div>
+                <div class="inline">
+                    <h5>Angle Horizontal</h5>
+                    <knob value="icarusDroit.angle.haut.horizontal" ></knob>
+                </div>
+            </div>
+            <div>
+                <h4>Bras Bas</h4>
+                <div class="inline">
+                    <h5>Angle Vertical</h5>
+                    <knob value="icarusDroit.angle.bas.vertical" color="#66CC66" ></knob>
+                </div>
+                <div class="inline">
+                    <h5>Angle Horizontal</h5>
+                    <knob value="icarusDroit.angle.bas.horizontal" ></knob>
+                </div>
+            </div>
+    </div>
+</div>

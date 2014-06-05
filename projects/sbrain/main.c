@@ -13,8 +13,14 @@ void led_heartbeat(void * p)
   while(1) 
   {
     PORTQ.OUTTGL = (1 << 3);
-    com_print(COM_DEBUG, "heartbeat %d", cnt++);
-    vTaskDelay(500);
+    com_print(COM_DEBUG, "debug %d", cnt++);
+    vTaskDelay(300);
+    com_print(COM_INFO, "info %d", cnt++);
+    vTaskDelay(300);
+    com_print(COM_WARNING, "warn %d", cnt++);
+    vTaskDelay(300);
+    com_print(COM_ERROR, "error %d", cnt++);
+    vTaskDelay(300);
   }
 }
 
@@ -42,7 +48,7 @@ int main(void)
   //initialize modules
   motors_init();
   com_init(SCHED_COM_PRIORITY);
-  xTaskCreate(led_heartbeat, "heartbeat", 100, 0, SCHED_HEARTBEAT_PRIORITY, 0);
+  xTaskCreate(led_heartbeat, "heartbeat", 200, 0, SCHED_HEARTBEAT_PRIORITY, 0);
 
 
   //start scheduler

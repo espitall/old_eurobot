@@ -49,21 +49,24 @@ void com_print(com_print_lvl_t lvl, char * fmt, ...)
   packet_write_header.payload_size = 0;
   packet_write_header.src = COM_ID;
   packet_write_header.dst = 0xff;
+  packet_write_header.payload_id = COM_PAYLOAD_LOG;
   packet_write_header.header_crc = 0xffff;
   packet_write_header.payload_crc = 0xffff;
 
   //fill payload data
+  packet_write_payload[0] = lvl;
   va_list args;
   va_start(args, fmt);
-  int len = vsnprintf((char *)packet_write_payload, 256, fmt, args); 
+  int len = vsnprintf((char *)(packet_write_payload + 1), 255, fmt, args); 
   va_end(args);
-  packet_write_header.payload_size = len;
+  packet_write_header.payload_size = len + 1;
 
   //compute crc
   packet_write_header.header_crc = _crc_ccitt_update(packet_write_header.header_crc,packet_write_header.magic_start);
   packet_write_header.header_crc = _crc_ccitt_update(packet_write_header.header_crc,packet_write_header.payload_size);
   packet_write_header.header_crc = _crc_ccitt_update(packet_write_header.header_crc,packet_write_header.src);
   packet_write_header.header_crc = _crc_ccitt_update(packet_write_header.header_crc,packet_write_header.dst);
+  packet_write_header.header_crc = _crc_ccitt_update(packet_write_header.header_crc,packet_write_header.payload_id);
   for(i = 0; i < packet_write_header.payload_size; i += 1)
   {
     packet_write_header.payload_crc = _crc_ccitt_update(packet_write_header.payload_crc, packet_write_payload[i]);

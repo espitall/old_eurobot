@@ -11,12 +11,18 @@ typedef enum
   COM_ERROR,
 } com_print_lvl_t;
 
+typedef enum 
+{
+  COM_PAYLOAD_LOG = 0x01,
+} com_payload_id_t;
+
 typedef struct 
 {
   uint8_t magic_start;
   uint8_t payload_size;
   uint8_t src;
   uint8_t dst;
+  uint8_t payload_id;
   uint16_t header_crc;
   uint16_t payload_crc;
 } com_packet_header_t;

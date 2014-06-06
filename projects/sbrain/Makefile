@@ -5,7 +5,7 @@
 SRCS = $(filter-out avoidance%, $(wildcard *.c))
 ASRCS =
 TARGET = main
-MODULES = xmega/clock xmega/pwm com FreeRTOS
+MODULES = xmega/clock xmega/pwm com position FreeRTOS
 
 ## Target configuration
 MCU = atxmega128a1

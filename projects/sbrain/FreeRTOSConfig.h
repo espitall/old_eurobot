@@ -84,7 +84,7 @@
 #define configUSE_IDLE_HOOK			0
 #define configUSE_TICK_HOOK			0
 #define configTICK_RATE_HZ			( ( TickType_t ) 1000 )
-#define configMAX_PRIORITIES		( 4 )
+#define configMAX_PRIORITIES		( 10 )
 #define configMINIMAL_STACK_SIZE	( ( unsigned short ) 85 )
 #define configTOTAL_HEAP_SIZE		( (size_t ) ( 2048 ) )
 #define configMAX_TASK_NAME_LEN		( 8 )

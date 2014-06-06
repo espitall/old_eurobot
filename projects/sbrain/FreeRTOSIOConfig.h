@@ -58,9 +58,9 @@
 #define ioconfigUSE_UART_CIRCULAR_BUFFER_RX   0
 #define ioconfigUSE_UART_RX_CHAR_QUEUE        1
 
-#define ioconfigINCLUDE_SSP                   0
-#define ioconfigUSE_SSP_POLLED_TX             0
-#define ioconfigUSE_SSP_POLLED_RX             0
+#define ioconfigINCLUDE_SSP                   1
+#define ioconfigUSE_SSP_POLLED_TX             1
+#define ioconfigUSE_SSP_POLLED_RX             1
 #define ioconfigUSE_SSP_ZERO_COPY_TX          0
 #define ioconfigUSE_SSP_CIRCULAR_BUFFER_RX    0
 #define ioconfigUSE_SSP_RX_CHAR_QUEUE         0

@@ -1,6 +1,7 @@
 #include <avr/io.h>
 #include <FreeRTOS/module.h> 
 #include <xmega/clock/clock.h> 
+#include <position/position.h> 
 #include <com/com.h>
 #include "motors.h"
 #include "config.h"
@@ -9,12 +10,20 @@ void led_heartbeat(void * p)
 {
   (void)p;
 
-  int cnt = 0;
   while(1) 
   {
     PORTQ.OUTTGL = (1 << 3);
-    com_print(COM_DEBUG, "heartbeat %d", cnt++);
     vTaskDelay(500);
+    motors_set_consign(0, 300);
+  }
+}
+
+void asserv(void *p)
+{
+  while(1)
+  {
+    position_update();
+    vTaskDelay(10);
   }
 }
 
@@ -27,6 +36,7 @@ uint32_t com_get_ith_hook(com_packet_header_t * header)
 
 void com_write_hook(void)
 {
+  com_print(COM_DEBUG, "speed %ld", position_get_right_speed());
 }
 
 int main(void)
@@ -43,9 +53,11 @@ int main(void)
 
 
   //initialize modules
+  position_init();
   motors_init();
   com_init(SCHED_COM_RECV_PRIORITY, SCHED_COM_SEND_PRIORITY);
   xTaskCreate(led_heartbeat, "heartbeat", 200, 0, SCHED_HEARTBEAT_PRIORITY, 0);
+  xTaskCreate(asserv, "asserv", 200, 0, SCHED_ASSERV_PRIORITY, 0);
 
 
   //start scheduler

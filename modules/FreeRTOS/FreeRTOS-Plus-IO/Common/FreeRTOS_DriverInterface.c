@@ -96,10 +96,15 @@ Peripheral_Control_t *pxPeripheralControl = NULL;
 		}
 
 		/* Convert the number from its ASCII representation. */
-		cPeripheralNumber = *pcPath - '0';
-    if(xAvailablePeripherals[ xIndex ].xPeripheralType == eUART_TYPE) {
-      cPeripheralNumber += ((*(pcPath - 1) - 'C') << 1);
+    if((*pcPath >= '0') && (*pcPath <= '9')) {
+      cPeripheralNumber = *pcPath - '0';
+      if(xAvailablePeripherals[ xIndex ].xPeripheralType == eUART_TYPE) {
+        cPeripheralNumber += ((*(pcPath - 1) - 'C') << 1);
+      }
     }
+    else {
+      cPeripheralNumber = *pcPath - 'A';
+    } 
 
 		/* Create the peripheral control structure used by FreeRTOS+IO to
 		access the peripheral.  This is also used as the handle to the

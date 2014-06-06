@@ -42,13 +42,11 @@ void encoder_magnetic_manage(void)
   {
     portGPIO_OUTCLR((*gpio_port[i]), (1 << gpio_pin[i]));
     uint8_t raw[2];
-    if(FreeRTOS_read(*spi, raw, 2) != 2)
-    {
-    }
+    FreeRTOS_read(*spi, raw, 2);
 		enc.s.u8_msb = raw[0] & 0xff;
 		enc.s.u8_lsb = raw[1] & 0xff;
     enc.s16 <<= 1;
-    portGPIO_OUTSET((*gpio_port)[i], (1 << gpio_pin[i]));
+    portGPIO_OUTSET((*gpio_port[i]), (1 << gpio_pin[i]));
 
 		diff = enc.s16 - previous[i];
 		previous[i] = enc.s16;

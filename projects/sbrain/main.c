@@ -14,7 +14,7 @@ void led_heartbeat(void * p)
   {
     PORTQ.OUTTGL = (1 << 3);
     vTaskDelay(500);
-    motors_set_consign(0, 300);
+    motors_set_consign(300, 300);
   }
 }
 
@@ -36,7 +36,7 @@ uint32_t com_get_ith_hook(com_packet_header_t * header)
 
 void com_write_hook(void)
 {
-  com_print(COM_DEBUG, "speed %ld", position_get_right_speed());
+  com_print(COM_DEBUG, "speed l:%ld r:%ld", position_get_left_speed(), position_get_right_speed());
 }
 
 int main(void)

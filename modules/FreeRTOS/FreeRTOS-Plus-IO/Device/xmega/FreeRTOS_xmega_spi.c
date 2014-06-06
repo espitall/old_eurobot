@@ -93,8 +93,9 @@ const int8_t cPeripheralNumber = diGET_PERIPHERAL_NUMBER( pxPeripheralControl );
         /* Setup the pins for the SSP being used. */
         boardCONFIGURE_SSP_PINS( cPeripheralNumber);
 
+
         /* Set up the default SSP configuration. */
-        pxSSP->CTRL = SPI_MASTER_bm | SPI_ENABLE_bm | SPI_PRESCALER_DIV4_gc;
+        pxSSP->CTRL = SPI_MASTER_bm | SPI_ENABLE_bm | SPI_MODE_2_gc | SPI_PRESCALER_DIV16_gc;
       }
       taskEXIT_CRITICAL();
 
@@ -245,144 +246,77 @@ size_t FreeRTOS_SSP_read( Peripheral_Descriptor_t const pxPeripheral, void * con
   (void)pxPeripheral;
   (void)pvBuffer;
   (void)xBytes;
-//Peripheral_Control_t * const pxPeripheralControl = ( Peripheral_Control_t * const ) pxPeripheral;
-size_t xReturn = 0U;
-//LPC_SSP_TypeDef * const pxSSP = ( LPC_SSP_TypeDef * const ) diGET_PERIPHERAL_BASE_ADDRESS( ( ( Peripheral_Control_t * const ) pxPeripheral ) );
-//SSP_DATA_SETUP_Type *pxSSPTransferDefinition;
-//const int8_t cPeripheralNumber = diGET_PERIPHERAL_NUMBER( ( ( Peripheral_Control_t * const ) pxPeripheral ) );
-//
-//	/* Sanity check the array index. */
-//	configASSERT( cPeripheralNumber < ( int8_t ) ( sizeof( xIRQ ) / sizeof( IRQn_Type ) ) );
-//
-//	switch( diGET_RX_TRANSFER_TYPE( pxPeripheralControl ) )
-//	{
-//		case ioctlUSE_POLLED_RX :
-//
-//			#if ioconfigUSE_SSP_POLLED_RX == 1
-//			{
-//				/* Configure the transfer data.  No semaphore or queue is used
-//				here, so the application must ensure only one task attempts to
-//				make a polling read at a time.  *NOTE* the Tx transfer state
-//				is used, as the SSP requires a Tx to occur for any data to be
-//				received. */
-//				pxSSPTransferDefinition = ( SSP_DATA_SETUP_Type * ) diGET_TX_TRANSFER_STATE( pxPeripheralControl );
-//				configASSERT( pxSSPTransferDefinition );
-//				pxSSPTransferDefinition->tx_data = NULL;
-//				pxSSPTransferDefinition->rx_data = ( void * ) pvBuffer;
-//				pxSSPTransferDefinition->length  = ( uint32_t ) xBytes;
-//				xReturn = SSP_ReadWrite( pxSSP, pxSSPTransferDefinition, SSP_TRANSFER_POLLING );
-//			}
-//			#endif /* ioconfigUSE_SSP_POLLED_RX */
-//			break;
-//
-//
-//		case ioctlUSE_CIRCULAR_BUFFER_RX :
-//			/* _RB_ This relies on Tx being configured to zero copy mode. */
-//			#if ioconfigUSE_SSP_CIRCULAR_BUFFER_RX == 1
-//			{
-//				/* There is nothing to prevent multiple tasks attempting to
-//				read the circular buffer at any one time.  The implementation
-//				of the circular buffer uses a semaphore to indicate when new
-//				data is available, and the semaphore will ensure that only the
-//				highest priority task that is attempting a read will actually
-//				receive bytes. */
-//
-//				/* A write is performed first, to generate the clock required
-//				to clock the data in.  NULL is passed as the source buffer as
-//				there isn't actually any data to send, and NULL will just
-//				result in 0xff being sent.  When the data written to the FIFO
-//				has been transmitted an Rx interrupt will copy the received
-//				data into the circular buffer, and check to see if there is
-//				more data to be written. */
-//
-//				/* Ensure the last Tx has completed. */
-//				xReturn = xIOUtilsGetZeroCopyWriteMutex( pxPeripheralControl, ioctlOBTAIN_WRITE_MUTEX, ioutilsDEFAULT_ZERO_COPY_TX_MUTEX_BLOCK_TIME );
-//				configASSERT( xReturn );
-//
-//				if( xReturn == pdPASS )
-//				{
-//					/* Empty whatever is lingering in the Rx buffer (there
-//					shouldn't be any. */
-//					vIOUtilsClearRxCircularBuffer( pxPeripheralControl );
-//
-//					/* Data should be received during the following write. */
-//					ulReceiveActive[ cPeripheralNumber ] = pdTRUE;
-//
-//					/* Write to solicit received data. */
-//					FreeRTOS_SSP_write( pxPeripheralControl, NULL, xBytes );
-//
-//					/* This macro will continuously wait on the new data mutex,
-//					reading bytes from the circular buffer each time it
-//					receives it, until the desired number of bytes have been
-//					read. */
-//					ioutilsRECEIVE_CHARS_FROM_CIRCULAR_BUFFER
-//						(
-//							pxPeripheralControl,
-//							SSP_IntConfig( pxSSP, sspRX_DATA_AVAILABLE_INTERRUPTS, DISABLE ), /* Disable interrupt. */
-//							SSP_IntConfig( pxSSP, sspRX_DATA_AVAILABLE_INTERRUPTS, ENABLE ), /* Enable interrupt. */
-//							( ( uint8_t * ) pvBuffer ),	/* Data destination. */
-//							xBytes,						/* Bytes to read. */
-//							xReturn						/* Number of bytes read. */
-//						);
-//
-//					/* Not expecting any more Rx data now, so just junk anything
-//					that is received until the next explicit read is performed. */
-//					ulReceiveActive[ cPeripheralNumber ] = pdFALSE;
-//				}
-//			}
-//			#endif
-//			break;
-//
-//
-//		case ioctlUSE_CHARACTER_QUEUE_RX :
-//
-//			/* The queue allows multiple tasks to attempt to read bytes,
-//			but ensures only the highest priority of these tasks will
-//			actually receive bytes.  If two tasks of equal priority attempt
-//			to read simultaneously, then the application must ensure mutual
-//			exclusion, as time slicing could result in the string being
-//			received being partially received by each task. */
-//			#if ioconfigUSE_SSP_RX_CHAR_QUEUE == 1
-//			{
-//				/* Ensure the last Tx has completed. */
-//				xIOUtilsWaitTxQueueEmpty( pxPeripheralControl, boardDEFAULT_READ_MUTEX_TIMEOUT );
-//
-//				/* Clear any residual data - there shouldn't be any! */
-//				xIOUtilsClearRxCharQueue( pxPeripheralControl );
-//
-//				/* Data should be received during the following write. */
-//				ulReceiveActive[ cPeripheralNumber ] = pdTRUE;
-//
-//				/* Write to solicit received data. */
-//				FreeRTOS_SSP_write( pxPeripheralControl, NULL, xBytes );
-//
-//				/* Read the received data placed in the Rx queue by the
-//				interrupt. */
-//				xReturn = xIOUtilsReceiveCharsFromRxQueue( pxPeripheralControl, ( uint8_t * ) pvBuffer, xBytes );
-//
-//				/* Not expecting any more Rx data now, so just junk anything
-//				that is received until the next explicit read is performed. */
-//				ulReceiveActive[ cPeripheralNumber ] = pdFALSE;
-//			}
-//			#endif
-//			break;
-//
-//
-//		default :
-//
-//			/* Other methods can be implemented here. */
-//			configASSERT( xReturn );
-//
-//			/* Prevent compiler warnings when the configuration is set such
-//			that the following parameters are not used. */
-//			( void ) pvBuffer;
-//			( void ) xBytes;
-//			( void ) pxSSP;
-//			( void ) pxSSPTransferDefinition;
-//			( void ) cPeripheralNumber;
-//			break;
-//	}
-//
+  Peripheral_Control_t * const pxPeripheralControl = ( Peripheral_Control_t * const ) pxPeripheral;
+  size_t xReturn = 0U;
+  SPI_t * const pxSSP = ( SPI_t * const ) diGET_PERIPHERAL_BASE_ADDRESS( ( ( Peripheral_Control_t * const ) pxPeripheral ) );
+  const int8_t cPeripheralNumber = diGET_PERIPHERAL_NUMBER( ( ( Peripheral_Control_t * const ) pxPeripheral ) );
+
+
+	switch( diGET_RX_TRANSFER_TYPE( pxPeripheralControl ) )
+	{
+		case ioctlUSE_POLLED_RX :
+
+			#if ioconfigUSE_SSP_POLLED_RX == 1
+			{
+				/* Configure the transfer data.  No semaphore or queue is used
+				here, so the application must ensure only one task attempts to
+				make a polling read at a time.  *NOTE* the Tx transfer state
+				is used, as the SSP requires a Tx to occur for any data to be
+				received. */
+        uint8_t * ptr = (uint8_t *)pvBuffer;
+        while(xReturn < xBytes)
+        {
+          pxSSP->DATA = 0xFF;
+          while(!(pxSSP->STATUS & SPI_IF_bm));
+          *ptr = pxSSP->DATA;
+
+          ptr += 1;
+          xReturn += 1;
+        }
+			}
+			#endif /* ioconfigUSE_SSP_POLLED_RX */
+			break;
+
+
+		case ioctlUSE_CIRCULAR_BUFFER_RX :
+			/* _RB_ This relies on Tx being configured to zero copy mode. */
+			#if ioconfigUSE_SSP_CIRCULAR_BUFFER_RX == 1
+			{
+#error "not implemented"	
+			}
+			#endif
+			break;
+
+
+		case ioctlUSE_CHARACTER_QUEUE_RX :
+
+			/* The queue allows multiple tasks to attempt to read bytes,
+			but ensures only the highest priority of these tasks will
+			actually receive bytes.  If two tasks of equal priority attempt
+			to read simultaneously, then the application must ensure mutual
+			exclusion, as time slicing could result in the string being
+			received being partially received by each task. */
+			#if ioconfigUSE_SSP_RX_CHAR_QUEUE == 1
+			{
+#error "not implemented"	
+			#endif
+			break;
+
+
+		default :
+
+			/* Other methods can be implemented here. */
+			configASSERT( xReturn );
+
+			/* Prevent compiler warnings when the configuration is set such
+			that the following parameters are not used. */
+			( void ) pvBuffer;
+			( void ) xBytes;
+			( void ) pxSSP;
+			( void ) cPeripheralNumber;
+			break;
+	}
+
 	return xReturn;
 }
 ///*-----------------------------------------------------------*/

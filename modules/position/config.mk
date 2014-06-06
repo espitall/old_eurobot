@@ -1,2 +1,2 @@
 SRCS = position.c
-MODULES = com
+MODULES = com encoder_magnetic

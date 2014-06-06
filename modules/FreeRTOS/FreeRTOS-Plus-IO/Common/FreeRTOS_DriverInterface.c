@@ -89,10 +89,6 @@ Peripheral_Control_t *pxPeripheralControl = NULL;
 		while( ( ( *( pcPath + 1 ) ) != '/' ) && ( ( *( pcPath + 1 ) ) != 0x00 ) )
 		{
 			pcPath++;
-			while( ( *pcPath < '0' ) || ( *pcPath > '9' ) )
-			{
-				pcPath++;
-			}
 		}
 
 		/* Convert the number from its ASCII representation. */
@@ -103,7 +99,7 @@ Peripheral_Control_t *pxPeripheralControl = NULL;
       }
     }
     else {
-      cPeripheralNumber = *pcPath - 'A';
+      cPeripheralNumber = *pcPath - 'C';
     } 
 
 		/* Create the peripheral control structure used by FreeRTOS+IO to

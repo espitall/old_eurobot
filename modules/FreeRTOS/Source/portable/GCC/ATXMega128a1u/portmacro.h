@@ -96,6 +96,7 @@ extern "C" {
 #define portSTACK_TYPE	uint8_t
 #define portBASE_TYPE	int
 #define portPOINTER_SIZE_TYPE uint16_t
+#define portGPIO_TYPE  PORT_t
 
 typedef portSTACK_TYPE StackType_t;
 typedef signed int BaseType_t;
@@ -142,6 +143,11 @@ extern void vPortYield( void ) __attribute__ ( ( naked ) );
 }
 #endif
 
+
+//GPIO
+#define portGPIO_DIRSET(port, mask) port.DIRSET = mask
+#define portGPIO_OUTSET(port, mask) port.OUTSET = mask
+#define portGPIO_OUTCLR(port, mask) port.OUTCLR = mask
 
 #endif /* PORTMACRO_H */
 

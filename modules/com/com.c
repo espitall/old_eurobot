@@ -232,6 +232,6 @@ void com_init(BaseType_t com_recv_priority, BaseType_t com_send_priority)
     }
   }
   xTaskCreate(com_read, "com_recv", 200, 0, com_recv_priority, 0);
-  xTaskCreate(com_write, "com_send", 200, 0, com_send_priority, 0);
+  xTaskCreate(com_write, "com_send", 512, 0, com_send_priority, 0);
 }
 

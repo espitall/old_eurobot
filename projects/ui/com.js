@@ -59,7 +59,35 @@ var payloads = {
       console.log("[" + level.toUpperCase() + "] [" + source + "] " + msg);
     },
 
-  }
+  },
+
+  asserv: {
+    type: 0x02,
+
+    identifier: {
+      debug_stream: 0x00,
+    },
+
+    parse: function(rctrl, packet) {
+      switch(packet.data[0]) {
+        case this.identifier.debug_stream:
+          var payload = binary.parse(packet.data)
+            .word8("identifier")
+            .word32lu("timestamp_ms")
+            .word32ls("dist_set_point")
+            .word32ls("dist_feedback")
+            .word32ls("angu_set_point")
+            .word32ls("angu_feedback")
+            .tap(function(vars){
+              this.buffer("msg",packet.data.length - 1 );
+            })
+          .vars;
+
+          rctrl.send_ui("asserv_stream", payload);
+          break;
+      }
+    }
+  },
 };
 
 module.exports = payloads;

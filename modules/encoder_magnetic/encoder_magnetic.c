@@ -22,7 +22,7 @@ void encoder_magnetic_init(Peripheral_Descriptor_t * s)
     portGPIO_OUTSET((*gpio_port[i]), (1 << gpio_pin[i]));
   }
 
-	//encoder_magnetic_manage();
+	encoder_magnetic_manage();
 	memset(values, 0, sizeof(values));
 }
 

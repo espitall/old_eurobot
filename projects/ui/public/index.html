@@ -33,6 +33,15 @@
   <div id="maincontainer">
 
     <div id="main">
+      <tabs>
+        <pane heading="S-Asserv">
+          <asserv robot="S"></asserv>
+        </pane>
+
+        <pane heading="P-Asserv">
+          <asserv robot="P"></asserv>
+        </pane>
+      </tabs>
       <div class="clear"></div>
     </div><!-- </main> -->
 
@@ -50,6 +59,7 @@
 
 <script src="javascripts/app.js"></script>
 <script src="/socket.io/socket.io.js"></script>
+<script src="javascripts/libs/canvasjs.min.js"></script>
 <!--
 
 <script src="javascripts/libs/jquery.knob.js"></script>
@@ -62,6 +72,8 @@
 
 <script src="javascripts/libs/jquery.min.js"></script>
 <script src="javascripts/directives/directives.js"></script>
+<script src="javascripts/directives/asserv.js"></script>
+<script src="javascripts/directives/chart.js"></script>
 <script src="javascripts/services/services.js"></script>
 <script src="javascripts/controllers/controllers.js"></script>
 

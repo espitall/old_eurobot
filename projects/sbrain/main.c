@@ -2,6 +2,7 @@
 #include <FreeRTOS/module.h> 
 #include <xmega/clock/clock.h> 
 #include <position/position.h> 
+#include <asserv/asserv.h> 
 #include <com/com.h>
 #include "motors.h"
 #include "config.h"
@@ -10,20 +11,31 @@ void led_heartbeat(void * p)
 {
   (void)p;
 
+  com_print(COM_INFO, "Boot");
   while(1) 
   {
     PORTQ.OUTTGL = (1 << 3);
-    vTaskDelay(500);
-    motors_set_consign(300, 300);
+    vTaskDelay(2500);
+    asserv_set_dist_set_point(30000);
+
+    PORTQ.OUTTGL = (1 << 3);
+    vTaskDelay(3000);
+    asserv_set_dist_set_point(-30000);
   }
 }
 
 void asserv(void *p)
 {
+  TickType_t last_wake_time = xTaskGetTickCount();
+  const TickType_t asserv_period = 20;
+
   while(1)
   {
+    vTaskDelayUntil( &last_wake_time, asserv_period);
+
     position_update();
-    vTaskDelay(10);
+    asserv_update();
+    motors_set_consign(asserv_get_left_mot_set_point(), asserv_get_right_mot_set_point());
   }
 }
 
@@ -36,7 +48,24 @@ uint32_t com_get_ith_hook(com_packet_header_t * header)
 
 void com_write_hook(void)
 {
-  com_print(COM_DEBUG, "speed l:%ld r:%ld", position_get_left_speed(), position_get_right_speed());
+  static int32_t tickCount = 0;
+  tickCount += (uint16_t)(xTaskGetTickCount() - ((uint16_t)tickCount));
+  //com_print(COM_DEBUG, "speed l:%ld r:%ld", position_get_left_speed(), position_get_right_speed());
+
+  //send asserv debug data
+  uint8_t * buf = com_request_write_buffer(COM_BROADCAST, COM_PAYLOAD_ASSERV);
+  buf[0] = COM_PAYLOAD_ASSERV_DEBUG_STREAM;
+  com_payload_asserv_debug_stream_t * stream = (com_payload_asserv_debug_stream_t *) (buf + 1); 
+
+  stream->timestamp = tickCount;
+  stream->dist_set_point = asserv_get_dist_set_point();
+  stream->dist_feedback = position_get_dist();
+  stream->dist_output = asserv_get_dist_output();
+
+  stream->angu_set_point = asserv_get_angu_set_point();
+  //stream->angu_feedback = asserv_get_angu_feedback();
+
+  com_release_write_buffer(sizeof(com_payload_asserv_debug_stream_t) + 1);
 }
 
 int main(void)
@@ -54,10 +83,11 @@ int main(void)
 
   //initialize modules
   position_init();
+  asserv_init();
   motors_init();
   com_init(SCHED_COM_RECV_PRIORITY, SCHED_COM_SEND_PRIORITY);
   xTaskCreate(led_heartbeat, "heartbeat", 200, 0, SCHED_HEARTBEAT_PRIORITY, 0);
-  xTaskCreate(asserv, "asserv", 200, 0, SCHED_ASSERV_PRIORITY, 0);
+  xTaskCreate(asserv, "asserv", 512, 0, SCHED_ASSERV_PRIORITY, 0);
 
 
   //start scheduler

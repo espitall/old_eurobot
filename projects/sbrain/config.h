@@ -10,5 +10,10 @@
 
 #define COM_ID                  COM_SBRAIN
 #define COM_WRITE_COOL_TIME            100    
+
+#define MOTOR_0                 left
+#define MOTOR_0_INVERT
+#define MOTOR_1                 right
+#undef MOTOR_1_INVERT
   
 #endif// CONFIG_H

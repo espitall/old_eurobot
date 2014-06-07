@@ -37,7 +37,11 @@ void motors_set_consign(int32_t left, int32_t right)
     right = -MOTORS_PWM_PERIOD;
   }
 
-  if(left >= 0)
+#ifdef MOTOR_0_INVERT
+  if(MOTOR_0 < 0)
+#else
+  if(MOTOR_0 >= 0)
+#endif
   {
     PORTH.OUTCLR = (1 << 0);
     PORTH.OUTSET = (1 << 1);
@@ -48,7 +52,11 @@ void motors_set_consign(int32_t left, int32_t right)
     PORTH.OUTCLR = (1 << 1);
   }
 
-  if(right >= 0)
+#ifdef MOTOR_1_INVERT
+  if(MOTOR_1 < 0)
+#else
+  if(MOTOR_1 >= 0)
+#endif
   {
     PORTH.OUTCLR = (1 << 2);
     PORTH.OUTSET = (1 << 3);
@@ -60,6 +68,6 @@ void motors_set_consign(int32_t left, int32_t right)
   }
 
   //set pwm
-  pwm_set_output(&pwms, 'D', right);
-  pwm_set_output(&pwms, 'C', left);
+  pwm_set_output(&pwms, 'C', MOTOR_0);
+  pwm_set_output(&pwms, 'D', MOTOR_1);
 }

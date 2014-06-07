@@ -48,7 +48,7 @@ RobotControl.prototype.receive = function(msg) {
     payload.parse(this, msg);
   }
   else {
-    com.log.send(this, "ui", "Unknown payload type: " + msg.type);
+    com.log.send(this, "ui", "error", "Unknown payload type: " + msg.type);
   }
 };
 

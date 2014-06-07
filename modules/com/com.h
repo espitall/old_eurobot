@@ -2,6 +2,7 @@
 #define COM_H
 
 #include <FreeRTOS/module.h> 
+#include "payload.h"
 
 #define COM_MAX_PAYLOAD_LENGTH 256
 
@@ -21,11 +22,6 @@ typedef enum
   COM_ERROR,
 } com_print_lvl_t;
 
-typedef enum 
-{
-  COM_PAYLOAD_SYSTEM = 0x00,
-  COM_PAYLOAD_LOG = 0x01,
-} com_payload_id_t;
 
 typedef struct 
 {

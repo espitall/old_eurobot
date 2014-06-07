@@ -62,11 +62,14 @@ void com_write_hook(void)
   stream->timestamp = tickCount;
   stream->dist_set_point = asserv_get_dist_set_point();
   stream->dist_feedback = position_get_dist();
+  stream->dist_p = asserv_get_dist_p();
+  stream->dist_d = asserv_get_dist_d();
   stream->dist_output = asserv_get_dist_output();
-
 
   stream->angu_set_point = asserv_get_angu_set_point();
   stream->angu_feedback = position_get_angu();
+  stream->angu_d = asserv_get_angu_d();
+  stream->angu_output = asserv_get_angu_output();
   stream->angu_output = asserv_get_angu_output();
 
   com_release_write_buffer(sizeof(com_payload_asserv_debug_stream_t) + 1);

@@ -76,9 +76,13 @@ var payloads = {
             .word32lu("timestamp_ms")
             .word32ls("dist_set_point")
             .word32ls("dist_feedback")
+            .word32ls("dist_p")
+            .word32ls("dist_d")
             .word32ls("dist_output")
             .word32ls("angu_set_point")
             .word32ls("angu_feedback")
+            .word32ls("angu_p")
+            .word32ls("angu_d")
             .word32ls("angu_output")
             .tap(function(vars){
               this.buffer("msg",packet.data.length - 1 );

@@ -19,10 +19,14 @@ typedef struct {
   
   int32_t dist_set_point;
   int32_t dist_feedback;
+  int32_t dist_p;
+  int32_t dist_d;
   int32_t dist_output;
 
   int32_t angu_set_point;
   int32_t angu_feedback;
+  int32_t angu_p;
+  int32_t angu_d;
   int32_t angu_output;
 } com_payload_asserv_debug_stream_t;
 

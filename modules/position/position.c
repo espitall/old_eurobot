@@ -8,6 +8,7 @@ static Peripheral_Descriptor_t spi;
 static int32_t pos_left_tick;
 static int32_t pos_right_tick;
 static int32_t pos_dist;
+static int32_t pos_angu;
 
 static int32_t spd_left_tick;
 static int32_t spd_right_tick;
@@ -30,7 +31,8 @@ void position_update(void)
   pos_left_tick = new_pos_left_tick;
   pos_right_tick = new_pos_right_tick;
 
-  pos_dist = pos_left_tick + pos_right_tick;
+  pos_dist = pos_right_tick + pos_left_tick;
+  pos_angu = pos_right_tick - pos_left_tick;
 }
 
 int32_t position_get_right_speed(void)
@@ -50,6 +52,19 @@ int32_t position_get_dist(void)
   taskENTER_CRITICAL();
   {
     value = pos_dist;
+  }
+  taskEXIT_CRITICAL();
+
+	return value;
+}
+
+int32_t position_get_angu(void)
+{
+	int32_t value;
+
+  taskENTER_CRITICAL();
+  {
+    value = pos_angu;
   }
   taskEXIT_CRITICAL();
 

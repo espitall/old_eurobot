@@ -1,6 +1,98 @@
-<h2>Graph</h2>
-  <div style="width: 100%">
-    <chart type="line" title="PID: distance" series="dist_set_point; dist_feedback"></chart>
-  </div>
+<div>
+  <div>
+    <h2>Graph</h2>
+    <chart title="PID: distance" 
+    axisx='{
+      "title": "temps (ms)",
+      "titleFontSize": 10,
+      "labelFontSize": 10,
+      "titleFontWeight": "bold"
+    }'
 
-<div class="clear"></div>
+    axisy='{
+      "title": "distance",
+      "titleFontSize": 10,
+      "labelFontSize": 10,
+      "titleFontWeight": "bold"
+    }'
+
+    axisy2='{
+      "title": "sortie",
+      "titleFontSize": 10,
+      "labelFontSize": 10,
+      "titleFontWeight": "bold",
+      "minimum": -2000,
+      "maximum": 2000
+    }'
+
+    series='
+    [
+      {
+        "name": "Consigne", 
+        "source": "dist_set_point", 
+        "type": "line"
+      },
+      {
+        "name": "Retour", 
+        "source": "dist_feedback", 
+        "type": "line"
+      },
+      {
+        "name": "Sortie", 
+        "source": "dist_output", 
+        "type": "line",
+        "axisYType": "secondary"
+      }
+    ]' 
+    ></chart>
+  </div>
+  <div>
+    <p>az</p>
+
+    <chart title="PID: angle" 
+    axisx='{
+      "title": "temps (ms)",
+      "titleFontSize": 10,
+      "labelFontSize": 10,
+      "titleFontWeight": "bold"
+    }'
+
+    axisy='{
+      "title": "angle",
+      "titleFontSize": 10,
+      "labelFontSize": 10,
+      "titleFontWeight": "bold"
+    }'
+
+    axisy2='{
+      "title": "sortie",
+      "titleFontSize": 10,
+      "labelFontSize": 10,
+      "titleFontWeight": "bold",
+      "minimum": -2000,
+      "maximum": 2000
+    }'
+
+    series='
+    [
+      {
+        "name": "Consigne", 
+        "source": "angu_set_point", 
+        "type": "line"
+      },
+      {
+        "name": "Retour", 
+        "source": "angu_feedback", 
+        "type": "line"
+      },
+      {
+        "name": "Sortie", 
+        "source": "angu_output", 
+        "type": "line",
+        "axisYType": "secondary"
+      }
+    ]' 
+    ></chart>
+
+  </div>
+</div>

@@ -1,6 +1,5 @@
 plasteamUI.directive("chart",["socket", function(socket, Graph) {
   var uniqueId = 1;
-  var baseWidth = 600;
   var baseHeight = 300;
 
   return {
@@ -9,40 +8,38 @@ plasteamUI.directive("chart",["socket", function(socket, Graph) {
     link : function(scope, elm, attrs) {
       var div  = elm.find('div')[0];
       div.id = 'chart_' + (uniqueId++);
-      console.log('id:' + div.id);
 
-      var options = {
-        width:  attrs.width  || baseWidth,
-        height: attrs.height || baseHeight
-      };
-
-      var data = [];
+      var data = JSON.parse(attrs.series);
       var series = attrs.series.split(";");
-      for(var i in series) {
-        var str  = series[i].trim();
-        data.push({
-          type: attrs.type,
-          dataPoints: [],
-          name: str,
-          index: str,
-          showInLegend: true,
-        });
+      for(var i in data) {
+        data[i].dataPoints = [];
+        data[i].showInLegend = true;
+        data[i].markerType = 'none';
       }
 
-      div.width = options.width;
-      div.height = options.height;
       var chart = new CanvasJS.Chart(div.id, {
         legend: {
           horizontalAlign: "right",
           verticalAlign: "center",
         },
         title :{
-          text: attrs.title
+          text: attrs.title,
+          fontSize: 15,
         },      
+        toolTip: {
+          shared: true,
+        },
+        axisX: JSON.parse(attrs.axisx || '{}'),
+        axisY: JSON.parse(attrs.axisy || '{}'),
+        axisY2: JSON.parse(attrs.axisy2 || '{}'),
         data: data,
+        height: baseHeight,
       });
 
       chart.render();
+      div.style.height = baseHeight + 'px';
+
+      console.log(chart.width);
 
       socket.on("asserv_stream", function (msg) {
         var dps = data[0].dataPoints;
@@ -56,7 +53,7 @@ plasteamUI.directive("chart",["socket", function(socket, Graph) {
         for(var i = 0, l = data.length; i < l; i += 1) {
           data[i].dataPoints.push({
             x: msg.timestamp_ms,
-            y: msg[data[i].index],
+            y: msg[data[i].source],
           });
         }
 

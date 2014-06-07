@@ -11,7 +11,9 @@ void led_heartbeat(void * p)
 {
   (void)p;
 
-  com_print(COM_INFO, "Boot");
+  com_print(COM_INFO, "Boot register: 0x%02X", RST.STATUS);
+  RST.STATUS = 0;
+
   while(1) 
   {
     PORTQ.OUTTGL = (1 << 3);
@@ -62,8 +64,10 @@ void com_write_hook(void)
   stream->dist_feedback = position_get_dist();
   stream->dist_output = asserv_get_dist_output();
 
+
   stream->angu_set_point = asserv_get_angu_set_point();
-  //stream->angu_feedback = asserv_get_angu_feedback();
+  stream->angu_feedback = position_get_angu();
+  stream->angu_output = asserv_get_angu_output();
 
   com_release_write_buffer(sizeof(com_payload_asserv_debug_stream_t) + 1);
 }

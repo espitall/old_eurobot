@@ -20,7 +20,7 @@ var uiControl = new uiControlMod.UiControl();
 
 process.on('uncaughtException', function(err) {
   console.error(err.stack);
-  robotControl.sendToUi("log",{src:"Serveur",lvl:4,msg:"err.stack"});
+  robotControl.send_ui("log",{src:"Serveur",lvl:4,msg:"err.stack"});
 });
 
 
@@ -33,7 +33,7 @@ if(process.argv[2] && process.argv[2][0] == '/') {
 
   serialPort.open(function () {
     console.log('serial port open');
-    robotControl.sendToUi("log",{src:"Serveur",lvl:2,msg:"Serial port " + process.argv[2] + ":" + baudrate + " opened"});
+    robotControl.send_ui("log",{src:"Serveur",lvl:2,msg:"Serial port " + process.argv[2] + ":" + baudrate + " opened"});
     serialPort.on('data', function(data) {
       robotControl.decode(data);
     });
@@ -67,7 +67,7 @@ else {
 
   robotServeur.on("connect",function() {
     console.log('CONNECTED TO: ' + HOST + ':' + PORT);
-    robotControl.sendToUi("log",{src:"Serveur",lvl:2,msg:"Connexion avec le robot Ok"});
+    robotControl.send_ui("log",{src:"Serveur",lvl:2,msg:"Connexion avec le robot Ok"});
     robotControl.bonjour();
   });
 
@@ -77,11 +77,11 @@ else {
 
   robotServeur.on('close', function() {
     console.log('Connexion vers le robot fermée');
-    robotControl.sendToUi("log",{src:"Node",lvl:4,msg:"Connexion vers le robot fermée"});
+    robotControl.send_ui("log",{src:"Node",lvl:4,msg:"Connexion vers le robot fermée"});
 
     setTimeout(function() {
       console.log("Tentative de reconnexion...");
-      robotControl.sendToUi("log",{src:"Node",lvl:2,msg:"Tentative de reconnexion..."});
+      robotControl.send_ui("log",{src:"Node",lvl:2,msg:"Tentative de reconnexion..."});
       robotServeur.connect(PORT, HOST);
     },TIMETORECO);
 
@@ -89,7 +89,7 @@ else {
 
   robotServeur.on('error', function(e) {
     console.log('Erreur de connexion vers le robot',e.code);
-    robotControl.sendToUi("log",{src:"Node",lvl:4,msg:"Erreur de connexion vers le robot"});
+    robotControl.send_ui("log",{src:"Node",lvl:4,msg:"Erreur de connexion vers le robot"});
   });
 
   robotControl.on("sendToBot",function (message){
@@ -116,7 +116,7 @@ var serveur = http.createServer(app).listen(app.get('port'), function(){
 io = io.listen(serveur);
 io.set('log level', 1);
 
-robotControl.on("sendToUi",function (type,message){
+robotControl.on("send_ui",function (type,message){
   io.sockets.emit(type,message);
 });
 

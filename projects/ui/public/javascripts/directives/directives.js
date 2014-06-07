@@ -12,13 +12,6 @@ plasteamUI
       container.appendChild(element);
       container.id = "log";
 
-      var state = {
-        debug : 0,
-        info : 1,
-        warning : 2,
-        erreur : 3
-      };
-
       var filtre = {
         debug : false,
         info : false,
@@ -34,46 +27,16 @@ plasteamUI
         element.innerHTML = "";
       }
 
-      function log(message,type) {
+      function log(level, source, msg) {
         var item = document.createElement("p");
-
-        switch (type) {
-          case state.debug:
-            item.className="debug";
-            if(filtre.debug){
-              item.className+=" hide";
-            }
-            break;
-
-          case state.info:
-            item.className="info";
-            if(filtre.info){
-              item.className+=" hide";
-            }
-            break;
-
-          case state.warning:
-            item.className="warning";
-            if(filtre.warning){
-              item.className+=" hide";
-            }
-            break;
-
-          case state.erreur:
-            item.className="error";
-            if(filtre.error){
-              item.className+=" hide";
-            }
-            break;
-
-          default:
-            item.className="";
-            break;
+        item.className = level;
+        if(filtre[level]) {
+          item.className += " hide";
         }
-
+        
         count++;
 
-        item.innerHTML = message ;
+        item.innerHTML = "[" + source + "] " + msg;
         element.appendChild(item);
 
         if(count === 1000) {
@@ -88,7 +51,7 @@ plasteamUI
       }
 
       socket.on("log", function (data) {
-        log("["+data.src+"] "+data.msg,data.lvl);
+        log(data.level, data.src, data.msg);
       });
 
       scope.$on('clearLogEvent', function() {

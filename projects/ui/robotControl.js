@@ -1,7 +1,7 @@
 
 var events = require('events'),
     sys = require('sys');
-var ppp = require("./pppPayloads");
+var com = require("./com");
 var binary = require('binary');
 
 
@@ -33,229 +33,23 @@ sys.inherits(RobotControl, events.EventEmitter);
 
 
 
-RobotControl.prototype.receive = function(message) {
- // console.log(message.data.toString());
-  //if(message.type) {
-    var payload = {};
-    switch (message.type) {
+RobotControl.prototype.receive = function(msg) {
 
-      case ppp.PAYLOAD_TYPE.SYSTEM:
-        payload = this.decodePayloadSystem(message.data);
-        //console.log("payload System ["+payload.type+"] : ",payload.data);
-        //console.log("payload System ["+payload.type+"] : ",payload.data.toString());
+  var payload = null;
+
+  for(var p in com) {
+    if(com[p].type == msg.type) {
+      payload = com[p];
       break;
-
-      case ppp.PAYLOAD_TYPE.LOG :
-        payload = this.decodePayloadLog(message.data);
-        this.sendToUi("log",{"src":this.decodeAddresse(message.source),"lvl":payload.niveau,"msg":payload.message});
-        break;
-
-      case ppp.PAYLOAD_ADDANC.ICARUS.ID_PAYLOAD :
-
-        payload = this.decodePayloadIcarus(message.data);
-
-        this.sendToUi(payload.msg_type,{"src":this.decodeAddresse(message.source),"donnee":payload.donnee});
-
-      break;
-      case ppp.PAYLOAD_ADDANC.ASSERV.ID_PAYLOAD :
-
-      payload = this.decodePayloadAsserv(message.data);
-
-        this.sendToUi(payload.msg_type,{"src":this.decodeAddresse(message.source),"donnee":payload.donnee});
-
-      break;
-      default:
-        console.log("type ->" ,(message.type).toString(16));
-      break;
-
-
     }
-
-  //}
-};
-
-RobotControl.prototype.decodePayloadSystem = function(payload) {
-
-  var donnee = "";
-  var sens = payload[0]&0x1;
-  var identifiant = payload[0]&0x7;
-
-
-    switch(identifiant) {
-
-      case ppp.PAYLOAD_SYSTEM_ID.ack:
-        donnee = "ack";
-        break;
-      case ppp.PAYLOAD_SYSTEM_ID.nak:
-        donnee = "nak";
-        break;
-      case ppp.PAYLOAD_SYSTEM_ID.ping:
-        donnee = {"type":"ping","data":payload.slice(2,3)} ;
-        break;
-      case ppp.PAYLOAD_SYSTEM_ID.traceroute:
-        break;
-      case ppp.PAYLOAD_SYSTEM_ID.name:
-        donnee = {"type":"Name","data":payload.slice(1,payload.length)} ;
-        break;
-      case ppp.PAYLOAD_SYSTEM_ID.stop:
-        break;
-      case ppp.PAYLOAD_SYSTEM_ID.reset:
-        donnee = {"type":"reset"};
-        break;
-      case ppp.PAYLOAD_SYSTEM_ID.supported:
-        break;
-      default:
-        break;
-    }
-
-  return donnee;
-};
-
-
-RobotControl.prototype.decodePayloadIcarus = function(payload) {
-  var decodePayload = binary.parse(payload)
-    .word8("id")
-    .tap(function(vars){
-      this.buffer("data",payload.length );
-    })
-    .vars;
-
-    var msg_type = "icarus.",
-    donnee = {};
-
-    if(decodePayload.id === ppp.PAYLOAD_ADDANC.ICARUS.ID_CONFIG) {
-      msg_type += "config";
-      donnee = {
-        conf : decodePayload.data.readUInt8(0)& 0x03,
-        angle : decodePayload.data.readUInt16LE(1)
-      };
-    } else if(decodePayload.id === ppp.PAYLOAD_ADDANC.ICARUS.ID_STATUS) {
-      msg_type += "position";
-      donnee = decodePayload.data.readUInt8(0);
-    }
-
-    return {"msg_type":msg_type,"donnee":donnee};
-
-};
-
-RobotControl.prototype.decodePayloadAsserv = function(payload) {
-  var decodePayload = binary.parse(payload)
-    .word8("id")
-    .tap(function(vars){
-      this.buffer("data",payload.length - 1);
-    })
-    .vars;
-
-
-    var msg_type = "",
-    donnee = {};
-
-    if(decodePayload.id === ppp.PAYLOAD_ADDANC.ASSERV.ID_CONFIG) {
-      msg_type = "asserv.config";
-      donnee = {
-        flag : decodePayload.data.readUInt8(0),
-        commande : {}
-      };
-
-
-      if(donnee.flag === ppp.PAYLOAD_ADDANC.ASSERV.DATA_TYPE.RAMPES) {
-        donnee.commande = {
-          "vmax_d":decodePayload.data.readFloatLE(1),
-          "amax_d":decodePayload.data.readFloatLE(5),
-          "vmax_a":decodePayload.data.readFloatLE(9),
-          "amax_a":decodePayload.data.readFloatLE(13)
-        };
-        //console.log("---------------->",decodePayload.data.length,decodePayload.data);
-      } else if (donnee.flag === ppp.PAYLOAD_ADDANC.ASSERV.DATA_TYPE.PID) {
-        donnee.commande = {
-          "kp_d":decodePayload.data.readFloatLE(1),
-          "kd_d":decodePayload.data.readFloatLE(5),
-          "alpha_d":decodePayload.data.readFloatLE(9),
-          "ki_d":decodePayload.data.readFloatLE(13),
-          "imax_d":decodePayload.data.readFloatLE(17),
-          "omax_d":decodePayload.data.readFloatLE(21),
-          "kp_a":decodePayload.data.readFloatLE(25),
-          "kd_a":decodePayload.data.readFloatLE(29),
-          "alpha_a":decodePayload.data.readFloatLE(33),
-          "ki_a":decodePayload.data.readFloatLE(37),
-          "imax_a":decodePayload.data.readFloatLE(41),
-          "omax_a":decodePayload.data.readFloatLE(45)
-        };
-      } else if (donnee.flag === ppp.PAYLOAD_ADDANC.ASSERV.DATA_TYPE.MOTEURS) {
-        donnee.commande = {
-          "coef_droit":decodePayload.data.readFloatLE(1),
-          "min_droit":decodePayload.data.readUInt32LE(5),
-          "coef_gauche":decodePayload.data.readFloatLE(9),
-          "min_gauche":decodePayload.data.readUInt32LE(13)
-        };
-      } else if (donnee.flag === ppp.PAYLOAD_ADDANC.ASSERV.DATA_TYPE.POSITION) {
-
-        donnee.commande = {
-          "coef_droit":decodePayload.data.readFloatLE(1),
-          "coef_gauche":decodePayload.data.readFloatLE(5),
-          "tick_cm":decodePayload.data.readFloatLE(9),
-          "tick_deg":decodePayload.data.readFloatLE(13)
-        };
-
-      }
-    } else if(decodePayload.id === ppp.PAYLOAD_ADDANC.ASSERV.ID_GRAPH) {
-      msg_type = "asserv.stream";
-      donnee = {
-        "d_consigne":decodePayload.data.readFloatLE(0),
-        "d_consigne_filtre":decodePayload.data.readFloatLE(4),
-        "d_retour":decodePayload.data.readFloatLE(8),
-        "d_output":decodePayload.data.readFloatLE(12),
-        "d_i":decodePayload.data.readFloatLE(16),
-        "a_consigne":decodePayload.data.readFloatLE(20),
-        "a_consigne_filtre":decodePayload.data.readFloatLE(24),
-        "a_retour":decodePayload.data.readFloatLE(28),
-        "a_output":decodePayload.data.readFloatLE(32),
-        "a_i":decodePayload.data.readFloatLE(36),
-        "moteur_droit":decodePayload.data.readUInt32LE(40),
-        "moteur_gauche":decodePayload.data.readUInt32LE(44)
-      };
-
-    } else if(decodePayload.id === 2 ) {
-      msg_type = "asserv.2";
-    }
-  return {"msg_type":msg_type,"donnee":donnee};
-  //return {"id":decodePayload.idPayload,"donnee":decodePayload.donnee};
-};
-
-
-RobotControl.prototype.decodePayloadLog = function(payload) {
-
-  var decodePayload = binary.parse(payload)
-    .word8("ackniveau")
-    .tap(function(vars){
-      this.buffer("message",payload.length - 1 );
-    })
-    .vars;
-
-  //console.log("\n",payload,"\n",decodePayload.ackniveau,"\n",decodePayload.message.toString());
-
-  return {"niveau":decodePayload.ackniveau&0x7,"message":decodePayload.message.toString()} ;
-};
-
-RobotControl.prototype.decodeAddresse = function(adresseCode) {
-  var adresse = "" ;
-  switch(adresseCode) {
-    case ppp.PAYLOAD_ADDRESS.sbrain:
-      adresse = "sbrain";
-      break;
-    case ppp.PAYLOAD_ADDRESS.pbrain:
-      adresse = "pbrain";
-      break;
-    case ppp.PAYLOAD_ADDRESS.BROADCAST:
-      adresse = "broadcast";
-      break;
-    default:
-      adresse = "code "+adresseCode+" inconnu";
-      break;
   }
 
-  return adresse;
-
+  if(payload != null) {
+    payload.parse(this, msg);
+  }
+  else {
+    com.log.send(this, "ui", "Unknown payload type: " + msg.type);
+  }
 };
 
 
@@ -277,6 +71,7 @@ RobotControl.prototype.calculCrc = function(data) {
 
   return crc;
 };
+
 /**
 * data : data à controler -> Buffer
 * crc : Code Crc de data -> int
@@ -359,90 +154,6 @@ RobotControl.prototype.decode = function(paquet) {
       }
     }
   }
-  /*
-  if(this.paquet.Hcomplet) {
-
-    this.paquet.data = Buffer.concat([this.paquet.data,paquet]);
-
-    if(this.paquet.data.length -1  >= this.paquet.header.payloadSize) {
-
-      var _this = this ;
-      var decodePaquet = binary.parse(this.paquet.data)
-        .tap(function(vars){
-          this.buffer("payloadData",_this.paquet.header.payloadSize);
-        })
-        .vars
-        ;
-
-      if(this.valideCRC(this.paquet.data,this.paquet.header.payloadCRC)) {
-
-
-        this.paquet.Hcomplet = false;
-
-
-        if(this.paquet.data.length - 2 > this.paquet.header.payloadSize) {
-
-          var paquetSuivant = this.paquet.data.slice(this.paquet.header.payloadSize+2);
-
-          this.decode(paquetSuivant);
-        }
-
-      } else {
-        console.log("mauvais crc trame");
-        this.paquet.Hcomplet = false;
-      }
-
-    }
-  } else {
-
-    if(paquet.length > 7) {
-      if(this.paquet.headerData.length>0) {
-        paquet = Buffer.concat([this.paquet.headerData,paquet]);
-      }
-      var headerTemp = paquet.toString();
-      var positionDebutPaquet = headerTemp.indexOf("P");
-
-      if(positionDebutPaquet != -1) {
-
-        paquet = paquet.slice(positionDebutPaquet);
-
-        this.paquet.header = binary.parse(paquet)
-        .word8("P")
-        .word8("payloadSize")
-        .word8("source")
-        .word8("destination")
-        .word8("type")
-        .word16lu("headerCRC")
-        .word16lu("payloadCRC")
-        .vars
-        ;
-        this.paquet.headerData = new Buffer(0);
-
-        if(this.valideCRC(paquet.slice(0,4),this.paquet.header.headerCRC)) {
-
-          this.paquet.Hcomplet=true;
-          this.paquet.data = new Buffer(0);
-          if(paquet.length>8) {
-            this.decode(paquet.slice(8));
-          }
-        } else {
-          console.log(red,"mauvais CRC header",reset);
-          this.paquet.Hcomplet=false;
-        }
-      } else {
-        this.paquet.Hcomplet=false;
-        this.paquet.headerData = new Buffer(0);
-      }
-    } else {
-      this.paquet.headerData = Buffer.concat([this.paquet.headerData,paquet]);
-
-      if(this.paquet.headerData.length  > 7) {
-        this.decode(this.paquet.headerData);
-      }
-    }
-  }
-*/
-
 };
 
 RobotControl.prototype.debugFileOpen = function() {
@@ -595,8 +306,8 @@ RobotControl.prototype.sendToBot = function(data) {
   }
 };
 
-RobotControl.prototype.sendToUi = function(type,message) {
-  this.emit("sendToUi",type,message);
+RobotControl.prototype.send_ui = function(type,message) {
+  this.emit("send_ui",type,message);
 };
 
 

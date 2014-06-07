@@ -23,6 +23,7 @@ var pppPayloads = {
     },
 
 
+      /*
     PAYLOAD_ADDANC : {
         position : 0x80,
         COMMANDES : {
@@ -55,7 +56,7 @@ var pppPayloads = {
         }
     }
 
-
+*/
 
 } ;
 

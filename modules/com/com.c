@@ -7,9 +7,6 @@
 
 #define COM_MAGIC_START 'P'
 
-#define COM_PAYLOAD_SYSTEM_RESET  6
-
-
 static Peripheral_Descriptor_t dev[COM_ITH_NUMBER];
 
 static SemaphoreHandle_t packet_write_mutex;
@@ -35,7 +32,7 @@ static void com_parse_received_packet(void)
 {
   if((packet_read_header.dst == COM_BROADCAST) || (packet_read_header.dst == COM_ID))
   {
-    switch(packet_read_header.payload_id)
+    switch(packet_read_header.payload_type)
     {
       case COM_PAYLOAD_SYSTEM:
         //parse system payload
@@ -53,6 +50,17 @@ static void com_parse_received_packet(void)
             break;
         }
         break;        
+
+      default:
+        {
+          unsigned int parsed = com_read_hook(&packet_read_header, packet_read_payload);
+          if(!parsed)
+          {
+            com_print(COM_WARNING, "Payload type 0x%02X not implemented", packet_read_header.payload_type);
+          }
+        }
+        break;
+
     }
   }
 }
@@ -79,7 +87,7 @@ void com_read(void * p)
       crc = _crc_ccitt_update(crc,packet_read_header.payload_size);
       crc = _crc_ccitt_update(crc,packet_read_header.src);
       crc = _crc_ccitt_update(crc,packet_read_header.dst);
-      crc = _crc_ccitt_update(crc,packet_read_header.payload_id);
+      crc = _crc_ccitt_update(crc,packet_read_header.payload_type);
       if(crc == packet_read_header.header_crc)
       {
         uint16_t crc = 0xffff;
@@ -121,14 +129,16 @@ void com_write(void *p )
 {
   (void)p;
 
+  int32_t tickCount = 0;
   while(1)
   {
-    com_write_hook();
+    tickCount += (uint16_t)(xTaskGetTickCount() - ((uint16_t)tickCount));
+    com_write_hook(tickCount);
     vTaskDelay(COM_WRITE_COOL_TIME);
   }
 }
 
-uint8_t * com_request_write_buffer(uint8_t dest, uint8_t payload_id)
+uint8_t * com_request_write_buffer(uint8_t dest, uint8_t payload_type)
 {
   //Avoid data corruption when two task try to send a packet
   while(xSemaphoreTake(packet_write_mutex, portMAX_DELAY) != pdTRUE);
@@ -138,7 +148,7 @@ uint8_t * com_request_write_buffer(uint8_t dest, uint8_t payload_id)
   packet_write_header.payload_size = 0;
   packet_write_header.src = COM_ID;
   packet_write_header.dst = dest;
-  packet_write_header.payload_id = payload_id;
+  packet_write_header.payload_type = payload_type;
   packet_write_header.header_crc = 0xffff;
   packet_write_header.payload_crc = 0xffff;
 
@@ -155,7 +165,7 @@ void com_release_write_buffer(uint8_t size)
   packet_write_header.header_crc = _crc_ccitt_update(packet_write_header.header_crc,packet_write_header.payload_size);
   packet_write_header.header_crc = _crc_ccitt_update(packet_write_header.header_crc,packet_write_header.src);
   packet_write_header.header_crc = _crc_ccitt_update(packet_write_header.header_crc,packet_write_header.dst);
-  packet_write_header.header_crc = _crc_ccitt_update(packet_write_header.header_crc,packet_write_header.payload_id);
+  packet_write_header.header_crc = _crc_ccitt_update(packet_write_header.header_crc,packet_write_header.payload_type);
   
   int i;
   for(i = 0; i < packet_write_header.payload_size; i += 1)

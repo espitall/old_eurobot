@@ -1,2 +1,2 @@
 SRCS += asserv.c
-MODULES = position
+MODULES = position com

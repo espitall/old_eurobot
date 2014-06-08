@@ -48,31 +48,25 @@ uint32_t com_get_ith_hook(com_packet_header_t * header)
   return (1 << 0);
 }
 
-void com_write_hook(void)
+void com_write_hook(uint32_t tickCount)
 {
-  static int32_t tickCount = 0;
-  tickCount += (uint16_t)(xTaskGetTickCount() - ((uint16_t)tickCount));
   //com_print(COM_DEBUG, "speed l:%ld r:%ld", position_get_left_speed(), position_get_right_speed());
 
   //send asserv debug data
-  uint8_t * buf = com_request_write_buffer(COM_BROADCAST, COM_PAYLOAD_ASSERV);
-  buf[0] = COM_PAYLOAD_ASSERV_DEBUG_STREAM;
-  com_payload_asserv_debug_stream_t * stream = (com_payload_asserv_debug_stream_t *) (buf + 1); 
+  asserv_com_write_handler(tickCount);
+}
 
-  stream->timestamp = tickCount;
-  stream->dist_set_point = asserv_get_dist_set_point();
-  stream->dist_feedback = position_get_dist();
-  stream->dist_p = asserv_get_dist_p();
-  stream->dist_d = asserv_get_dist_d();
-  stream->dist_output = asserv_get_dist_output();
+unsigned int com_read_hook(com_packet_header_t * header, uint8_t * buf)
+{
+  (void)header;
+  (void)buf;
+  
+  if(asserv_com_read_handler(header, buf))
+  {
+    return 1;
+  }
 
-  stream->angu_set_point = asserv_get_angu_set_point();
-  stream->angu_feedback = position_get_angu();
-  stream->angu_d = asserv_get_angu_d();
-  stream->angu_output = asserv_get_angu_output();
-  stream->angu_output = asserv_get_angu_output();
-
-  com_release_write_buffer(sizeof(com_payload_asserv_debug_stream_t) + 1);
+  return 0;
 }
 
 int main(void)

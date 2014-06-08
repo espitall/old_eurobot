@@ -11,6 +11,7 @@ var express = require('express'),
     robotControlMod = require("./robotControl"),
     uiControlMod = require("./uiControl"),
     binary = require('binary'),
+    com = require('./com'),
     SerialPort = require("serialport").SerialPort;
 
 var app = express();
@@ -19,8 +20,8 @@ var robotControl = new robotControlMod.RobotControl();
 var uiControl = new uiControlMod.UiControl();
 
 process.on('uncaughtException', function(err) {
-  console.error(err.stack);
-  robotControl.send_ui("log",{src:"Serveur",lvl:4,msg:"err.stack"});
+  console.error(err.stack);  
+  com.log.send(robotControl, "ui", "error", '' + err);
 });
 
 

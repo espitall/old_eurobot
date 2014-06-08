@@ -71,6 +71,7 @@ var payloads = {
       }
 
       this.send(rctrl, addrstr(packet.source), lvl, ''+payload.msg);
+      return true;
     },
 
     send: function(rctrl, source, level, msg) {
@@ -89,7 +90,33 @@ var payloads = {
     type: 0x02,
 
     identifier: {
-      debug_stream: 0x00,
+      debug_stream:   0x00,
+      read_d_params:  0x01,
+      read_a_params:  0x02,
+      write_d_params: 0x03,
+      write_a_params: 0x04,
+    },
+
+    read_d_params: function(msg) {
+      var packet = {}
+      packet.payload = new Buffer(1);
+      packet.type = this.type;
+      packet.source = node_addr.ui;
+      packet.destination = node_addr[msg.destination];
+
+      packet.payload[0] = this.identifier.read_d_params;
+      return packet;
+    },
+
+    read_a_params: function(msg) {
+      var packet = {}
+      packet.payload = new Buffer(1);
+      packet.type = this.type;
+      packet.source = node_addr.ui;
+      packet.destination = node_addr[msg.destination];
+
+      packet.payload[0] = this.identifier.read_a_params;
+      return packet;
     },
 
     parse: function(rctrl, packet) {
@@ -114,8 +141,43 @@ var payloads = {
           .vars;
 
           rctrl.send_ui("asserv_stream", payload);
-          break;
+          return true;
+
+        case this.identifier.read_d_params:
+          var payload = binary.parse(packet.data)
+            .word8("identifier")
+            .word32ls("kp")
+            .word32ls("kd")
+            .word32ls("shift")
+            .word32ls("amax")
+            .word32ls("vmax")
+            .vars;
+
+          payload.type = "dist";
+          payload.source = addrstr(packet.source);
+
+          rctrl.send_ui("asserv_params", payload);
+          return true;
+
+        case this.identifier.read_a_params:
+          var payload = binary.parse(packet.data)
+            .word8("identifier")
+            .word32ls("kp")
+            .word32ls("kd")
+            .word32ls("shift")
+            .word32ls("amax")
+            .word32ls("vmax")
+            .vars;
+
+          payload.type = "angu";
+          payload.source = addrstr(packet.source);
+
+          rctrl.send_ui("asserv_params", payload);
+          return true;
+
       }
+
+      return false;
     }
   },
 };

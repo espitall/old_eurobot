@@ -1,6 +1,7 @@
 #ifndef ASSERV_H
 #define ASSERV_H
 
+#include <com/com.h>
 #include <stdint.h>
 
 void asserv_init(void);
@@ -21,5 +22,7 @@ int32_t asserv_get_angu_output(void);
 int32_t asserv_get_angu_p(void);
 int32_t asserv_get_angu_d(void);
 
+void asserv_com_write_handler(uint32_t tickCount);
+unsigned int asserv_com_read_handler(com_packet_header_t * header, uint8_t * buf);
 
 #endif// ASSERV_H

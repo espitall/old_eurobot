@@ -115,20 +115,20 @@
           <fieldset>
             <legend>Rampes</legend>
             <ul>
-              <li><label>Vmax :</label><input ng-model="commande.rampes.vmax_d"/></li>
-              <li><label>Amax :</label><input ng-model="commande.rampes.amax_d"/></li>
+              <li><label>Vmax :</label><input ng-model="commands.dist.vmax"/></li>
+              <li><label>Amax :</label><input ng-model="commands.dist.amax"/></li>
             </ul>
           </fieldset>
           <fieldset>
             <legend>PID</legend>
             <ul>
-              <li><label>Kp :</label><input ng-model="commande.rampes.vmax_d"/></li>
-              <li><label>Kd :</label><input ng-model="commande.rampes.amax_d"/></li>
-              <li><label>Shift :</label><input ng-model="commande.rampes.amax_d"/></li>
+              <li><label>Kp :</label><input ng-model="commands.dist.kp"/></li>
+              <li><label>Kd :</label><input ng-model="commands.dist.kd"/></li>
+              <li><label>Shift :</label><input ng-model="commands.dist.shift"/></li>
             </ul>
           </fieldset>
-          <button ng-click="write_param_d()" class="appliquer">Enreg.</button>
-          <button ng-click="read_param_d()" >Lire</button>
+          <button ng-click="write_d_params()" class="appliquer">Enreg.</button>
+          <button ng-click="read_d_params()" >Lire</button>
         </div>
       </div>
     </div>
@@ -243,6 +243,29 @@
         }
       ]' 
       ></chart>
+    </div>
+    <div class="inlinetop">
+      <div class="commandes">
+        <div class="inline">
+          <fieldset>
+            <legend>Rampes</legend>
+            <ul>
+              <li><label>Vmax :</label><input ng-model="commands.angu.vmax"/></li>
+              <li><label>Amax :</label><input ng-model="commands.angu.amax"/></li>
+            </ul>
+          </fieldset>
+          <fieldset>
+            <legend>PID</legend>
+            <ul>
+              <li><label>Kp :</label><input ng-model="commands.angu.kp"/></li>
+              <li><label>Kd :</label><input ng-model="commands.angu.kd"/></li>
+              <li><label>Shift :</label><input ng-model="commands.angu.shift"/></li>
+            </ul>
+          </fieldset>
+          <button ng-click="write_a_params()" class="appliquer">Enreg.</button>
+          <button ng-click="read_a_params()" >Lire</button>
+        </div>
+      </div>
     </div>
 
   </div>

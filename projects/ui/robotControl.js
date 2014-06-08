@@ -44,10 +44,13 @@ RobotControl.prototype.receive = function(msg) {
     }
   }
 
+  var parsed = false;
+
   if(payload != null) {
-    payload.parse(this, msg);
+    parsed = payload.parse(this, msg);
   }
-  else {
+
+  if(!parsed) {
     com.log.send(this, "ui", "error", "Unknown payload type: " + msg.type);
   }
 };
@@ -239,6 +242,7 @@ RobotControl.prototype.encode = function (packet) {
 
 RobotControl.prototype.sendToBot = function(data) {
   var message = this.encode(data);
+  console.log("send" + message);
   if(message) {
     this.emit("sendToBot",message);
   }

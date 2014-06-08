@@ -42,8 +42,6 @@ plasteamUI.directive("chart",["socket", function(socket, Graph) {
       div.style.height = baseHeight + 'px';
       div.style.width = baseWidth + 'px';
 
-      console.log(chart.width);
-
       socket.on("asserv_stream", function (msg) {
         var dps = data[0].dataPoints;
 

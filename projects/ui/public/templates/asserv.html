@@ -1,122 +1,249 @@
 <div>
-  <div>
-    <h2>Graph</h2>
-    <chart title="PID: distance" 
-    axisx='{
-      "title": "temps (ms)",
-      "titleFontSize": 10,
-      "labelFontSize": 10,
-      "titleFontWeight": "bold"
-    }'
+  <div class="graph">
+    <h2>Distance</h2>
+    <div class="inline">
+      <chart title="Vitesse" 
+      axisx='{
+        "title": "temps (ms)",
+        "titleFontSize": 10,
+        "labelFontSize": 10,
+        "titleFontWeight": "bold"
+      }'
 
-    axisy='{
-      "title": "distance",
-      "titleFontSize": 10,
-      "labelFontSize": 10,
-      "titleFontWeight": "bold"
-    }'
+      axisy='{
+        "title": "position",
+        "titleFontSize": 10,
+        "labelFontSize": 10,
+        "titleFontWeight": "bold"
+      }'
 
-    axisy2='{
-      "title": "sortie",
-      "titleFontSize": 10,
-      "labelFontSize": 10,
-      "titleFontWeight": "bold",
-      "minimum": -2000,
-      "maximum": 2000
-    }'
+      axisy2='{
+        "title": "vitesse",
+        "titleFontSize": 10,
+        "labelFontSize": 10,
+        "titleFontWeight": "bold"
+      }'
 
-    series='
-    [
-      {
-        "name": "Consigne", 
-        "source": "dist_set_point", 
-        "type": "line"
-      },
-      {
-        "name": "Retour", 
-        "source": "dist_feedback", 
-        "type": "line"
-      },
-      {
-        "name": "Proportionnel", 
-        "source": "dist_p", 
-        "type": "line",
-        "axisYType": "secondary"
-      },
-      {
-        "name": "Derive", 
-        "source": "dist_d", 
-        "type": "line",
-        "axisYType": "secondary"
-      },
-      {
-        "name": "Sortie", 
-        "source": "dist_output", 
-        "type": "line",
-        "axisYType": "secondary"
-      }
-    ]' 
-    ></chart>
+      series='
+      [
+        {
+          "name": "Ordre", 
+          "source": "dist_set_point", 
+          "type": "line"
+        },
+        {
+          "name": "Sortie", 
+          "source": "dist_pid_set_point", 
+          "type": "line"
+        },
+        {
+          "name": "Consigne vitesse", 
+          "source": "dist_speed_set_point", 
+          "type": "line",
+          "axisYType": "secondary"
+        },
+        {
+          "name": "Vitesse", 
+          "source": "dist_speed", 
+          "type": "line",
+          "axisYType": "secondary"
+        }
+      ]' 
+      ></chart>
+    </div>
+    <div class="inline">
+      <chart title="PID" 
+      axisx='{
+        "title": "temps (ms)",
+        "titleFontSize": 10,
+        "labelFontSize": 10,
+        "titleFontWeight": "bold"
+      }'
+
+      axisy='{
+        "title": "position",
+        "titleFontSize": 10,
+        "labelFontSize": 10,
+        "titleFontWeight": "bold"
+      }'
+
+      axisy2='{
+        "title": "sortie",
+        "titleFontSize": 10,
+        "labelFontSize": 10,
+        "titleFontWeight": "bold",
+        "minimum": -2000,
+        "maximum": 2000
+      }'
+
+      series='
+      [
+        {
+          "name": "Consigne", 
+          "source": "dist_pid_set_point", 
+          "type": "line"
+        },
+        {
+          "name": "Retour", 
+          "source": "dist_feedback", 
+          "type": "line"
+        },
+        {
+          "name": "Proportionnel", 
+          "source": "dist_p", 
+          "type": "line",
+          "axisYType": "secondary"
+        },
+        {
+          "name": "Derive", 
+          "source": "dist_d", 
+          "type": "line",
+          "axisYType": "secondary"
+        },
+        {
+          "name": "Sortie", 
+          "source": "dist_output", 
+          "type": "line",
+          "axisYType": "secondary"
+        }
+      ]' 
+      ></chart>
+    </div>
+    <div class="inlinetop">
+      <div class="commandes">
+        <div class="inline">
+          <fieldset>
+            <legend>Rampes</legend>
+            <ul>
+              <li><label>Vmax :</label><input ng-model="commande.rampes.vmax_d"/></li>
+              <li><label>Amax :</label><input ng-model="commande.rampes.amax_d"/></li>
+            </ul>
+          </fieldset>
+          <fieldset>
+            <legend>PID</legend>
+            <ul>
+              <li><label>Kp :</label><input ng-model="commande.rampes.vmax_d"/></li>
+              <li><label>Kd :</label><input ng-model="commande.rampes.amax_d"/></li>
+              <li><label>Shift :</label><input ng-model="commande.rampes.amax_d"/></li>
+            </ul>
+          </fieldset>
+          <button ng-click="write_param_d()" class="appliquer">Enreg.</button>
+          <button ng-click="read_param_d()" >Lire</button>
+        </div>
+      </div>
+    </div>
   </div>
+
   <div>
-    <p>az</p>
+    <h2>Angle</h2>
+    <div class="inline">
+      <chart title="Vitesse" 
+      axisx='{
+        "title": "temps (ms)",
+        "titleFontSize": 10,
+        "labelFontSize": 10,
+        "titleFontWeight": "bold"
+      }'
 
-    <chart title="PID: angle" 
-    axisx='{
-      "title": "temps (ms)",
-      "titleFontSize": 10,
-      "labelFontSize": 10,
-      "titleFontWeight": "bold"
-    }'
+      axisy='{
+        "title": "position",
+        "titleFontSize": 10,
+        "labelFontSize": 10,
+        "titleFontWeight": "bold"
+      }'
 
-    axisy='{
-      "title": "angle",
-      "titleFontSize": 10,
-      "labelFontSize": 10,
-      "titleFontWeight": "bold"
-    }'
+      axisy2='{
+        "title": "vitesse",
+        "titleFontSize": 10,
+        "labelFontSize": 10,
+        "titleFontWeight": "bold"
+      }'
 
-    axisy2='{
-      "title": "sortie",
-      "titleFontSize": 10,
-      "labelFontSize": 10,
-      "titleFontWeight": "bold",
-      "minimum": -2000,
-      "maximum": 2000
-    }'
+      series='
+      [
+        {
+          "name": "Ordre", 
+          "source": "angu_set_point", 
+          "type": "line"
+        },
+        {
+          "name": "Sortie", 
+          "source": "angu_pid_set_point", 
+          "type": "line"
+        },
+        {
+          "name": "Consigne vitesse", 
+          "source": "angu_speed_set_point", 
+          "type": "line",
+          "axisYType": "secondary"
+        },
+        {
+          "name": "Vitesse", 
+          "source": "angu_speed", 
+          "type": "line",
+          "axisYType": "secondary"
+        }
+      ]' 
+      ></chart>
+    </div>
+    <div class="inline">
+      <chart title="PID" 
+      axisx='{
+        "title": "temps (ms)",
+        "titleFontSize": 10,
+        "labelFontSize": 10,
+        "titleFontWeight": "bold"
+      }'
 
-    series='
-    [
-      {
-        "name": "Consigne", 
-        "source": "angu_set_point", 
-        "type": "line"
-      },
-      {
-        "name": "Retour", 
-        "source": "angu_feedback", 
-        "type": "line"
-      },
-      {
-        "name": "Proportionnel", 
-        "source": "angu_a", 
-        "type": "line",
-        "axisYType": "secondary"
-      },
-      {
-        "name": "Derive", 
-        "source": "angu_d", 
-        "type": "line",
-        "axisYType": "secondary"
-      },
-      {
-        "name": "Sortie", 
-        "source": "angu_output", 
-        "type": "line",
-        "axisYType": "secondary"
-      }
-    ]' 
-    ></chart>
+      axisy='{
+        "title": "position",
+        "titleFontSize": 10,
+        "labelFontSize": 10,
+        "titleFontWeight": "bold"
+      }'
+
+      axisy2='{
+        "title": "sortie",
+        "titleFontSize": 10,
+        "labelFontSize": 10,
+        "titleFontWeight": "bold",
+        "minimum": -2000,
+        "maximum": 2000
+      }'
+
+      series='
+      [
+        {
+          "name": "Consigne", 
+          "source": "angu_pid_set_point", 
+          "type": "line"
+        },
+        {
+          "name": "Retour", 
+          "source": "angu_feedback", 
+          "type": "line"
+        },
+        {
+          "name": "Proportionnel", 
+          "source": "angu_p", 
+          "type": "line",
+          "axisYType": "secondary"
+        },
+        {
+          "name": "Derive", 
+          "source": "angu_d", 
+          "type": "line",
+          "axisYType": "secondary"
+        },
+        {
+          "name": "Sortie", 
+          "source": "angu_output", 
+          "type": "line",
+          "axisYType": "secondary"
+        }
+      ]' 
+      ></chart>
+    </div>
 
   </div>
 </div>

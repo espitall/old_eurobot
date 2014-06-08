@@ -1,7 +1,7 @@
 var events = require('events'),
     sys = require('sys');
 
-var ppp = require("./pppPayloads");
+var com = require("./com");
 
 
 function UiControl() {
@@ -11,60 +11,8 @@ function UiControl() {
 sys.inherits(UiControl, events.EventEmitter);
 
 UiControl.prototype.receive = function(message) {
-    switch (message.id) {
-
-        case "reset":
-            this.sendToBot({
-                "type":ppp.PAYLOAD_TYPE.SYSTEM,
-                "destination":ppp.PAYLOAD_ADDRESS.BROADCAST,
-                "payloadData":{
-                    "identifiant" : ppp.PAYLOAD_SYSTEM_ID.reset,
-                    "sens":0,
-                    "donnee" : ""
-                }
-            });
-        break;
-
-        case "stop":
-            this.sendToBot({
-                "type":ppp.PAYLOAD_TYPE.SYSTEM,
-                "destination":ppp.PAYLOAD_ADDRESS.BROADCAST,
-                "payloadData":{
-                    "identifiant" : ppp.PAYLOAD_SYSTEM_ID.stop,
-                    "sens":0,
-                    "donnee" : ""
-                }
-            });
-        break;
-
-
-        /*
-        case "name":
-            this.sendToBot({"type":"bonjour"});
-        break;
-        case "asserv":
-            this.gestionCommandes(message);
-        break;
-        case "asserv.stream":
-            this.gestionStream(message.carte,message.etat);
-        break;
-        case "strat":
-            this.gestionStrat(message.data);
-        break;
-        case "commandes":
-            this.gestionCommandesPosition(message.data);
-        break;
-        case "icarus":
-            this.gestionIcarus(message.data);
-        break;
-        case "test":
-            this.sendToBot({"type":"bonjour"});
-        break;
-        */
-        default:
-        break;
-
-    }
+  console.log(message);
+  this.sendToBot(com[message.payload][message.func](message));
 };
 
 UiControl.prototype.gestionCommandesPosition = function(message){
@@ -320,9 +268,4 @@ UiControl.prototype.sendToBot = function(data) {
   this.emit("sendToBot",data);
 };
 
-
-
-
-
-
-exports.UiControl = UiControl ;
+exports.UiControl = UiControl;

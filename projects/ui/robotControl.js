@@ -214,65 +214,7 @@ RobotControl.prototype.encodePayloadAddanc = function(identifiant,donnee) {
   return payload;
 };
 
-RobotControl.prototype.encode = function (data) {
-  //console.log(data);
-  var paquet = {
-    source : ppp.PAYLOAD_ADDRESS.UI,
-    destination : data.destination,
-    type : data.type
-  };
-
-  switch (data.type) {
-    case ppp.PAYLOAD_TYPE.SYSTEM :
-      paquet.data = this.encodePayloadSystem(
-        data.payloadData.identifiant,
-        data.payloadData.sens,
-        data.payloadData.donnee
-      );
-    break;
-
-
-    case ppp.PAYLOAD_ADDANC.SENSOR.ID_PAYLOAD:
-      paquet.data = this.encodePayloadAddanc(
-        data.payloadData.id,
-        data.payloadData.donnee
-      );
-
-    break;
-
-    case ppp.PAYLOAD_ADDANC.ICARUS.ID_PAYLOAD:
-      paquet.data=new Buffer(1 + data.payloadData.donnee.length);
-      paquet.data[0]=data.payloadData.id;
-
-      if(data.payloadData.donnee.length > 0){
-        data.payloadData.donnee.copy(paquet.data,1);
-      }
-      //console.log("==========*",paquet.data,data.payloadData.donnee.length);
-    break;
-
-    case ppp.PAYLOAD_ADDANC.ASSERV.ID_PAYLOAD :
-      paquet.data=new Buffer(2 + data.payloadData.donnee.length);
-      paquet.data[0]=data.payloadData.id;
-      paquet.data[1]=data.payloadData.flag;
-
-      if(data.payloadData.donnee.length > 0){
-        data.payloadData.donnee.copy(paquet.data,2);
-      }
-
-    break;
-    case ppp.PAYLOAD_ADDANC.COMMANDES.ID_PAYLOAD :
-      paquet.data=data.payloadData.donnee;
-    break;
-
-    case "bonjour":
-
-      this.bonjour();
-    break;
-
-    default:
-    break;
-
-  }
+RobotControl.prototype.encode = function (packet) {
 
   // P (1)
   // size (2)
@@ -282,21 +224,17 @@ RobotControl.prototype.encode = function (data) {
   // headerCRC (2)
   // data (?)
   // data CRC (2)
-  if(typeof paquet.data !== "undefined") {
-    var paquetHeader = new Buffer(9);
+  var packetHeader = new Buffer(9);
+  console.log(packet);
 
-    paquetHeader.write("P",0);
-    paquetHeader.writeUInt8(paquet.data.length,1);
-    paquetHeader.writeUInt8(paquet.source,2);
-    paquetHeader.writeUInt8(paquet.destination,3);
-    paquetHeader.writeUInt8(paquet.type,4);
-    paquetHeader.writeUInt16LE(this.calculCrc(paquetHeader.slice(0,5)),5);
-    paquetHeader.writeUInt16LE(this.calculCrc(paquet.data),7);
-    return  Buffer.concat([paquetHeader,paquet.data]);
-
-  } else {
-    return ;
-  }
+  packetHeader.write("P",0);
+  packetHeader.writeUInt8(packet.payload.length,1);
+  packetHeader.writeUInt8(packet.source,2);
+  packetHeader.writeUInt8(packet.destination,3);
+  packetHeader.writeUInt8(packet.type,4);
+  packetHeader.writeUInt16LE(this.calculCrc(packetHeader.slice(0,5)),5);
+  packetHeader.writeUInt16LE(this.calculCrc(packet.payload),7);
+  return  Buffer.concat([packetHeader, packet.payload]);
 };
 
 RobotControl.prototype.sendToBot = function(data) {

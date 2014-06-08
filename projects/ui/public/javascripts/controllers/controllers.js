@@ -36,11 +36,11 @@ function LogCtrl($scope,Logger) {
 
 function HeadCtrl($scope,socket) {
 	$scope.reset = function(){
-		socket.emit("command",{"id":"reset"});
+		socket.emit("command",{payload: "system", func: "reset", destination: "broadcast"});
 	};
 
 	$scope.stop = function(){
-		socket.emit("command",{"id":"stop"});
+		socket.emit("command",{payload: "system", func: "stop", destination: "broadcast"});
 	};
 }
 

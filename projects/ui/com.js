@@ -5,6 +5,8 @@ var binary = require('binary');
 var node_addr = {
   sbrain: 0x00,
   pbrain: 0x01,
+  ui: 0x02,
+  broadcast: 0xff,
 }
 
 var addrstr = function(addr) {
@@ -18,6 +20,28 @@ var addrstr = function(addr) {
 var payloads = {
   system: {
     type: 0x00,
+
+    stop: function(msg) {
+      var packet = {}
+      packet.payload = new Buffer(1);
+      packet.type = this.type;
+      packet.source = node_addr.ui;
+      packet.destination = node_addr[msg.destination];
+
+      packet.payload[0] = 0x05;
+      return packet;
+    },
+
+    reset: function(msg) {
+      var packet = {}
+      packet.payload = new Buffer(1);
+      packet.type = this.type;
+      packet.source = node_addr.ui;
+      packet.destination = node_addr[msg.destination];
+
+      packet.payload[0] = 0x06;
+      return packet;
+    }
   },
 
   log: {

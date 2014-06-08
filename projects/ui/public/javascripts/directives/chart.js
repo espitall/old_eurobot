@@ -1,6 +1,7 @@
 plasteamUI.directive("chart",["socket", function(socket, Graph) {
   var uniqueId = 1;
   var baseHeight = 300;
+  var baseWidth = 445;
 
   return {
     restrict: "EA",
@@ -19,8 +20,8 @@ plasteamUI.directive("chart",["socket", function(socket, Graph) {
 
       var chart = new CanvasJS.Chart(div.id, {
         legend: {
-          horizontalAlign: "right",
-          verticalAlign: "center",
+          horizontalAlign: "center",
+          verticalAlign: "bottom",
         },
         title :{
           text: attrs.title,
@@ -34,10 +35,12 @@ plasteamUI.directive("chart",["socket", function(socket, Graph) {
         axisY2: JSON.parse(attrs.axisy2 || '{}'),
         data: data,
         height: baseHeight,
+        width: baseWidth,
       });
 
       chart.render();
       div.style.height = baseHeight + 'px';
+      div.style.width = baseWidth + 'px';
 
       console.log(chart.width);
 

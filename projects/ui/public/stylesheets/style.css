@@ -1,5 +1,5 @@
 
-#wrapper {width:1000px;margin: 2px auto;}
+#wrapper {width: 1200px;margin: 2px auto;}
 
 header {
 	background:#333;
@@ -46,7 +46,7 @@ position:relative;
 	border-radius: 0 2px 2px 2px;
 	box-shadow: 1px 0 1px #EEE;
 	border-bottom: 1px solid #ECECEC;
-	width:715px;
+	width: 1175px;
 }
 
 #main h2 {
@@ -91,33 +91,12 @@ color: #fff;
 	display: block;
 }
 
-
-.largegraph {
-	width:100%;
-	height:380px;
-}
-
 .graph {
-	width:50%;
-	height:185px;
+  
 }
-.tailleAuto {}
 
-.largegraph , .graph {
-	float:left;
-}
-.divgraph {
-	border:1px solid #ddd;
-	/*box-shadow: 0px 0px 20px rgba(204, 204, 204, 0.13) inset;*/
-	/*width:95%;
-	height:90%;*/
-	width: 600px;
-	height:350px;
-	display: block;
-}
 
 .commandes {
-	/*margin: 0 100px 15px 0px;*/
 }
 
 .commandes label {
@@ -128,7 +107,7 @@ color: #fff;
 	/*font-weight: bold;*/
 }
 .commandes input {
-	width:100px;
+	width: 60px;
 	margin: 4px 0 ;
 }
 .commandes input[type="checkbox"] {
@@ -235,6 +214,12 @@ top:3px
 	}
 
 .inline {
+	display: inline-block;
+	margin: 0 10px;
+}
+
+.inlinetop {
+  vertical-align: top;
 	display: inline-block;
 	margin: 0 10px;
 }

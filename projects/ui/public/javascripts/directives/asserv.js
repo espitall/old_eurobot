@@ -25,8 +25,18 @@ plasteamUI.directive("asserv",["socket",function(socket, Graph) {
         socket.emit("command",{payload: "asserv", func: "read_d_params", destination: $attrs.board});
       }
 
+      $scope.write_d_params = function(argument) {
+        socket.emit("command",{payload: "asserv", func: "write_d_params", destination: $attrs.board, args: $scope.commands.dist});
+        $scope.read_d_params(null);
+      }
+
       $scope.read_a_params = function(argument) {
         socket.emit("command",{payload: "asserv", func: "read_a_params", destination: $attrs.board});
+      }
+
+      $scope.write_a_params = function(argument) {
+        socket.emit("command",{payload: "asserv", func: "write_a_params", destination: $attrs.board, args: $scope.commands.angu});
+        $scope.read_a_params(null);
       }
 
       $scope.read_d_params(null);

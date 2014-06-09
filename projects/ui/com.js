@@ -119,6 +119,40 @@ var payloads = {
       return packet;
     },
 
+    write_d_params: function(msg) {
+      var packet = {}
+      packet.payload = new Buffer(21);
+      packet.type = this.type;
+      packet.source = node_addr.ui;
+      packet.destination = node_addr[msg.destination];
+
+      packet.payload.writeUInt8(this.identifier.write_d_params, 0);
+      packet.payload.writeUInt32LE(Math.round(msg.args.kp), 1);
+      packet.payload.writeUInt32LE(Math.round(msg.args.kd), 5);
+      packet.payload.writeUInt32LE(Math.round(msg.args.shift), 9);
+      packet.payload.writeUInt32LE(Math.round(msg.args.vmax), 13);
+      packet.payload.writeUInt32LE(Math.round(msg.args.amax), 17);
+
+      return packet;
+    },
+
+    write_a_params: function(msg) {
+      var packet = {}
+      packet.payload = new Buffer(21);
+      packet.type = this.type;
+      packet.source = node_addr.ui;
+      packet.destination = node_addr[msg.destination];
+
+      packet.payload.writeUInt8(this.identifier.write_a_params, 0);
+      packet.payload.writeUInt32LE(Math.round(msg.args.kp), 1);
+      packet.payload.writeUInt32LE(Math.round(msg.args.kd), 5);
+      packet.payload.writeUInt32LE(Math.round(msg.args.shift), 9);
+      packet.payload.writeUInt32LE(Math.round(msg.args.vmax), 13);
+      packet.payload.writeUInt32LE(Math.round(msg.args.amax), 17);
+
+      return packet;
+    },
+
     parse: function(rctrl, packet) {
       switch(packet.data[0]) {
         case this.identifier.debug_stream:

@@ -276,6 +276,28 @@ unsigned int asserv_com_read_handler(com_packet_header_t * header, uint8_t * buf
         }
         break;
 
+      case ASSERV_PAYLOAD_WRITE_D_PARAMS:
+        {
+          asserv_payload_params_t * st = (asserv_payload_params_t *) (buf + 1); 
+          dist_pid_kp = st->kp;
+          dist_pid_kd = st->kd;
+          dist_pid_shift_out = st->shift;
+          dist_amax = st->amax;
+          dist_vmax = st->vmax;
+        }
+        break;
+
+      case ASSERV_PAYLOAD_WRITE_A_PARAMS:
+        {
+          asserv_payload_params_t * st = (asserv_payload_params_t *) (buf + 1); 
+          angu_pid_kp = st->kp;
+          angu_pid_kd = st->kd;
+          angu_pid_shift_out = st->shift;
+          angu_amax = st->amax;
+          angu_vmax = st->vmax;
+        }
+        break;
+
       default:
         com_print(COM_ERROR, "Asserv payload id 0x%02X not implemented", buf[0]);
         break;

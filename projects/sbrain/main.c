@@ -11,8 +11,23 @@ void led_heartbeat(void * p)
 {
   (void)p;
 
-  com_print(COM_INFO, "Boot register: 0x%02X", RST.STATUS);
-  RST.STATUS = 0;
+  //handle reset
+  com_print_lvl_t lvl = COM_ERROR;
+  if((RST.STATUS & RST_PDIRF_bm) || (RST.STATUS == 0))
+  {
+    lvl = COM_INFO;
+  }
+  com_print(lvl, "Boot: %s%s%s%s%s%s%s%s", 
+            (RST.STATUS & RST_SDRF_bm) ? "spike " : "",
+            (RST.STATUS & RST_SRF_bm) ? "softreg " : "",
+            (RST.STATUS & RST_PDIRF_bm) ? "pdi " : "",
+            (RST.STATUS & RST_WDRF_bm) ? "watchdog " : "",
+            (RST.STATUS & RST_BORF_bm) ? "brown-out " : "",
+            (RST.STATUS & RST_EXTRF_bm) ? "pin " : "",
+            (RST.STATUS & RST_PORF_bm) ? "power-on " : "",
+            ((RST.STATUS & 0xff) == 0) ? "soft" : ""
+            );
+  RST.STATUS = 0xff;
 
   while(1) 
   {

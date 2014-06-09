@@ -6,28 +6,32 @@
 static int32_t left_mot_set_point;
 static int32_t right_mot_set_point;
 
-static int32_t angu_set_point;
+
 static int32_t dist_set_point;
+static int32_t dist_speed_set_point;
+static int32_t dist_pid_set_point;
+static int32_t dist_pid_shift_out;
+static int32_t dist_pid_kp;
+static int32_t dist_pid_kd;
+static int32_t dist_pid_output;
+static int32_t dist_pid_e;
+static int32_t dist_pid_p;
+static int32_t dist_pid_d;
+static int32_t dist_vmax;
+static int32_t dist_amax;
 
-int32_t dist_pid_shift_out;
-int32_t dist_pid_kp;
-int32_t dist_pid_kd;
-int32_t dist_pid_output;
-int32_t dist_pid_e;
-int32_t dist_pid_p;
-int32_t dist_pid_d;
-int32_t dist_vmax;
-int32_t dist_amax;
-
-int32_t angu_pid_shift_out;
-int32_t angu_pid_kp;
-int32_t angu_pid_kd;
-int32_t angu_pid_output;
-int32_t angu_pid_e;
-int32_t angu_pid_p;
-int32_t angu_pid_d;
-int32_t angu_vmax;
-int32_t angu_amax;
+static int32_t angu_set_point;
+static int32_t angu_speed_set_point;
+static int32_t angu_pid_set_point;
+static int32_t angu_pid_shift_out;
+static int32_t angu_pid_kp;
+static int32_t angu_pid_kd;
+static int32_t angu_pid_output;
+static int32_t angu_pid_e;
+static int32_t angu_pid_p;
+static int32_t angu_pid_d;
+static int32_t angu_vmax;
+static int32_t angu_amax;
 
 
 void asserv_init(void)
@@ -61,8 +65,17 @@ void asserv_init(void)
 
 void asserv_update(void)
 {
-  int32_t pid_d = dist_set_point - position_get_dist();
-  int32_t pid_a = angu_set_point - position_get_angu();
+  //speed limitation
+  dist_speed_set_point = 0;
+  dist_pid_set_point = dist_set_point;
+
+  angu_speed_set_point = 0;
+  angu_pid_set_point = angu_set_point;
+
+
+  //PID
+  int32_t pid_d = dist_pid_set_point - position_get_dist();
+  int32_t pid_a = angu_pid_set_point - position_get_angu();
 
   dist_pid_p = dist_pid_kp * pid_d;
   dist_pid_d = dist_pid_kd * (pid_d - dist_pid_e);
@@ -159,6 +172,32 @@ int32_t asserv_get_dist_d(void)
 	return value;
 }
 
+int32_t asserv_get_dist_speed_set_point(void)
+{
+	int32_t value;
+
+  taskENTER_CRITICAL();
+  {
+    value = dist_speed_set_point;
+  }
+  taskEXIT_CRITICAL();
+
+	return value;
+}
+
+int32_t asserv_get_dist_pid_set_point(void)
+{
+	int32_t value;
+
+  taskENTER_CRITICAL();
+  {
+    value = dist_pid_set_point;
+  }
+  taskEXIT_CRITICAL();
+
+	return value;
+}
+
 void asserv_set_angu_set_point(int32_t sp)
 {
   taskENTER_CRITICAL();
@@ -207,6 +246,32 @@ int32_t asserv_get_angu_d(void)
 	return value;
 }
 
+int32_t asserv_get_angu_speed_set_point(void)
+{
+	int32_t value;
+
+  taskENTER_CRITICAL();
+  {
+    value = angu_speed_set_point;
+  }
+  taskEXIT_CRITICAL();
+
+	return value;
+}
+
+int32_t asserv_get_angu_pid_set_point(void)
+{
+	int32_t value;
+
+  taskENTER_CRITICAL();
+  {
+    value = angu_pid_set_point;
+  }
+  taskEXIT_CRITICAL();
+
+	return value;
+}
+
 int32_t asserv_get_angu_p(void)
 {
 	int32_t value;
@@ -227,13 +292,20 @@ void asserv_com_write_handler(uint32_t tickCount)
   asserv_payload_debug_stream_t * stream = (asserv_payload_debug_stream_t *) (buf + 1); 
 
   stream->timestamp = tickCount;
+
   stream->dist_set_point = asserv_get_dist_set_point();
+  stream->dist_pid_set_point = asserv_get_dist_pid_set_point();
+  stream->dist_speed_set_point = asserv_get_dist_speed_set_point();
+  stream->dist_speed_feedback = position_get_dist_speed();
   stream->dist_feedback = position_get_dist();
   stream->dist_p = asserv_get_dist_p();
   stream->dist_d = asserv_get_dist_d();
   stream->dist_output = asserv_get_dist_output();
 
   stream->angu_set_point = asserv_get_angu_set_point();
+  stream->angu_pid_set_point = asserv_get_angu_pid_set_point();
+  stream->angu_speed_set_point = asserv_get_angu_speed_set_point();
+  stream->angu_speed_feedback = position_get_angu_speed();
   stream->angu_feedback = position_get_angu();
   stream->angu_d = asserv_get_angu_d();
   stream->angu_output = asserv_get_angu_output();

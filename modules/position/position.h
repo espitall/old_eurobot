@@ -12,4 +12,7 @@ int32_t position_get_right_speed(void);
 int32_t position_get_dist(void);
 int32_t position_get_angu(void);
 
+int32_t position_get_dist_speed(void);
+int32_t position_get_angu_speed(void);
+
 #endif// POSITION_H

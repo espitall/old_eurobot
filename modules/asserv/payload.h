@@ -13,12 +13,18 @@ typedef struct {
   uint32_t timestamp;
   
   int32_t dist_set_point;
+  int32_t dist_pid_set_point;
+  int32_t dist_speed_set_point;
+  int32_t dist_speed_feedback;
   int32_t dist_feedback;
   int32_t dist_p;
   int32_t dist_d;
   int32_t dist_output;
 
   int32_t angu_set_point;
+  int32_t angu_pid_set_point;
+  int32_t angu_speed_set_point;
+  int32_t angu_speed_feedback;
   int32_t angu_feedback;
   int32_t angu_p;
   int32_t angu_d;

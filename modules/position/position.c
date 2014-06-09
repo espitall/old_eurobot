@@ -12,6 +12,8 @@ static int32_t pos_angu;
 
 static int32_t spd_left_tick;
 static int32_t spd_right_tick;
+static int32_t spd_dist;
+static int32_t spd_angu;
 
 void position_init(void)
 {
@@ -33,6 +35,9 @@ void position_update(void)
 
   pos_dist = pos_right_tick + pos_left_tick;
   pos_angu = pos_right_tick - pos_left_tick;
+
+  spd_dist = spd_right_tick + spd_left_tick;
+  spd_angu = spd_right_tick - spd_left_tick;
 }
 
 int32_t position_get_right_speed(void)
@@ -65,6 +70,32 @@ int32_t position_get_angu(void)
   taskENTER_CRITICAL();
   {
     value = pos_angu;
+  }
+  taskEXIT_CRITICAL();
+
+	return value;
+}
+
+int32_t position_get_dist_speed(void)
+{
+	int32_t value;
+
+  taskENTER_CRITICAL();
+  {
+    value = spd_dist;
+  }
+  taskEXIT_CRITICAL();
+
+	return value;
+}
+
+int32_t position_get_angu_speed(void)
+{
+	int32_t value;
+
+  taskENTER_CRITICAL();
+  {
+    value = spd_angu;
   }
   taskEXIT_CRITICAL();
 

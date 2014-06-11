@@ -6,6 +6,8 @@
 void position_init(void);
 void position_update(void);
 
+int32_t position_get_left(void);
+int32_t position_get_right(void);
 int32_t position_get_left_speed(void);
 int32_t position_get_right_speed(void);
 
@@ -14,5 +16,7 @@ int32_t position_get_angu(void);
 
 int32_t position_get_dist_speed(void);
 int32_t position_get_angu_speed(void);
+
+int32_t position_from_cm(double cm);
 
 #endif// POSITION_H

@@ -43,18 +43,19 @@ void asserv_init(void)
   right_mot_set_point = 0;
 
   dist_pid_shift_out = 14;
-  dist_pid_kp = 210;
-  dist_pid_kd = 30;
-  dist_amax = 42;
-  dist_vmax = 24;
+  dist_pid_kp = 400;
+  dist_pid_kd = 1000;
+  dist_amax = 150;
+  dist_vmax = 5000;
   dist_pid_e = 0;
   dist_pid_p = 0;
   dist_pid_d = 0;
   dist_pid_output = 0;
+  dist_speed_set_point = 0;
   
   angu_pid_shift_out = 14;
-  angu_pid_kp = 150;
-  angu_pid_kd = 0;
+  angu_pid_kp = 200;
+  angu_pid_kd = 500;
   angu_amax = 10;
   angu_vmax = 5;
   angu_pid_e = 0;
@@ -66,8 +67,41 @@ void asserv_init(void)
 void asserv_update(void)
 {
   //speed limitation
-  dist_speed_set_point = 0;
-  dist_pid_set_point = dist_set_point;
+  if(dist_speed_set_point > 0)
+  {
+    if((dist_speed_set_point * dist_speed_set_point) / (2 * dist_amax) + dist_pid_set_point < dist_set_point)
+    {
+      if(dist_speed_set_point < dist_vmax)
+      {
+        dist_speed_set_point += dist_amax;
+      }
+    }
+    else
+    {
+      if(dist_speed_set_point > -dist_vmax)
+      {
+        dist_speed_set_point -= dist_amax;
+      }
+    }
+  }
+  else
+  {
+    if(-(dist_speed_set_point * dist_speed_set_point) / (2 * dist_amax) + dist_pid_set_point < dist_set_point)
+    {
+      if(dist_speed_set_point < dist_vmax)
+      {
+        dist_speed_set_point += dist_amax;
+      }
+    }
+    else
+    {
+      if(dist_speed_set_point > -dist_vmax)
+      {
+        dist_speed_set_point -= dist_amax;
+      }
+    }
+  }
+  dist_pid_set_point += dist_speed_set_point;
 
   angu_speed_set_point = 0;
   angu_pid_set_point = angu_set_point;

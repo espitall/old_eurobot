@@ -50,6 +50,17 @@ int32_t position_get_left_speed(void)
   return spd_left_tick;
 }
 
+
+int32_t position_get_right(void)
+{
+  return pos_right_tick;
+}
+
+int32_t position_get_left(void)
+{
+  return pos_left_tick;
+}
+
 int32_t position_get_dist(void)
 {
 	int32_t value;
@@ -100,4 +111,9 @@ int32_t position_get_angu_speed(void)
   taskEXIT_CRITICAL();
 
 	return value;
+}
+
+int32_t position_from_cm(double cm)
+{
+  return POSITION_TICK_PER_CM * cm;
 }

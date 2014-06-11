@@ -29,15 +29,19 @@ void led_heartbeat(void * p)
             );
   RST.STATUS = 0xff;
 
+  vTaskDelay(3000);
   while(1) 
   {
-    PORTQ.OUTTGL = (1 << 3);
-    vTaskDelay(2500);
-    asserv_set_dist_set_point(30000);
+    PORTQ.OUTSET = (1 << 3);
+    PORTQ.OUTCLR = (1 << 2);
+    asserv_set_dist_set_point(position_from_cm(33.5 * 3));
+    vTaskDelay(10000);
 
-    PORTQ.OUTTGL = (1 << 3);
-    vTaskDelay(3000);
-    asserv_set_dist_set_point(-30000);
+
+    PORTQ.OUTSET = (1 << 2);
+    PORTQ.OUTCLR = (1 << 3);
+    asserv_set_dist_set_point(position_from_cm(-33.5));
+    vTaskDelay(10000);
   }
 }
 
@@ -65,7 +69,7 @@ uint32_t com_get_ith_hook(com_packet_header_t * header)
 
 void com_write_hook(uint32_t tickCount)
 {
-  //com_print(COM_DEBUG, "speed l:%ld r:%ld", position_get_left_speed(), position_get_right_speed());
+  //com_print(COM_DEBUG, "speed l:%ld r:%ld", position_get_left(), position_get_right());
 
   //send asserv debug data
   asserv_com_write_handler(tickCount);

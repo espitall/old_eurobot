@@ -3,4 +3,6 @@
 
 #define POSITION_SPI_PERIPHERAL "/SPID/"
 
+#define POSITION_TICK_PER_CM    (212000.0 / 67.0)
+
 #endif// POSITION_CONFIG_H

@@ -130,8 +130,8 @@ var payloads = {
       packet.payload.writeUInt32LE(Math.round(msg.args.kp), 1);
       packet.payload.writeUInt32LE(Math.round(msg.args.kd), 5);
       packet.payload.writeUInt32LE(Math.round(msg.args.shift), 9);
-      packet.payload.writeUInt32LE(Math.round(msg.args.vmax), 13);
-      packet.payload.writeUInt32LE(Math.round(msg.args.amax), 17);
+      packet.payload.writeUInt32LE(Math.round(msg.args.amax), 13);
+      packet.payload.writeUInt32LE(Math.round(msg.args.vmax), 17);
 
       return packet;
     },
@@ -147,8 +147,8 @@ var payloads = {
       packet.payload.writeUInt32LE(Math.round(msg.args.kp), 1);
       packet.payload.writeUInt32LE(Math.round(msg.args.kd), 5);
       packet.payload.writeUInt32LE(Math.round(msg.args.shift), 9);
-      packet.payload.writeUInt32LE(Math.round(msg.args.vmax), 13);
-      packet.payload.writeUInt32LE(Math.round(msg.args.amax), 17);
+      packet.payload.writeUInt32LE(Math.round(msg.args.amax), 13);
+      packet.payload.writeUInt32LE(Math.round(msg.args.vmax), 17);
 
       return packet;
     },

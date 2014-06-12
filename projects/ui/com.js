@@ -180,6 +180,8 @@ var payloads = {
             })
           .vars;
 
+          payload.source = addrstr(packet.source);
+
           rctrl.send_ui("asserv_stream", payload);
           return true;
 

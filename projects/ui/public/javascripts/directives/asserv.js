@@ -19,7 +19,8 @@ plasteamUI.directive("asserv",["socket",function(socket, Graph) {
           kd:   undefined,
           shift: undefined,
         },
-      }
+      };
+      $scope.board = $attrs.board;
 
       $scope.read_d_params = function(argument) {
         socket.emit("command",{payload: "asserv", func: "read_d_params", destination: $attrs.board});

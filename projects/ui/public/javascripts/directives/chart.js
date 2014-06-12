@@ -43,30 +43,32 @@ plasteamUI.directive("chart",["socket", function(socket, Graph) {
       div.style.width = baseWidth + 'px';
 
       socket.on("asserv_stream", function (msg) {
-        var dps = data[0].dataPoints;
+        if(attrs.board == msg.source) {
+          var dps = data[0].dataPoints;
 
-        while((dps.length > 0) && (dps[dps.length - 1].x > msg.timestamp_ms)) {
-          for(var i = 0, l = data.length; i < l; i += 1) {
-            data[i].dataPoints.shift();
+          while((dps.length > 0) && (dps[dps.length - 1].x > msg.timestamp_ms)) {
+            for(var i = 0, l = data.length; i < l; i += 1) {
+              data[i].dataPoints.shift();
+            }
           }
-        }
 
-        for(var i = 0, l = data.length; i < l; i += 1) {
-          data[i].dataPoints.push({
-            x: msg.timestamp_ms,
-            y: msg[data[i].source],
-          });
-        }
-
-        dps = data[0].dataPoints;
-        while ((dps.length > 0) && ((msg.timestamp_ms - dps[0].x) > 5000))
-        {
           for(var i = 0, l = data.length; i < l; i += 1) {
-            data[i].dataPoints.shift();
+            data[i].dataPoints.push({
+              x: msg.timestamp_ms,
+              y: msg[data[i].source],
+            });
           }
-        }
 
-        chart.render();
+          dps = data[0].dataPoints;
+          while ((dps.length > 0) && ((msg.timestamp_ms - dps[0].x) > 5000))
+          {
+            for(var i = 0, l = data.length; i < l; i += 1) {
+              data[i].dataPoints.shift();
+            }
+          }
+
+          chart.render();
+        }
       });
     }
   }

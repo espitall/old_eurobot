@@ -1,8 +1,8 @@
 <div>
   <div class="graph">
-    <h2>Distance</h2>
+    <h2>Distance - {{board}}</h2>
     <div class="inline">
-      <chart title="Vitesse" 
+      <chart board="{{board}}" title="Vitesse" 
       axisx='{
         "title": "temps (ms)",
         "titleFontSize": 10,
@@ -52,7 +52,7 @@
       ></chart>
     </div>
     <div class="inline">
-      <chart title="PID" 
+      <chart board="{{board}}" title="PID" 
       axisx='{
         "title": "temps (ms)",
         "titleFontSize": 10,
@@ -137,7 +137,7 @@
   <div>
     <h2>Angle</h2>
     <div class="inline">
-      <chart title="Vitesse" 
+      <chart board="{{board}}" title="Vitesse" 
       axisx='{
         "title": "temps (ms)",
         "titleFontSize": 10,
@@ -187,7 +187,7 @@
       ></chart>
     </div>
     <div class="inline">
-      <chart title="PID" 
+      <chart board="{{board}}" title="PID" 
       axisx='{
         "title": "temps (ms)",
         "titleFontSize": 10,

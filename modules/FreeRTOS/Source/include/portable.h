@@ -197,6 +197,10 @@ include path. */
 	#include "../../Source/portable/GCC/ARM_CM3/portmacro.h"
 #endif
 
+#ifdef GCC_ARMCM4
+	#include "../../Source/portable/GCC/ARM_CM4F/portmacro.h"
+#endif
+
 #ifdef GCC_ARMCM3
 	#include "../../Source/portable/GCC/ARM_CM3/portmacro.h"
 #endif

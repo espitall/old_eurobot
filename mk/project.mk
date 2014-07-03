@@ -67,11 +67,12 @@ SIZE = avr-size
 NM = avr-nm
 TARGET_OBJ = $(TARGET).elf 
 OUTPUTS = $(TARGET).$(FORMAT_EXTENSION) $(TARGET).eep
-else
-CC = gcc
-AR = ar
-OBJCOPY = objcopy
-OBJDUMP = objdump
+eifeq ($(HOST),avr)
+else ifeq ($(HOST), arm)
+CC = arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -DGCC_ARMCM4
+AR = arm-none-eabi-ar
+OBJCOPY = arm-none-eabi-objcopy
+OBJDUMP = arm-none-eabi-objdump
 SIZE = size --format=Berkeley
 NM = nm
 TARGET_OBJ = $(TARGET)
@@ -207,7 +208,7 @@ list-modules:
 # Project outputs
 
 $(TARGET_OBJ): $(MODULES_LIBS) $(PROJECT_LIB)
-	$(CC) $(PROJECT_LIB) $(MODULES_LIBS) -o $@ $(LDFLAGS)
+	$(CC) -lc $(PROJECT_LIB) $(MODULES_LIBS) -o $@ $(LDFLAGS)
 
 # project objects, with renamed sections
 $(PROJECT_LIB): $(OBJS)

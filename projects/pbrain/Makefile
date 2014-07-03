@@ -1,11 +1,11 @@
 ## Makefile script from avarix
 
 ## Project configuration
-
+HOST = arm
 SRCS = $(filter-out avoidance%, $(wildcard *.c))
 ASRCS =
 TARGET = main
-MODULES = xmega/clock com FreeRTOS
+MODULES = FreeRTOS
 
 ## Target configuration
 MCU = atxmega128a1

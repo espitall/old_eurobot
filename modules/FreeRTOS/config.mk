@@ -1,7 +1,15 @@
-SRCS = Source/croutine.c Source/event_groups.c Source/list.c Source/portable/GCC/ATXMega128a1u/port.c Source/queue.c Source/tasks.c Source/timers.c Source/portable/MemMang/heap_1.c
+SRCS = Source/croutine.c Source/event_groups.c Source/list.c Source/queue.c Source/tasks.c Source/timers.c Source/portable/MemMang/heap_4.c
 
-SRCS += FreeRTOS-Plus-IO/Common/FreeRTOS_DriverInterface.c FreeRTOS-Plus-IO/Common/FreeRTOS_IOUtils.c FreeRTOS-Plus-IO/Common/IOUtils_CharQueueTxAndRx.c FreeRTOS-Plus-IO/Common/IOUtils_CircularBufferRx.c FreeRTOS-Plus-IO/Common/IOUtils_ZeroCopyTx.c FreeRTOS-Plus-IO/Device/xmega/FreeRTOS_xmega_DriverInterface.c FreeRTOS-Plus-IO/Device/xmega/FreeRTOS_xmega_uart.c FreeRTOS-Plus-IO/Device/xmega/FreeRTOS_xmega_spi.c
 
-MODULE_INCLUDE_DIRS = Source/include Source/portable/GCC/ATXMega128a1u FreeRTOS-Plus-IO/Include
-
+ifeq ($(HOST),avr)
 MODULES = xmega/clock
+else ifeq ($(HOST), arm)
+SRCS +=  Source/portable/GCC/ARM_CM4F/port.c Source/portable/GCC/ARM_CM4F/syscalls.c Source/portable/GCC/ARM_CM4F/system_stm32f4xx.c
+endif
+
+#SRCS += FreeRTOS-Plus-IO/Common/FreeRTOS_DriverInterface.c FreeRTOS-Plus-IO/Common/FreeRTOS_IOUtils.c FreeRTOS-Plus-IO/Common/IOUtils_CharQueueTxAndRx.c FreeRTOS-Plus-IO/Common/IOUtils_CircularBufferRx.c FreeRTOS-Plus-IO/Common/IOUtils_ZeroCopyTx.c FreeRTOS-Plus-IO/Device/xmega/FreeRTOS_xmega_DriverInterface.c FreeRTOS-Plus-IO/Device/xmega/FreeRTOS_xmega_uart.c FreeRTOS-Plus-IO/Device/xmega/FreeRTOS_xmega_spi.c
+
+MODULE_INCLUDE_DIRS = Source/include
+#FreeRTOS-Plus-IO/Include
+#Source/portable/GCC/ARM_CM4F
+

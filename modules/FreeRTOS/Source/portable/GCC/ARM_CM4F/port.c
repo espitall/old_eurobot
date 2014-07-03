@@ -67,6 +67,9 @@
  * Implementation of functions defined in portable.h for the ARM CM4F port.
  *----------------------------------------------------------*/
 
+#include "stm32f4xx.h"
+#include "system_stm32f4xx.h"
+
 /* Scheduler includes. */
 #include "FreeRTOS.h"
 #include "task.h"

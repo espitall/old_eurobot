@@ -3,3 +3,5 @@ build
 *.hex
 *.elf
 *.swp
+*.b#*
+*.s#*

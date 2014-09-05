@@ -73,10 +73,10 @@ CC = arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 -mfloat-abi=sof
 AR = arm-none-eabi-ar
 OBJCOPY = arm-none-eabi-objcopy
 OBJDUMP = arm-none-eabi-objdump
-SIZE = size --format=Berkeley
+SIZE = arm-none-eabi-size --format=Berkeley
 NM = nm
-TARGET_OBJ = $(TARGET)
-OUTPUTS = $(TARGET_OBJ)
+TARGET_OBJ = $(TARGET).elf 
+OUTPUTS = $(TARGET_OBJ) $(TARGET).bin
 endif
 PY_TEMPLATIZE = $(AVARIX_DIR)/mk/templatize.py
 export CC AR PY_TEMPLATIZE
@@ -220,7 +220,7 @@ $(PROJECT_LIB): $(OBJS)
 		$@
 
 size:
-	@$(SIZE) $(TARGET_OBJ)
+	$(SIZE) $(TARGET_OBJ)
 
 
 # Make sure to generate files first
@@ -252,12 +252,14 @@ $(AOBJS): $(obj_dir)/%.$(HOST).o: $(src_dir)/%.S
 		--change-section-lma .eeprom=0 --no-change-warnings \
 		-O $(FORMAT) $< $@
 
+%.bin: %.elf
+	$(OBJCOPY) -O binary $< $@
 
 
 # Cleaning
 
 clean: clean-project clean-modules
-	-rmdir -p $(sort $(obj_dir) $(gen_dir) $(dir $(OBJS) $(GEN_FILES_FULL))) 2>/dev/null
+	-rm -f $(sort $(obj_dir) $(gen_dir) $(dir $(OBJS) $(GEN_FILES_FULL)))
 
 clean-project:
 	rm -f $(TARGET_OBJ) $(PROJECT_LIB) $(OUTPUTS) \

@@ -5,10 +5,11 @@
 SRCS = $(filter-out avoidance%, $(wildcard *.c))
 ASRCS =
 TARGET = main
-MODULES = xmega/clock xmega/pwm com position asserv encoder_magnetic FreeRTOS
+MODULES = position asserv encoder_magnetic FreeRTOS
 
 ## Target configuration
-MCU = atxmega128a1
+HOST = arm
+MCU = stm32f429
 
 ## Build configuration
 
@@ -22,13 +23,6 @@ LDFLAGS += -g
 include ../../mk/project.mk
 
 # Program configuration
-AVRDUDE = avrdude
-AVRDUDE_PROGRAMMER = avrisp2
-AVRDUDE_PORT = usb	   # programmer connected to serial device
-AVRDUDE_WRITE_FLASH = -U flash:w:$(TARGET).hex
-#AVRDUDE_WRITE_EEPROM = -U eeprom:w:$(TARGET).eep
-AVRDUDE_FLAGS = -p $(MCU) -P $(AVRDUDE_PORT) -c $(AVRDUDE_PROGRAMMER)
 
-program: $(TARGET).hex $(TARGET).eep
-	$(AVRDUDE) $(AVRDUDE_FLAGS) $(AVRDUDE_WRITE_FLASH) $(AVRDUDE_WRITE_EEPROM)
-
+prog: $(TARGET).bin
+	st-flash write $(TARGET).bin 0x8000000

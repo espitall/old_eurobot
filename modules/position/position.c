@@ -3,7 +3,9 @@
 #include "position.h"
 #include "position_config.h"
 
+/* Remove for now
 static Peripheral_Descriptor_t spi;
+*/
 
 static int32_t pos_left_tick;
 static int32_t pos_right_tick;
@@ -17,8 +19,8 @@ static int32_t spd_angu;
 
 void position_init(void)
 {
-  spi = FreeRTOS_open((const int8_t *)POSITION_SPI_PERIPHERAL, 0);
-  encoder_magnetic_init(&spi);
+  //spi = FreeRTOS_open((const int8_t *)POSITION_SPI_PERIPHERAL, 0);
+  //encoder_magnetic_init(&spi);
 }
 
 void position_update(void)

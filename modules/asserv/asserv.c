@@ -319,6 +319,7 @@ int32_t asserv_get_angu_p(void)
 	return value;
 }
 
+/* Remove for now
 void asserv_com_write_handler(uint32_t tickCount)
 {
   uint8_t * buf = com_request_write_buffer(COM_BROADCAST, COM_PAYLOAD_ASSERV);
@@ -412,3 +413,4 @@ unsigned int asserv_com_read_handler(com_packet_header_t * header, uint8_t * buf
   }
   return 0;
 }
+*/

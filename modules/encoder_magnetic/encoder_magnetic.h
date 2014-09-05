@@ -5,8 +5,8 @@
 
 /** 
  * Initialisation of encoders, variables
- */
 void encoder_magnetic_init(Peripheral_Descriptor_t * spi);
+ */
 
 /** 
  * Update encoders values, need to be done quite often

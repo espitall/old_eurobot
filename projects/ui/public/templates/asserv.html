@@ -1,8 +1,11 @@
 <div>
+  <div>
+    <input ng-model="chart_enable" type="checkbox"/> Activation des graphes <br /> <br />
+  </div>
   <div class="graph">
     <h2>Distance - {{board}}</h2>
     <div class="inline">
-      <chart board="{{board}}" title="Vitesse" 
+      <chart board="{{board}}" enable="{{chart_enable}}" title="Vitesse" 
       axisx='{
         "title": "temps (ms)",
         "titleFontSize": 10,

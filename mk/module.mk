@@ -21,7 +21,7 @@ TARGET_OBJ = $(obj_dir).$(HOST).a
 SRC_COBJS = $(SRCS:%.c=$(obj_dir)/%.$(HOST).o)
 GEN_COBJS = $(GEN_SRCS:%.c=$(obj_dir)/%.$(HOST).o)
 COBJS = $(SRC_COBJS) $(GEN_COBJS)
-AOBJS = $(ASRCS:%.S=$(obj_dir)/%.$(HOST).o)
+AOBJS = $(ASRCS:%.s=$(obj_dir)/%.$(HOST).o)
 OBJS = $(COBJS) $(AOBJS)
 DEPS = $(COBJS:.o=.d)
 GEN_FILES_FULL = $(addprefix $(gen_dir)/,$(GEN_FILES))
@@ -42,7 +42,7 @@ $(OBJS): $(GEN_FILES_FULL)
 
 # Module library file
 $(TARGET_OBJ): $(OBJS)
-	$(AR) rs $@ $(COBJS) 2>/dev/null
+	$(AR) rs $@ $(OBJS) 2>/dev/null
 
 $(SRC_COBJS): $(obj_dir)/%.$(HOST).o: $(src_dir)/%.c
 	@mkdir -p $(dir $@)
@@ -52,7 +52,7 @@ $(GEN_COBJS): $(obj_dir)/%.$(HOST).o: $(gen_dir)/%.c
 	@mkdir -p $(dir $@)
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(GEN_MODULE_INCLUDE_DIRS) -MD -MF $(@:.o=.d) -c $< -o $@
 
-$(AOBJS): $(obj_dir)/%.$(HOST).o: $(src_dir)/%.S
+$(AOBJS): $(obj_dir)/%.$(HOST).o: $(src_dir)/%.s
 	@mkdir -p $(dir $@)
 	$(CC) $(CPPFLAGS) $(ASFLAGS) $(GEN_MODULE_INCLUDE_DIRS) -c $< -o $@
 

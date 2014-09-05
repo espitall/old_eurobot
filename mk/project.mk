@@ -69,7 +69,7 @@ TARGET_OBJ = $(TARGET).elf
 OUTPUTS = $(TARGET).$(FORMAT_EXTENSION) $(TARGET).eep
 eifeq ($(HOST),avr)
 else ifeq ($(HOST), arm)
-CC = arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -DGCC_ARMCM4
+CC = arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -DGCC_ARMCM4 -T$(AVARIX_DIR)/mk/linker/stm32_flash.ld
 AR = arm-none-eabi-ar
 OBJCOPY = arm-none-eabi-objcopy
 OBJDUMP = arm-none-eabi-objdump
@@ -91,8 +91,6 @@ endif
 else
 FIND_DIR_NAME = find $(1) -name $(2)
 endif
-
--include $(AVARIX_DIR)/mk/common.mk
 
 
 ## Various flags

@@ -7,3 +7,14 @@ build
 *.s#*
 *.bin
 *.log
+*.GBL
+*.GBO
+*.GBS
+*.GTL
+*.GTO
+*.GTP
+*.GTS
+*.TXT
+*.dri
+*.gpi
+*.zip

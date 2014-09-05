@@ -5,7 +5,7 @@
 SRCS = $(filter-out avoidance%, $(wildcard *.c))
 ASRCS =
 TARGET = main
-MODULES = position asserv encoder_magnetic FreeRTOS
+MODULES = position asserv encoder_magnetic FreeRTOS stm32f4_stdperiph CMSIS
 
 ## Target configuration
 HOST = arm

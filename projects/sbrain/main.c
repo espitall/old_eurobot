@@ -1,4 +1,5 @@
 #include <FreeRTOS/module.h> 
+#include <stm32f4_stdperiph/module.h> 
 #include <position/position.h> 
 #include <asserv/asserv.h> 
 #include "motors.h"
@@ -8,51 +9,24 @@ void led_heartbeat(void * p)
 {
   (void)p;
 
-  //handle reset
-  /*
-  com_print_lvl_t lvl = COM_ERROR;
-  if((RST.STATUS & RST_PDIRF_bm) || (RST.STATUS == 0))
+  while(1)
   {
-    lvl = COM_INFO;
+    //Toogle heartbeat pin at 2Hz
+    GPIOG->BSRRL = (1 << 13);
+    vTaskDelay(500);
+    GPIOG->BSRRH = (1 << 13);
+    vTaskDelay(500);
   }
-  com_print(lvl, "Boot: %s%s%s%s%s%s%s%s", 
-            (RST.STATUS & RST_SDRF_bm) ? "spike " : "",
-            (RST.STATUS & RST_SRF_bm) ? "softreg " : "",
-            (RST.STATUS & RST_PDIRF_bm) ? "pdi " : "",
-            (RST.STATUS & RST_WDRF_bm) ? "watchdog " : "",
-            (RST.STATUS & RST_BORF_bm) ? "brown-out " : "",
-            (RST.STATUS & RST_EXTRF_bm) ? "pin " : "",
-            (RST.STATUS & RST_PORF_bm) ? "power-on " : "",
-            ((RST.STATUS & 0xff) == 0) ? "soft" : ""
-            );
-            */
-  /*
-  RST.STATUS = 0xff;
-
-  vTaskDelay(3000);
-  while(1) 
-  {
-    PORTQ.OUTSET = (1 << 3);
-    PORTQ.OUTCLR = (1 << 2);
-    asserv_set_dist_set_point(position_from_cm(33.5 * 3));
-    vTaskDelay(10000);
-
-
-    PORTQ.OUTSET = (1 << 2);
-    PORTQ.OUTCLR = (1 << 3);
-    asserv_set_dist_set_point(position_from_cm(-33.5));
-    vTaskDelay(10000);
-  }
-  */
 }
 
 void asserv(void *p)
 {
   TickType_t last_wake_time = xTaskGetTickCount();
-  const TickType_t asserv_period = 20;
+  const TickType_t asserv_period = 20; //ms
 
   while(1)
   {
+    //wait until full period is ellapsed
     vTaskDelayUntil( &last_wake_time, asserv_period);
 
     position_update();
@@ -71,18 +45,36 @@ int main(void)
   //PORTQ.OUTCLR = (1 << 2);
   //PORTQ.OUTCLR = (1 << 3);
 
-  while(1);
+  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOG, ENABLE);
+  GPIO_InitTypeDef  GPIO_InitStructure;
+  GPIO_InitStructure.GPIO_Pin = (1 << 13)|(1 << 14);
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+  GPIO_Init(GPIOG, &GPIO_InitStructure);
 
-  //initialize modules
-  position_init();
-  asserv_init();
-  motors_init();
+
+
+  ////initialize modules
+  //position_init();
+  //asserv_init();
+  //motors_init();
   xTaskCreate(led_heartbeat, "heartbeat", 200, 0, SCHED_HEARTBEAT_PRIORITY, 0);
-  xTaskCreate(asserv, "asserv", 512, 0, SCHED_ASSERV_PRIORITY, 0);
+  //xTaskCreate(asserv, "asserv", 512, 0, SCHED_ASSERV_PRIORITY, 0);
 
 
   //start scheduler
   vTaskStartScheduler();
+
+
+  while(1)
+  {
+    GPIOG->BSRRL = (1 << 13);
+    for(volatile int i = 0; i < 200000; i += 1);
+    GPIOG->BSRRH = (1 << 13);
+    for(volatile int i = 0; i < 200000; i += 1);
+  }
 
   return -1;
 }

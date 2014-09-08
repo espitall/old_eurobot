@@ -130,6 +130,7 @@ static void lcdvPrintArea(lcdPrintDriver_t * drv, const char * fmt, va_list ap)
   chvprintf((BaseSequentialStream *) drv, fmt, ap);
 }
 
+static void lcdPrintArea(lcdPrintDriver_t * drv, const char * fmt, ...)  __attribute__ ((format (printf, 2, 3)));
 static void lcdPrintArea(lcdPrintDriver_t * drv, const char * fmt, ...)
 {
   va_list ap;
@@ -152,7 +153,7 @@ static msg_t lcdThread(void *arg) {
     uint8_t time = 119;
     uint8_t bat = 74;
 
-    lcdPrintArea(&topLine, "x: %dmm y: %dmm a: %d(%d)°\nc: %d%% t: %ds b: %d%%\n",
+    lcdPrintArea(&topLine, "x: %ldmm y: %ldmm a: %ld(%ld)°\nc: %d%% t: %ds b: %d%%\n",
              x_mm, y_mm, a_deg, arel_deg, pos_cor, time, bat);             
     
         
@@ -214,6 +215,7 @@ void lcdInit(void)
 }
 
 
+void lcdPrintln(const char * fmt, ...) __attribute__ ((format (printf, 1, 2)));
 void lcdPrintln(const char * fmt, ...)
 {
   va_list ap;

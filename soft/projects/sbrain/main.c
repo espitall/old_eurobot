@@ -18,6 +18,7 @@
 #include <hal.h>
 #include <lcd.h>
 
+int SDRAM i = 0;
 
 /*
  * Application entry point.
@@ -38,13 +39,14 @@ int main(void) {
   lcdInit();
   palSetPad(GPIOG, GPIOG_LED3_GREEN);
 
-  int i = 0;
+  i = 0;
   while (TRUE) {
-    lcdPrintln("blop bili ! %d", i++);
-    chThdSleepMilliseconds(200);
+    chThdSleepMilliseconds(500);
     palSetPad(GPIOG, GPIOG_LED4_RED);
     lcdPrintln("plop %d", i++);
-    chThdSleepMilliseconds(200);
+    chThdSleepMilliseconds(500);
     palClearPad(GPIOG, GPIOG_LED4_RED);
   }
+
+
 }

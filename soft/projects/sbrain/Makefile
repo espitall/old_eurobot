@@ -75,7 +75,7 @@ include $(CHIBIOS)/os/kernel/kernel.mk
 include $(CHIBIOS)/test/test.mk
 
 # Define linker script file here
-LDSCRIPT= $(PORTLD)/STM32F429xI.ld
+LDSCRIPT= $(MODULES)/eurobot_2015_board/STM32f429xI_sdram.ld
 
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
@@ -146,8 +146,8 @@ LD   = $(TRGT)gcc
 CP   = $(TRGT)objcopy
 AS   = $(TRGT)gcc -x assembler-with-cpp
 OD   = $(TRGT)objdump
-HEX  = $(CP) -O ihex
-BIN  = $(CP) -O binary
+HEX  = $(CP) -O ihex -R ".sdram"
+BIN  = $(CP) -O binary -R ".sdram"
 
 # ARM-specific options here
 AOPT =

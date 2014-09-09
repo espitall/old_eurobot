@@ -18,7 +18,7 @@
 #include "hal.h"
 
 #include "ili9341.h"
-//#include "stm32_ltdc.h"
+#include "stm32f429i_discovery_sdram.h"
 //#include "stm32_dma2d.h"
 
 #if ILI9341_USE_DRIVER
@@ -113,6 +113,8 @@ bool_t mmc_lld_is_write_protected(MMCDriver *mmcp) {
  * @todo    Add your board-specific code, if any.
  */
 void boardInit(void) {
+  SDRAM_Init();
+
 #if STM32_LTDC_USE_LTDC
   ltdcInit();
 #endif

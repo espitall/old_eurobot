@@ -307,6 +307,8 @@
 #define SPI_USE_MUTUAL_EXCLUSION    TRUE
 #endif
 
+#define SDRAM __attribute__ ((section (".sdram")))
+
 #endif /* _HALCONF_H_ */
 
 /** @} */

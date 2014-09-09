@@ -20,7 +20,7 @@ typedef struct {
   int rowModulo;
 } lcdPrintDriver_t;
 
-static uint16_t frame_buffer[ILI9341_PIXEL];
+static uint16_t SDRAM frame_buffer[ILI9341_PIXEL];
 
 struct BaseSequentialStreamVMT lcdPrintDriverVMT;
 lcdPrintDriver_t topLine, console;
@@ -212,6 +212,9 @@ void lcdInit(void)
     }
   }
   chThdCreateStatic(waLcdThread, sizeof(waLcdThread), LCD_SCHEDULER_PRIO, lcdThread, NULL);
+
+
+  lcdPrintln("addr 0x%lX", (uint32_t)frame_buffer);
 }
 
 

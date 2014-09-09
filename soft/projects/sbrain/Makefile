@@ -64,7 +64,7 @@ PROJECT = ch
 
 # Imported source files and paths
 MODULES = ../../modules
-include $(MODULES)/eurobot_2014_board/board.mk
+include $(MODULES)/eurobot_2015_board/board.mk
 include $(MODULES)/lcd/config.mk
 
 CHIBIOS = $(MODULES)/ChibiOS/

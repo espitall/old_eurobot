@@ -155,6 +155,11 @@ void ili9341Init(uint8_t * frame_buffer)
 
   //init ltdc peripheral
   LTDC_InitTypeDef LTDC_InitStruct;
+  RCC_APB2PeriphResetCmd(RCC_APB2Periph_LTDC, ENABLE);
+  RCC_AHB1PeriphResetCmd(RCC_AHB1Periph_DMA2D, ENABLE); 
+  RCC_AHB1PeriphResetCmd(RCC_AHB1Periph_DMA2D, DISABLE); 
+  RCC_APB2PeriphResetCmd(RCC_APB2Periph_LTDC, DISABLE);
+
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_LTDC, ENABLE);
   RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA2D, ENABLE); 
   LTDC_InitStruct.LTDC_HSPolarity = LTDC_HSPolarity_AL;     

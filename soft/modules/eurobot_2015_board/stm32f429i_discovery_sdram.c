@@ -16,6 +16,7 @@ void SDRAM_Init(void)
   FMC_SDRAMTimingInitTypeDef  FMC_SDRAMTimingInitStructure; 
   
   /* Enable FMC clock */
+  rccResetAHB3(RCC_AHB3ENR_FMCEN);
   rccEnableAHB3(RCC_AHB3ENR_FMCEN, FALSE);
  
 /* FMC Configuration ---------------------------------------------------------*/
@@ -201,8 +202,8 @@ void SDRAM_InitSequence(void)
   //refresh interval, meaning we won't risk losing contents if the SDRAM is in self-refresh
   //mode
 /* Step 4 --------------------------------------------------------------------*/
-  /* Insert 1 ms delay */
-  chThdSleepMilliseconds(1);
+  volatile int tmp;
+  for(tmp = 0; tmp < 1000000; tmp += 1)
     
 /* Step 5 --------------------------------------------------------------------*/
   /* Configure a PALL (precharge all) command */ 

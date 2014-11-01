@@ -2,6 +2,7 @@
 #include <hal.h>
 #include <stdio.h>
 #include <chprintf.h>
+#include <field.h>
 
 #include "lcd.h"
 #include "ili9341.h"
@@ -20,27 +21,28 @@ typedef struct {
   int rowModulo;
 } lcdPrintDriver_t;
 
-static uint16_t SDRAM frame_buffer[ILI9341_PIXEL];
+static uint32_t SDRAM frame_buffer[ILI9341_PIXEL * 2];
 
 struct BaseSequentialStreamVMT lcdPrintDriverVMT;
 lcdPrintDriver_t topLine, console;
+uint8_t current_layer;
 
 static WORKING_AREA(waLcdThread, 128);
 
 
-static void lcdSetPixel(uint16_t x, uint16_t y, uint16_t color)
+static void lcdSetPixel(uint8_t layer, uint16_t x, uint16_t y, uint32_t color)
 {
   if((x < ILI9341_HEIGHT) && (y < ILI9341_WIDTH))
   {
-    frame_buffer[x * ILI9341_WIDTH + (ILI9341_WIDTH - y - 1)] = color;
+    frame_buffer[x * ILI9341_WIDTH + (ILI9341_WIDTH - y - 1) + ILI9341_PIXEL * layer] = color;
   }
 }
 
-static uint16_t lcdGetPixel(uint16_t x, uint16_t y)
+static uint32_t lcdGetPixel(uint8_t layer, uint16_t x, uint16_t y)
 {
   if((x < ILI9341_HEIGHT) && (y < ILI9341_WIDTH))
   {
-    return frame_buffer[x * ILI9341_WIDTH + (ILI9341_WIDTH - y - 1)];
+    return frame_buffer[x * ILI9341_WIDTH + (ILI9341_WIDTH - y - 1) + ILI9341_PIXEL * layer];
   }
   return 0;
 }
@@ -67,11 +69,11 @@ static msg_t lcdPutChar(void * instance, uint8_t c)
       {
         if(drv->rowModulo == 1)
         {
-          lcdSetPixel(x + drv->startX, y + drv->startY, lcdGetPixel(x + drv->startX, y + drv->startY + drv->font->FontHeight));
+          lcdSetPixel(current_layer, x + drv->startX, y + drv->startY, lcdGetPixel(current_layer, x + drv->startX, y + drv->startY + drv->font->FontHeight));
         }
         else
         {
-          lcdSetPixel(x + drv->startX, y + drv->startY, 0x00);
+          lcdSetPixel(current_layer, x + drv->startX, y + drv->startY, 0x00);
         }
       }
     }
@@ -87,7 +89,7 @@ static msg_t lcdPutChar(void * instance, uint8_t c)
     {
       for(x = 0; x < drv->font->FontWidth * drv->maxCol; x += 1)
       {
-        lcdSetPixel(x + drv->startX, y + drv->startY + drv->font->FontHeight * drv->rowPosition, 0x0000);
+        lcdSetPixel(current_layer, x + drv->startX, y + drv->startY + drv->font->FontHeight * drv->rowPosition, 0x0000);
       }
     }
   }
@@ -105,11 +107,11 @@ static msg_t lcdPutChar(void * instance, uint8_t c)
       {
         if ((b << j) & 0x8000) 
         {
-          lcdSetPixel(xpos + j, ypos + i, 0xFFFF);
+          lcdSetPixel(current_layer, xpos + j, ypos + i, LCD_COLOR(255, 255, 255));
         } 
         else
         {
-          lcdSetPixel(xpos + j, ypos + i, 0x0000);
+          lcdSetPixel(current_layer, xpos + j, ypos + i, 0x0000);
         }
       }
     }
@@ -141,10 +143,51 @@ static void lcdPrintArea(lcdPrintDriver_t * drv, const char * fmt, ...)
   va_end(ap);
 }
 
-static msg_t lcdThread(void *arg) {
+static msg_t lcdThread(void *arg) 
+{
   (void) arg;
 
+  current_layer = 0;
+  int x;
+  int y;
+
+  //fill black
+  uint32_t i;
+	for (i = 0; i < ILI9341_PIXEL; i++) 
+  {
+		*(frame_buffer + i) = 0x0000;
+	}
+
+  //draw separator
+  for(x = 0; x < 320; x += 1)
+  {
+    lcdSetPixel(0, x, 21, LCD_COLOR(0x00, 0xFB, 0xE4));
+  }
+  for(y = 21; y < 240; y += 1)
+  {
+    lcdSetPixel(0, 142, y, LCD_COLOR(0x00, 0xFB, 0xE4));
+  }
+
+  lcdPrintln("addr 0x%lX", (uint32_t)frame_buffer);
   while (TRUE) {
+    
+    //copy current layer to next layer
+    if(current_layer)
+    {
+      for (i = 0; i < ILI9341_PIXEL; i++) 
+      {
+        *(frame_buffer + i) = *(frame_buffer + i + ILI9341_PIXEL);
+      }
+    }
+    else 
+    {
+      for (i = 0; i < ILI9341_PIXEL; i++) 
+      {
+        *(frame_buffer + i + ILI9341_PIXEL) = *(frame_buffer + i);
+      }
+    }
+    current_layer = !current_layer;
+
     int32_t x_mm = 12;
     int32_t y_mm = 35000;
     int32_t arel_deg = 174;
@@ -156,8 +199,10 @@ static msg_t lcdThread(void *arg) {
     lcdPrintArea(&topLine, "x: %ldmm y: %ldmm a: %ld(%ld)°\nc: %d%% t: %ds b: %d%%\n",
              x_mm, y_mm, a_deg, arel_deg, pos_cor, time, bat);             
     
-        
-    chThdSleepMilliseconds(100);
+    fieldPrint();
+
+    ili9341SetLayer(current_layer);
+    chThdSleepMilliseconds(50);
   }
 
   return 0;
@@ -185,36 +230,8 @@ void lcdInit(void)
   console.rowModulo = 1;
   console.font = &TM_Font_7x10; 
 
-	uint32_t i;
-	for (i = 0; i < ILI9341_PIXEL; i++) {
-		*(uint16_t *) (frame_buffer + i) = 0x0000;
-	}
-
-  int x;
-  int y;
-
-  for(x = 0; x < 320; x += 1)
-  {
-    lcdSetPixel(x, 21, 0xFBE4);
-  }
-
-  for(y = 21; y < 240; y += 1)
-  {
-    lcdSetPixel(142, y, 0xFBE4);
-  }
-
-  double c = 200.0 / 300.0;
-  for(y = 0; y < 300 * c; y += 1)
-  {
-    for(x = 0; x < 200 * c; x += 1)
-    {
-      lcdSetPixel(x, y + 30, 0x07E0);
-    }
-  }
+	
   chThdCreateStatic(waLcdThread, sizeof(waLcdThread), LCD_SCHEDULER_PRIO, lcdThread, NULL);
-
-
-  lcdPrintln("addr 0x%lX", (uint32_t)frame_buffer);
 }
 
 
@@ -229,4 +246,68 @@ void lcdPrintln(const char * fmt, ...)
   console.colPosition = 0;
 
   va_end(ap);
+}
+
+void lcdRect(lcd2DPoint_t origin, lcd2DPoint_t dest, uint32_t color, uint16_t flags)
+{
+  if(flags & LCD_METRIC)
+  {
+    const double ratio = 200.0 / 3000.0;
+    const double xoffset = 2;
+    const double yoffset = 30;
+    lcd2DPoint_t tmp;
+
+    tmp.x = origin.x;
+    tmp.y = origin.y;
+    origin.x = tmp.y * ratio + xoffset;
+    origin.y = tmp.x * ratio + yoffset;
+
+    tmp.x = dest.x;
+    tmp.y = dest.y;
+    dest.x = tmp.y * ratio + xoffset;
+    dest.y = tmp.x * ratio + yoffset;
+  }
+
+  int32_t i,j;
+  for(i = origin.x; i < dest.x; i += 1)
+  {
+    for(j = origin.y; j < dest.y; j += 1)
+    {
+      lcdSetPixel(current_layer, i, j, color);
+    }
+  }
+}
+
+void lcdCircle(lcd2DPoint_t origin, int32_t rayon, int32_t start_angle, int32_t end_angle, uint32_t color, uint16_t flags)
+{
+  if(flags & LCD_METRIC)
+  {
+    const double ratio = 200.0 / 3000.0;
+    const double xoffset = 2;
+    const double yoffset = 30;
+    lcd2DPoint_t tmp;
+
+    tmp.x = origin.x;
+    tmp.y = origin.y;
+    origin.x = tmp.y * ratio + xoffset;
+    origin.y = tmp.x * ratio + yoffset;
+
+    rayon = rayon * ratio;
+  }
+
+  (void)start_angle;
+  (void)end_angle;
+
+  int32_t i,j;
+  int32_t rayon_squared = rayon * rayon;
+  for(i = -rayon; i < rayon; i += 1)
+  {
+    for(j = -rayon; j < rayon; j += 1)
+    {
+      if(i * i + j * j < rayon_squared)
+      {
+        lcdSetPixel(current_layer, origin.x + i, origin.y + j, color);
+      }
+    }
+  }
 }

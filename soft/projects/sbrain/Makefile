@@ -66,6 +66,7 @@ PROJECT = ch
 MODULES = ../../modules
 include $(MODULES)/eurobot_2015_board/board.mk
 include $(MODULES)/lcd/config.mk
+include $(MODULES)/field_2015/config.mk
 
 CHIBIOS = $(MODULES)/ChibiOS/
 include $(CHIBIOS)/os/hal/platforms/STM32F4xx/platform.mk
@@ -87,6 +88,7 @@ CSRC = $(PORTSRC) \
        $(CHIBIOS)/os/various/chprintf.c \
        $(BOARDSRC) \
 			 $(LCDSRC) \
+			 $(FIELDSRC) \
        main.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
@@ -122,7 +124,8 @@ INCDIR = $(PORTINC) $(KERNINC) $(TESTINC) \
          $(CHIBIOS)/os/various/devices_lib/accel \
          $(CHIBIOS)/os/various \
          $(CHIBIOS)/os/various \
-				 $(LCDINC)
+				 $(LCDINC) \
+				 $(FIELDINC)
 
 #
 # Project, sources and paths

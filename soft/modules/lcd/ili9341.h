@@ -46,6 +46,7 @@
 
 
 void ili9341Init(uint8_t * frame_buffer);
+void ili9341SetLayer(uint8_t layer);
 
 
 #endif// ILI9341_H

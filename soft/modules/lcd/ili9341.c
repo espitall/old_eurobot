@@ -189,7 +189,7 @@ void ili9341Init(uint8_t * frame_buffer)
   LTDC_Layer_InitStruct.LTDC_HorizontalStop = 269;
   LTDC_Layer_InitStruct.LTDC_VerticalStart = 4;
   LTDC_Layer_InitStruct.LTDC_VerticalStop = 323;
-  LTDC_Layer_InitStruct.LTDC_PixelFormat = LTDC_Pixelformat_RGB565;
+  LTDC_Layer_InitStruct.LTDC_PixelFormat = LTDC_Pixelformat_ARGB8888;
   LTDC_Layer_InitStruct.LTDC_ConstantAlpha = 255; 
   LTDC_Layer_InitStruct.LTDC_DefaultColorBlue = 0;        
   LTDC_Layer_InitStruct.LTDC_DefaultColorGreen = 0;       
@@ -197,14 +197,13 @@ void ili9341Init(uint8_t * frame_buffer)
   LTDC_Layer_InitStruct.LTDC_DefaultColorAlpha = 0;
   LTDC_Layer_InitStruct.LTDC_BlendingFactor_1 = LTDC_BlendingFactor1_CA;    
   LTDC_Layer_InitStruct.LTDC_BlendingFactor_2 = LTDC_BlendingFactor2_CA;
-  LTDC_Layer_InitStruct.LTDC_CFBLineLength = 240 * 2 + 3;
-  LTDC_Layer_InitStruct.LTDC_CFBPitch = 240 * 2;
+  LTDC_Layer_InitStruct.LTDC_CFBLineLength = 240 * 4 + 3;
+  LTDC_Layer_InitStruct.LTDC_CFBPitch = 240 * 4;
   LTDC_Layer_InitStruct.LTDC_CFBLineNumber = 320;
   LTDC_Layer_InitStruct.LTDC_CFBStartAdress = (uint32_t)(void *)frame_buffer;
   LTDC_LayerInit(LTDC_Layer1, &LTDC_Layer_InitStruct);
 
-  //LTDC_Layer_InitStruct.LTDC_CFBStartAdress = frame_buffer + ILI9341_FRAME_OFFSET;
-  LTDC_Layer_InitStruct.LTDC_CFBStartAdress = (uint32_t)(void *)frame_buffer;
+  LTDC_Layer_InitStruct.LTDC_CFBStartAdress = ((uint32_t)(void *)frame_buffer) + 4 * ILI9341_PIXEL;
   LTDC_Layer_InitStruct.LTDC_BlendingFactor_1 = LTDC_BlendingFactor1_PAxCA;
   LTDC_Layer_InitStruct.LTDC_BlendingFactor_2 = LTDC_BlendingFactor2_PAxCA;
   LTDC_LayerInit(LTDC_Layer2, &LTDC_Layer_InitStruct);
@@ -219,4 +218,22 @@ void ili9341Init(uint8_t * frame_buffer)
   LTDC_LayerAlpha(LTDC_Layer1, 255);
   LTDC_LayerAlpha(LTDC_Layer2, 125);
   LTDC_ReloadConfig(LTDC_IMReload);
+}
+
+void ili9341SetLayer(uint8_t layer)
+{
+  switch(layer)
+  {
+    case 0:
+      LTDC_LayerAlpha(LTDC_Layer1, 255);
+      LTDC_LayerAlpha(LTDC_Layer2, 0);
+      LTDC_ReloadConfig(LTDC_IMReload);
+      break;
+
+    case 1:
+      LTDC_LayerAlpha(LTDC_Layer1, 0);
+      LTDC_LayerAlpha(LTDC_Layer2, 255);
+      LTDC_ReloadConfig(LTDC_IMReload);
+      break;
+  }
 }

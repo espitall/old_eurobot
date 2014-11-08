@@ -33,6 +33,15 @@ int main(void)
     //raw = ((raw & 0xff) << 8) | (raw >> 8);
     //raw <<= 1;
 
+    if(raw % 2)
+    {
+      palSetPad(GPIOG, GPIOG_LED4_RED);
+    }
+    else
+    {
+      palClearPad(GPIOG, GPIOG_LED4_RED);
+    }
+
     lcdPrintln("raw: 0x%04X (%u)", raw, raw);
     chThdSleepMilliseconds(500);
   }

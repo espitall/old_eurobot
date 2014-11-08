@@ -8,7 +8,7 @@
 #define TICK2DEG(tick)  ((((double)tick) * 180.0) / TICK_PER_180DEG) 
 #define TICK2MM(tick)  ((((double)tick) * 1000.0) / TICK_PER_1M) 
 
-static WORKING_AREA(waPosThread, 128);
+static WORKING_AREA(waPosThread, 256);
 
 static Mutex mutex;
 

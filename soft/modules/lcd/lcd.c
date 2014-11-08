@@ -27,8 +27,9 @@ static uint32_t SDRAM frame_buffer[ILI9341_PIXEL * 2];
 struct BaseSequentialStreamVMT lcdPrintDriverVMT;
 lcdPrintDriver_t topLine, console;
 uint8_t current_layer;
+static Mutex mutex;
 
-static WORKING_AREA(waLcdThread, 128);
+static WORKING_AREA(waLcdThread, 256);
 
 
 static void lcdSetPixel(uint8_t layer, uint16_t x, uint16_t y, uint32_t color)
@@ -152,6 +153,7 @@ static msg_t lcdThread(void *arg)
   int x;
   int y;
 
+  chMtxLock(&mutex);
   //fill black
   uint32_t i;
 	for (i = 0; i < ILI9341_PIXEL; i++) 
@@ -168,10 +170,12 @@ static msg_t lcdThread(void *arg)
   {
     lcdSetPixel(0, 142, y, LCD_COLOR(0x00, 0xFB, 0xE4));
   }
+  chMtxUnlock();
 
   while (TRUE) {
     
     //copy current layer to next layer
+    chMtxLock(&mutex);
     if(current_layer)
     {
       for (i = 0; i < ILI9341_PIXEL; i++) 
@@ -187,6 +191,7 @@ static msg_t lcdThread(void *arg)
       }
     }
     current_layer = !current_layer;
+    chMtxUnlock();
 
     int32_t x_mm = posGetXmm();
     int32_t y_mm = posGetYmm();
@@ -210,6 +215,8 @@ static msg_t lcdThread(void *arg)
 
 void lcdInit(void)
 {
+  chMtxInit(&mutex);
+
   ili9341Init((uint8_t *)frame_buffer);
 
   //init ascii areas
@@ -238,6 +245,7 @@ void lcdInit(void)
 void lcdPrintln(const char * fmt, ...) __attribute__ ((format (printf, 1, 2)));
 void lcdPrintln(const char * fmt, ...)
 {
+  chMtxLock(&mutex);
   va_list ap;
 
   va_start(ap, fmt);
@@ -246,6 +254,7 @@ void lcdPrintln(const char * fmt, ...)
   console.colPosition = 0;
 
   va_end(ap);
+  chMtxUnlock();
 }
 
 void lcdRect(lcd2DPoint_t origin, lcd2DPoint_t dest, uint32_t color, uint16_t flags)
@@ -268,6 +277,7 @@ void lcdRect(lcd2DPoint_t origin, lcd2DPoint_t dest, uint32_t color, uint16_t fl
     dest.y = tmp.x * ratio + yoffset;
   }
 
+  chMtxLock(&mutex);
   int32_t i,j;
   for(i = origin.x; i < dest.x; i += 1)
   {
@@ -276,6 +286,7 @@ void lcdRect(lcd2DPoint_t origin, lcd2DPoint_t dest, uint32_t color, uint16_t fl
       lcdSetPixel(current_layer, i, j, color);
     }
   }
+  chMtxUnlock();
 }
 
 void lcdCircle(lcd2DPoint_t origin, int32_t rayon, int32_t start_angle, int32_t end_angle, uint32_t color, uint16_t flags)
@@ -300,6 +311,8 @@ void lcdCircle(lcd2DPoint_t origin, int32_t rayon, int32_t start_angle, int32_t 
 
   int32_t i,j;
   int32_t rayon_squared = rayon * rayon;
+
+  chMtxLock(&mutex);
   for(i = -rayon; i < rayon; i += 1)
   {
     for(j = -rayon; j < rayon; j += 1)
@@ -310,4 +323,5 @@ void lcdCircle(lcd2DPoint_t origin, int32_t rayon, int32_t start_angle, int32_t 
       }
     }
   }
+  chMtxUnlock();
 }

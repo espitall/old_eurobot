@@ -104,6 +104,10 @@ static msg_t lcdPutChar(void * instance, uint8_t c)
     uint16_t i,j,b;
     for (i = 0; i < drv->font->FontHeight; i++) 
     {
+      if(c > 127)
+      {
+        c = '?';
+      }
       b = drv->font->data[(c - 32) * drv->font->FontHeight + i];
       for (j = 0; j < drv->font->FontWidth; j++) 
       {
@@ -201,7 +205,7 @@ static msg_t lcdThread(void *arg)
     uint8_t time = 90;
     uint8_t bat = 42;
 
-    lcdPrintArea(&topLine, "x: %ldmm y: %ldmm a: %ld(%ld)°\nc: %d%% t: %ds b: %d%%\n",
+    lcdPrintArea(&topLine, "x: %ldmm y: %ldmm a: %ld (%ld)deg\nc: %d%% t: %ds b: %d%%\n",
              x_mm, y_mm, a_deg, arel_deg, pos_cor, time, bat);             
     
     fieldPrint();

@@ -25,6 +25,14 @@
 extern ILI9341Driver ILI9341D1;
 #endif
 
+static const SPIConfig spi4cfg = {
+  NULL,
+  NULL,
+  0,
+  ((0x07 << 3) & SPI_CR1_BR) | SPI_CR1_SSM | SPI_CR1_SSI | SPI_CR1_MSTR | SPI_CR1_CPOL | 0,
+};
+
+
 #if HAL_USE_PAL || defined(__DOXYGEN__)
 /**
  * @brief   PAL setup.
@@ -126,4 +134,7 @@ void boardInit(void) {
 #if ILI9341_USE_DRIVER
   ili9341ObjectInit(&ILI9341D1);
 #endif
+
+  //init SPI4 bus
+  spiStart(&SPID4, &spi4cfg);
 }

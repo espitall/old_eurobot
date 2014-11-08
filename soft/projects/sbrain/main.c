@@ -18,21 +18,17 @@ int main(void)
   lcdInit();
   fieldInit();
 
-  //test moteur
-  int pwm = 0;
-  int sens = 1;
+
   while (TRUE) {
-    pwm += 1000 * sens;
-    if(pwm > 8000)
-    {
-      sens = -1;
-    }
-    if(pwm < -8000)
-    {
-      sens = 1;
-    }
-    lcdPrintln("test moteur pwm: %d", pwm);
-    dcmSetWidth(1, pwm);
+
+    uint16_t raw = 0x0000;
+    palClearPad(GPIOE, GPIOE_SPI4_ENC0_CS);
+    spiReceive(&SPID4, 2, &raw);
+    palSetPad(GPIOE, GPIOE_SPI4_ENC0_CS);
+    raw = ((raw & 0xff) << 8) | (raw >> 8);
+    raw <<= 1;
+
+    lcdPrintln("raw: 0x%04X (%u)", raw, raw);
     chThdSleepMilliseconds(500);
   }
 

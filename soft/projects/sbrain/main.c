@@ -32,7 +32,7 @@ int main(void)
       sens = 1;
     }
     lcdPrintln("test moteur pwm: %d", pwm);
-    dcmSetWidth(0, pwm);
+    dcmSetWidth(1, pwm);
     chThdSleepMilliseconds(500);
   }
 

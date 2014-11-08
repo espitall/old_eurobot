@@ -4,6 +4,7 @@ build
 *.hex
 *.elf
 *.swp
+*.swo
 *.b#*
 *.s#*
 *.bin

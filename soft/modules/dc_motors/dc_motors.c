@@ -36,6 +36,10 @@ void dcmSetWidth(unsigned int channel, int width)
       pwm_channel = 1;
       break;
 
+    case 1:
+      pwm_channel = 2;
+      break;
+
     default:
       return;
   }
@@ -49,6 +53,10 @@ void dcmSetWidth(unsigned int channel, int width)
       case 0:
         palClearPad(GPIOC, GPIOC_DIR_M0);
         break;
+
+      case 1:
+        palClearPad(GPIOC, GPIOC_DIR_M1);
+        break;
     }
   }
   else
@@ -58,6 +66,10 @@ void dcmSetWidth(unsigned int channel, int width)
     {
       case 0:
         palSetPad(GPIOC, GPIOC_DIR_M0);
+        break;
+
+      case 1:
+        palSetPad(GPIOC, GPIOC_DIR_M1);
         break;
     }
   }

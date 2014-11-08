@@ -2,6 +2,7 @@
 #include <hal.h>
 #include <lcd.h>
 #include <field.h>
+#include <dc_motors.h>
 
 
 int main(void) 
@@ -13,23 +14,27 @@ int main(void)
   palSetPad(GPIOG, GPIOG_LED4_RED);
 
   //modules and peripherals initialization
+  dcmInit();
   lcdInit();
   fieldInit();
 
-  palSetPad(GPIOG, GPIOG_LED3_GREEN);
-
-
-  //background task: lcd console test
-  SDRAM int i;
-  int j;
-  i = 0;
-  j = 0;
+  //test moteur
+  int pwm = 0;
+  int sens = 1;
   while (TRUE) {
+    pwm += 1000 * sens;
+    if(pwm > 8000)
+    {
+      sens = -1;
+    }
+    if(pwm < -8000)
+    {
+      sens = 1;
+    }
+    lcdPrintln("test moteur pwm: %d", pwm);
+    dcmSetWidth(0, pwm);
     chThdSleepMilliseconds(500);
-    palSetPad(GPIOG, GPIOG_LED4_RED);
-    lcdPrintln("plop %d %d 0x%lX", i++, j++, (uint32_t)&i);
-    chThdSleepMilliseconds(500);
-    palClearPad(GPIOG, GPIOG_LED4_RED);
   }
 
+  while(TRUE);
 }

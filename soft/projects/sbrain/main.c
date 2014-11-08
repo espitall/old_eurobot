@@ -3,6 +3,7 @@
 #include <lcd.h>
 #include <field.h>
 #include <dc_motors.h>
+#include <position.h>
 
 
 int main(void) 
@@ -17,20 +18,27 @@ int main(void)
   dcmInit();
   lcdInit();
   fieldInit();
+  posInit();
 
+  lcdPrintln("Start");
 
-  while (TRUE) {
+  uint16_t raw = 0x0000;
+  while (TRUE) 
+  {
+    raw += 1;
 
-    uint16_t raw = 0x0000;
-    palClearPad(GPIOE, GPIOE_SPI4_ENC0_CS);
-    spiReceive(&SPID4, 2, &raw);
-    palSetPad(GPIOE, GPIOE_SPI4_ENC0_CS);
-    raw = ((raw & 0xff) << 8) | (raw >> 8);
-    raw <<= 1;
+    //palClearPad(GPIOE, GPIOE_SPI4_ENC0_CS);
+    //spiReceive(&SPID4, 2, &raw);
+    //palSetPad(GPIOE, GPIOE_SPI4_ENC0_CS);
+    //raw = ((raw & 0xff) << 8) | (raw >> 8);
+    //raw <<= 1;
 
     lcdPrintln("raw: 0x%04X (%u)", raw, raw);
     chThdSleepMilliseconds(500);
   }
 
-  while(TRUE);
+  while(TRUE)
+  {
+    chThdSleepMilliseconds(1000);
+  }
 }

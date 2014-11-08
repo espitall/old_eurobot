@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <chprintf.h>
 #include <field.h>
+#include <position.h>
 
 #include "lcd.h"
 #include "ili9341.h"
@@ -168,7 +169,6 @@ static msg_t lcdThread(void *arg)
     lcdSetPixel(0, 142, y, LCD_COLOR(0x00, 0xFB, 0xE4));
   }
 
-  lcdPrintln("addr 0x%lX", (uint32_t)frame_buffer);
   while (TRUE) {
     
     //copy current layer to next layer
@@ -188,13 +188,13 @@ static msg_t lcdThread(void *arg)
     }
     current_layer = !current_layer;
 
-    int32_t x_mm = 12;
-    int32_t y_mm = 35000;
-    int32_t arel_deg = 174;
-    int32_t a_deg = 35174;
-    uint8_t pos_cor = 99;
-    uint8_t time = 119;
-    uint8_t bat = 74;
+    int32_t x_mm = posGetXmm();
+    int32_t y_mm = posGetYmm();
+    int32_t a_deg = posGetAdeg();
+    int32_t arel_deg = a_deg % 360;
+    uint8_t pos_cor = -1;
+    uint8_t time = 90;
+    uint8_t bat = 42;
 
     lcdPrintArea(&topLine, "x: %ldmm y: %ldmm a: %ld(%ld)°\nc: %d%% t: %ds b: %d%%\n",
              x_mm, y_mm, a_deg, arel_deg, pos_cor, time, bat);             

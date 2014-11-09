@@ -24,8 +24,8 @@
 /*
  * Board identifier.
  */
-#define BOARD_EUROBOT_2014
-#define BOARD_NAME                  "Eurobot 2014 - STM32F429I-Discovery"
+#define BOARD_EUROBOT_2015
+#define BOARD_NAME                  "Eurobot 2015 - STM32F429I-Discovery"
 
 
 /*
@@ -91,7 +91,7 @@
 #define GPIOC_FMC_SDNWE             0
 #define GPIOC_SPI5_MEMS_CS          1
 #define GPIOC_SPI5_LCD_CS           2
-#define GPIOC_PIN3                  3
+#define GPIOC_RST_MX                3
 #define GPIOC_OTG_HS_PSO            4
 #define GPIOC_OTG_HS_OC             5
 #define GPIOC_LCD_HSYNC             6
@@ -101,15 +101,15 @@
 #define GPIOC_LCD_R2                10
 #define GPIOC_DIR_M0                11
 #define GPIOC_DIR_M1                12
-#define GPIOC_PIN13                 13
+#define GPIOC_SPI4_ENC1_CS          13
 #define GPIOC_OSC32_IN              14
 #define GPIOC_OSC32_OUT             15
 
 #define GPIOD_FMC_D2                0
 #define GPIOD_FMC_D3                1
-#define GPIOD_PIN2                  2
+#define GPIOD_FAULT_M0              2
 #define GPIOD_LCD_G7                3
-#define GPIOD_PIN4                  4
+#define GPIOD_FAULT_M1              4
 #define GPIOD_PIN5                  5
 #define GPIOD_LCD_B2                6
 #define GPIOD_PIN7                  7
@@ -126,7 +126,7 @@
 #define GPIOE_FMC_NBL1              1
 #define GPIOE_SPI4_SCK              2
 #define GPIOE_SPI4_ENC0_CS          3
-#define GPIOE_PIN4                  4
+#define GPIOE_SPI4_GYRO_CS          4
 #define GPIOE_SPI4_MISO             5
 #define GPIOE_SPI4_MOSI             6
 #define GPIOE_FMC_D4                7
@@ -158,8 +158,8 @@
 
 #define GPIOG_FMC_A10               0
 #define GPIOG_FMC_A11               1
-#define GPIOG_PIN2                  2
-#define GPIOG_PIN3                  3
+#define GPIOG_SPI5_ADC0_CS          2
+#define GPIOG_SPI5_ADC1_CS          3
 #define GPIOG_FMC_BA0               4
 #define GPIOG_FMC_BA1               5
 #define GPIOG_LCD_R7                6
@@ -483,101 +483,101 @@
  * PC14 - OSC32_IN                  (input floating).
  * PC15 - OSC32_OUT                 (input floating).
  */
-#define VAL_GPIOC_MODER             (PIN_MODE_ALTERNATE(GPIOC_FMC_SDNWE) |  \
-                                     PIN_MODE_OUTPUT(GPIOC_SPI5_MEMS_CS) |  \
-                                     PIN_MODE_OUTPUT(GPIOC_SPI5_LCD_CS) |   \
-                                     PIN_MODE_INPUT(GPIOC_PIN3) |           \
-                                     PIN_MODE_OUTPUT(GPIOC_OTG_HS_PSO) |    \
-                                     PIN_MODE_INPUT(GPIOC_OTG_HS_OC) |      \
-                                     PIN_MODE_ALTERNATE(GPIOC_LCD_HSYNC) |  \
-                                     PIN_MODE_ALTERNATE(GPIOC_LCD_G6) |     \
-                                     PIN_MODE_INPUT(GPIOC_PIN8) |           \
-                                     PIN_MODE_ALTERNATE(GPIOC_I2C3_SDA) |   \
-                                     PIN_MODE_ALTERNATE(GPIOC_LCD_R2) |     \
-                                     PIN_MODE_OUTPUT(GPIOC_DIR_M0) |        \
-                                     PIN_MODE_OUTPUT(GPIOC_DIR_M1) |        \
-                                     PIN_MODE_INPUT(GPIOC_PIN13) |          \
-                                     PIN_MODE_INPUT(GPIOC_OSC32_IN) |       \
+#define VAL_GPIOC_MODER             (PIN_MODE_ALTERNATE(GPIOC_FMC_SDNWE) |    \
+                                     PIN_MODE_OUTPUT(GPIOC_SPI5_MEMS_CS) |    \
+                                     PIN_MODE_OUTPUT(GPIOC_SPI5_LCD_CS) |     \
+                                     PIN_MODE_OUTPUT(GPIOC_RST_MX) |          \
+                                     PIN_MODE_OUTPUT(GPIOC_OTG_HS_PSO) |      \
+                                     PIN_MODE_INPUT(GPIOC_OTG_HS_OC) |        \
+                                     PIN_MODE_ALTERNATE(GPIOC_LCD_HSYNC) |    \
+                                     PIN_MODE_ALTERNATE(GPIOC_LCD_G6) |       \
+                                     PIN_MODE_INPUT(GPIOC_PIN8) |             \
+                                     PIN_MODE_ALTERNATE(GPIOC_I2C3_SDA) |     \
+                                     PIN_MODE_ALTERNATE(GPIOC_LCD_R2) |       \
+                                     PIN_MODE_OUTPUT(GPIOC_DIR_M0) |          \
+                                     PIN_MODE_OUTPUT(GPIOC_DIR_M1) |          \
+                                     PIN_MODE_OUTPUT(GPIOC_SPI4_ENC1_CS) |    \
+                                     PIN_MODE_INPUT(GPIOC_OSC32_IN) |         \
                                      PIN_MODE_INPUT(GPIOC_OSC32_OUT))
-#define VAL_GPIOC_OTYPER            (PIN_OTYPE_PUSHPULL(GPIOC_FMC_SDNWE) |  \
-                                     PIN_OTYPE_PUSHPULL(GPIOC_SPI5_MEMS_CS) |\
-                                     PIN_OTYPE_PUSHPULL(GPIOC_SPI5_LCD_CS) |\
-                                     PIN_OTYPE_PUSHPULL(GPIOC_PIN3) |       \
-                                     PIN_OTYPE_PUSHPULL(GPIOC_OTG_HS_PSO) | \
-                                     PIN_OTYPE_PUSHPULL(GPIOC_OTG_HS_OC) |  \
-                                     PIN_OTYPE_PUSHPULL(GPIOC_LCD_HSYNC) |  \
-                                     PIN_OTYPE_PUSHPULL(GPIOC_LCD_G6) |     \
-                                     PIN_OTYPE_PUSHPULL(GPIOC_PIN8) |       \
-                                     PIN_OTYPE_OPENDRAIN(GPIOC_I2C3_SDA) |  \
-                                     PIN_OTYPE_PUSHPULL(GPIOC_LCD_R2) |     \
-                                     PIN_OTYPE_PUSHPULL(GPIOC_DIR_M0) |     \
-                                     PIN_OTYPE_PUSHPULL(GPIOC_DIR_M1) |     \
-                                     PIN_OTYPE_PUSHPULL(GPIOC_PIN13) |      \
-                                     PIN_OTYPE_PUSHPULL(GPIOC_OSC32_IN) |   \
+#define VAL_GPIOC_OTYPER            (PIN_OTYPE_PUSHPULL(GPIOC_FMC_SDNWE) |    \
+                                     PIN_OTYPE_PUSHPULL(GPIOC_SPI5_MEMS_CS) | \
+                                     PIN_OTYPE_PUSHPULL(GPIOC_SPI5_LCD_CS) |  \
+                                     PIN_OTYPE_PUSHPULL(GPIOC_RST_MX) |       \
+                                     PIN_OTYPE_PUSHPULL(GPIOC_OTG_HS_PSO) |   \
+                                     PIN_OTYPE_PUSHPULL(GPIOC_OTG_HS_OC) |    \
+                                     PIN_OTYPE_PUSHPULL(GPIOC_LCD_HSYNC) |    \
+                                     PIN_OTYPE_PUSHPULL(GPIOC_LCD_G6) |       \
+                                     PIN_OTYPE_PUSHPULL(GPIOC_PIN8) |         \
+                                     PIN_OTYPE_OPENDRAIN(GPIOC_I2C3_SDA) |    \
+                                     PIN_OTYPE_PUSHPULL(GPIOC_LCD_R2) |       \
+                                     PIN_OTYPE_PUSHPULL(GPIOC_DIR_M0) |       \
+                                     PIN_OTYPE_PUSHPULL(GPIOC_DIR_M1) |       \
+                                     PIN_OTYPE_PUSHPULL(GPIOC_SPI4_ENC1_CS) | \
+                                     PIN_OTYPE_PUSHPULL(GPIOC_OSC32_IN) |     \
                                      PIN_OTYPE_PUSHPULL(GPIOC_OSC32_OUT))
-#define VAL_GPIOC_OSPEEDR           (PIN_OSPEED_100M(GPIOC_FMC_SDNWE) |     \
-                                     PIN_OSPEED_100M(GPIOC_SPI5_MEMS_CS) |  \
-                                     PIN_OSPEED_100M(GPIOC_SPI5_LCD_CS) |   \
-                                     PIN_OSPEED_2M(GPIOC_PIN3) |            \
-                                     PIN_OSPEED_100M(GPIOC_OTG_HS_PSO) |    \
-                                     PIN_OSPEED_100M(GPIOC_OTG_HS_OC) |     \
-                                     PIN_OSPEED_100M(GPIOC_LCD_HSYNC) |     \
-                                     PIN_OSPEED_100M(GPIOC_LCD_G6) |        \
-                                     PIN_OSPEED_2M(GPIOC_PIN8) |            \
-                                     PIN_OSPEED_100M(GPIOC_I2C3_SDA) |      \
-                                     PIN_OSPEED_100M(GPIOC_LCD_R2) |        \
-                                     PIN_OSPEED_2M(GPIOC_DIR_M0) |          \
-                                     PIN_OSPEED_2M(GPIOC_DIR_M1) |          \
-                                     PIN_OSPEED_2M(GPIOC_PIN13) |           \
-                                     PIN_OSPEED_100M(GPIOC_OSC32_IN) |      \
+#define VAL_GPIOC_OSPEEDR           (PIN_OSPEED_100M(GPIOC_FMC_SDNWE) |       \
+                                     PIN_OSPEED_100M(GPIOC_SPI5_MEMS_CS) |    \
+                                     PIN_OSPEED_100M(GPIOC_SPI5_LCD_CS) |     \
+                                     PIN_OSPEED_2M(GPIOC_RST_MX) |            \
+                                     PIN_OSPEED_100M(GPIOC_OTG_HS_PSO) |      \
+                                     PIN_OSPEED_100M(GPIOC_OTG_HS_OC) |       \
+                                     PIN_OSPEED_100M(GPIOC_LCD_HSYNC) |       \
+                                     PIN_OSPEED_100M(GPIOC_LCD_G6) |          \
+                                     PIN_OSPEED_2M(GPIOC_PIN8) |              \
+                                     PIN_OSPEED_100M(GPIOC_I2C3_SDA) |        \
+                                     PIN_OSPEED_100M(GPIOC_LCD_R2) |          \
+                                     PIN_OSPEED_2M(GPIOC_DIR_M0) |            \
+                                     PIN_OSPEED_2M(GPIOC_DIR_M1) |            \
+                                     PIN_OSPEED_2M(GPIOC_SPI4_ENC1_CS) |      \
+                                     PIN_OSPEED_100M(GPIOC_OSC32_IN) |        \
                                      PIN_OSPEED_100M(GPIOC_OSC32_OUT))
-#define VAL_GPIOC_PUPDR             (PIN_PUPDR_FLOATING(GPIOC_FMC_SDNWE) |  \
-                                     PIN_PUPDR_FLOATING(GPIOC_SPI5_MEMS_CS) |\
-                                     PIN_PUPDR_FLOATING(GPIOC_SPI5_LCD_CS) |\
-                                     PIN_PUPDR_PULLUP(GPIOC_PIN3) |         \
-                                     PIN_PUPDR_FLOATING(GPIOC_OTG_HS_PSO) | \
-                                     PIN_PUPDR_FLOATING(GPIOC_OTG_HS_OC) |  \
-                                     PIN_PUPDR_FLOATING(GPIOC_LCD_HSYNC) |  \
-                                     PIN_PUPDR_FLOATING(GPIOC_LCD_G6) |     \
-                                     PIN_PUPDR_PULLUP(GPIOC_PIN8) |         \
-                                     PIN_PUPDR_FLOATING(GPIOC_I2C3_SDA) |   \
-                                     PIN_PUPDR_FLOATING(GPIOC_LCD_R2) |     \
-                                     PIN_PUPDR_PULLUP(GPIOC_DIR_M0) |       \
-                                     PIN_PUPDR_PULLUP(GPIOC_DIR_M1) |       \
-                                     PIN_PUPDR_PULLUP(GPIOC_PIN13) |        \
-                                     PIN_PUPDR_FLOATING(GPIOC_OSC32_IN) |   \
+#define VAL_GPIOC_PUPDR             (PIN_PUPDR_FLOATING(GPIOC_FMC_SDNWE) |    \
+                                     PIN_PUPDR_FLOATING(GPIOC_SPI5_MEMS_CS) | \
+                                     PIN_PUPDR_FLOATING(GPIOC_SPI5_LCD_CS) |  \
+                                     PIN_PUPDR_PULLUP(GPIOC_RST_MX) |         \
+                                     PIN_PUPDR_FLOATING(GPIOC_OTG_HS_PSO) |   \
+                                     PIN_PUPDR_FLOATING(GPIOC_OTG_HS_OC) |    \
+                                     PIN_PUPDR_FLOATING(GPIOC_LCD_HSYNC) |    \
+                                     PIN_PUPDR_FLOATING(GPIOC_LCD_G6) |       \
+                                     PIN_PUPDR_PULLUP(GPIOC_PIN8) |           \
+                                     PIN_PUPDR_FLOATING(GPIOC_I2C3_SDA) |     \
+                                     PIN_PUPDR_FLOATING(GPIOC_LCD_R2) |       \
+                                     PIN_PUPDR_PULLUP(GPIOC_DIR_M0) |         \
+                                     PIN_PUPDR_PULLUP(GPIOC_DIR_M1) |         \
+                                     PIN_PUPDR_PULLUP(GPIOC_SPI4_ENC1_CS) |   \
+                                     PIN_PUPDR_FLOATING(GPIOC_OSC32_IN) |     \
                                      PIN_PUPDR_FLOATING(GPIOC_OSC32_OUT))
-#define VAL_GPIOC_ODR               (PIN_ODR_HIGH(GPIOC_FMC_SDNWE) |        \
-                                     PIN_ODR_HIGH(GPIOC_SPI5_MEMS_CS) |     \
-                                     PIN_ODR_HIGH(GPIOC_SPI5_LCD_CS) |      \
-                                     PIN_ODR_HIGH(GPIOC_PIN3) |             \
-                                     PIN_ODR_HIGH(GPIOC_OTG_HS_PSO) |       \
-                                     PIN_ODR_HIGH(GPIOC_OTG_HS_OC) |        \
-                                     PIN_ODR_HIGH(GPIOC_LCD_HSYNC) |        \
-                                     PIN_ODR_HIGH(GPIOC_LCD_G6) |           \
-                                     PIN_ODR_HIGH(GPIOC_PIN8) |             \
-                                     PIN_ODR_HIGH(GPIOC_I2C3_SDA) |         \
-                                     PIN_ODR_HIGH(GPIOC_LCD_R2) |           \
-                                     PIN_ODR_HIGH(GPIOC_DIR_M0) |           \
-                                     PIN_ODR_HIGH(GPIOC_DIR_M1) |           \
-                                     PIN_ODR_HIGH(GPIOC_PIN13) |            \
-                                     PIN_ODR_HIGH(GPIOC_OSC32_IN) |         \
+#define VAL_GPIOC_ODR               (PIN_ODR_HIGH(GPIOC_FMC_SDNWE) |          \
+                                     PIN_ODR_HIGH(GPIOC_SPI5_MEMS_CS) |       \
+                                     PIN_ODR_HIGH(GPIOC_SPI5_LCD_CS) |        \
+                                     PIN_ODR_HIGH(GPIOC_RST_MX) |             \
+                                     PIN_ODR_HIGH(GPIOC_OTG_HS_PSO) |         \
+                                     PIN_ODR_HIGH(GPIOC_OTG_HS_OC) |          \
+                                     PIN_ODR_HIGH(GPIOC_LCD_HSYNC) |          \
+                                     PIN_ODR_HIGH(GPIOC_LCD_G6) |             \
+                                     PIN_ODR_HIGH(GPIOC_PIN8) |               \
+                                     PIN_ODR_HIGH(GPIOC_I2C3_SDA) |           \
+                                     PIN_ODR_HIGH(GPIOC_LCD_R2) |             \
+                                     PIN_ODR_HIGH(GPIOC_DIR_M0) |             \
+                                     PIN_ODR_HIGH(GPIOC_DIR_M1) |             \
+                                     PIN_ODR_HIGH(GPIOC_SPI4_ENC1_CS) |       \
+                                     PIN_ODR_HIGH(GPIOC_OSC32_IN) |           \
                                      PIN_ODR_HIGH(GPIOC_OSC32_OUT))
-#define VAL_GPIOC_AFRL              (PIN_AFIO_AF(GPIOC_FMC_SDNWE, 12) |     \
-                                     PIN_AFIO_AF(GPIOC_SPI5_MEMS_CS, 0) |   \
-                                     PIN_AFIO_AF(GPIOC_SPI5_LCD_CS, 0) |    \
-                                     PIN_AFIO_AF(GPIOC_PIN3, 0) |           \
-                                     PIN_AFIO_AF(GPIOC_OTG_HS_PSO, 0) |     \
-                                     PIN_AFIO_AF(GPIOC_OTG_HS_OC, 0) |      \
-                                     PIN_AFIO_AF(GPIOC_LCD_HSYNC, 14) |     \
+#define VAL_GPIOC_AFRL              (PIN_AFIO_AF(GPIOC_FMC_SDNWE, 12) |       \
+                                     PIN_AFIO_AF(GPIOC_SPI5_MEMS_CS, 0) |     \
+                                     PIN_AFIO_AF(GPIOC_SPI5_LCD_CS, 0) |      \
+                                     PIN_AFIO_AF(GPIOC_RST_MX, 0) |           \
+                                     PIN_AFIO_AF(GPIOC_OTG_HS_PSO, 0) |       \
+                                     PIN_AFIO_AF(GPIOC_OTG_HS_OC, 0) |        \
+                                     PIN_AFIO_AF(GPIOC_LCD_HSYNC, 14) |       \
                                      PIN_AFIO_AF(GPIOC_LCD_G6, 14))
-#define VAL_GPIOC_AFRH              (PIN_AFIO_AF(GPIOC_PIN8, 0) |           \
-                                     PIN_AFIO_AF(GPIOC_I2C3_SDA, 4) |       \
-                                     PIN_AFIO_AF(GPIOC_LCD_R2, 14) |        \
-                                     PIN_AFIO_AF(GPIOC_DIR_M0, 0) |         \
-                                     PIN_AFIO_AF(GPIOC_DIR_M1, 0) |         \
-                                     PIN_AFIO_AF(GPIOC_PIN13, 0) |          \
-                                     PIN_AFIO_AF(GPIOC_OSC32_IN, 0) |       \
+#define VAL_GPIOC_AFRH              (PIN_AFIO_AF(GPIOC_PIN8, 0) |             \
+                                     PIN_AFIO_AF(GPIOC_I2C3_SDA, 4) |         \
+                                     PIN_AFIO_AF(GPIOC_LCD_R2, 14) |          \
+                                     PIN_AFIO_AF(GPIOC_DIR_M0, 0) |           \
+                                     PIN_AFIO_AF(GPIOC_DIR_M1, 0) |           \
+                                     PIN_AFIO_AF(GPIOC_SPI4_ENC1_CS, 0) |     \
+                                     PIN_AFIO_AF(GPIOC_OSC32_IN, 0) |         \
                                      PIN_AFIO_AF(GPIOC_OSC32_OUT, 0))
 
 /*
@@ -602,9 +602,9 @@
  */
 #define VAL_GPIOD_MODER             (PIN_MODE_ALTERNATE(GPIOD_FMC_D2) |     \
                                      PIN_MODE_ALTERNATE(GPIOD_FMC_D3) |     \
-                                     PIN_MODE_INPUT(GPIOD_PIN2) |           \
+                                     PIN_MODE_INPUT(GPIOD_FAULT_M0) |       \
                                      PIN_MODE_ALTERNATE(GPIOD_LCD_G7) |     \
-                                     PIN_MODE_INPUT(GPIOD_PIN4) |           \
+                                     PIN_MODE_INPUT(GPIOD_FAULT_M1) |       \
                                      PIN_MODE_INPUT(GPIOD_PIN5) |           \
                                      PIN_MODE_ALTERNATE(GPIOD_LCD_B2) |     \
                                      PIN_MODE_INPUT(GPIOD_PIN7) |           \
@@ -618,9 +618,9 @@
                                      PIN_MODE_ALTERNATE(GPIOD_FMC_D1))
 #define VAL_GPIOD_OTYPER            (PIN_OTYPE_PUSHPULL(GPIOD_FMC_D2) |     \
                                      PIN_OTYPE_PUSHPULL(GPIOD_FMC_D3) |     \
-                                     PIN_OTYPE_PUSHPULL(GPIOD_PIN2) |       \
+                                     PIN_OTYPE_PUSHPULL(GPIOD_FAULT_M0) |   \
                                      PIN_OTYPE_PUSHPULL(GPIOD_LCD_G7) |     \
-                                     PIN_OTYPE_PUSHPULL(GPIOD_PIN4) |       \
+                                     PIN_OTYPE_PUSHPULL(GPIOD_FAULT_M1) |   \
                                      PIN_OTYPE_PUSHPULL(GPIOD_PIN5) |       \
                                      PIN_OTYPE_PUSHPULL(GPIOD_LCD_B2) |     \
                                      PIN_OTYPE_PUSHPULL(GPIOD_PIN7) |       \
@@ -634,9 +634,9 @@
                                      PIN_OTYPE_PUSHPULL(GPIOD_FMC_D1))
 #define VAL_GPIOD_OSPEEDR           (PIN_OSPEED_100M(GPIOD_FMC_D2) |        \
                                      PIN_OSPEED_100M(GPIOD_FMC_D3) |        \
-                                     PIN_OSPEED_2M(GPIOD_PIN2) |            \
+                                     PIN_OSPEED_2M(GPIOD_FAULT_M0) |        \
                                      PIN_OSPEED_100M(GPIOD_LCD_G7) |        \
-                                     PIN_OSPEED_2M(GPIOD_PIN4) |            \
+                                     PIN_OSPEED_2M(GPIOD_FAULT_M1) |        \
                                      PIN_OSPEED_2M(GPIOD_PIN5) |            \
                                      PIN_OSPEED_100M(GPIOD_LCD_B2) |        \
                                      PIN_OSPEED_2M(GPIOD_PIN7) |            \
@@ -650,9 +650,9 @@
                                      PIN_OSPEED_100M(GPIOD_FMC_D1))
 #define VAL_GPIOD_PUPDR             (PIN_PUPDR_FLOATING(GPIOD_FMC_D2) |     \
                                      PIN_PUPDR_FLOATING(GPIOD_FMC_D3) |     \
-                                     PIN_PUPDR_PULLUP(GPIOD_PIN2) |         \
+                                     PIN_PUPDR_PULLUP(GPIOD_FAULT_M0) |     \
                                      PIN_PUPDR_FLOATING(GPIOD_LCD_G7) |     \
-                                     PIN_PUPDR_PULLUP(GPIOD_PIN4) |         \
+                                     PIN_PUPDR_PULLUP(GPIOD_FAULT_M1) |     \
                                      PIN_PUPDR_PULLUP(GPIOD_PIN5) |         \
                                      PIN_PUPDR_FLOATING(GPIOD_LCD_B2) |     \
                                      PIN_PUPDR_PULLUP(GPIOD_PIN7) |         \
@@ -666,9 +666,9 @@
                                      PIN_PUPDR_FLOATING(GPIOD_FMC_D1))
 #define VAL_GPIOD_ODR               (PIN_ODR_HIGH(GPIOD_FMC_D2) |           \
                                      PIN_ODR_HIGH(GPIOD_FMC_D3) |           \
-                                     PIN_ODR_HIGH(GPIOD_PIN2) |             \
+                                     PIN_ODR_HIGH(GPIOD_FAULT_M0) |         \
                                      PIN_ODR_HIGH(GPIOD_LCD_G7) |           \
-                                     PIN_ODR_HIGH(GPIOD_PIN4) |             \
+                                     PIN_ODR_HIGH(GPIOD_FAULT_M1) |         \
                                      PIN_ODR_HIGH(GPIOD_PIN5) |             \
                                      PIN_ODR_HIGH(GPIOD_LCD_B2) |           \
                                      PIN_ODR_HIGH(GPIOD_PIN7) |             \
@@ -682,9 +682,9 @@
                                      PIN_ODR_HIGH(GPIOD_FMC_D1))
 #define VAL_GPIOD_AFRL              (PIN_AFIO_AF(GPIOD_FMC_D2, 12) |        \
                                      PIN_AFIO_AF(GPIOD_FMC_D3, 12) |        \
-                                     PIN_AFIO_AF(GPIOD_PIN2, 0) |           \
+                                     PIN_AFIO_AF(GPIOD_FAULT_M0, 0) |       \
                                      PIN_AFIO_AF(GPIOD_LCD_G7, 14) |        \
-                                     PIN_AFIO_AF(GPIOD_PIN4, 0) |           \
+                                     PIN_AFIO_AF(GPIOD_FAULT_M1, 0) |       \
                                      PIN_AFIO_AF(GPIOD_PIN5, 0) |           \
                                      PIN_AFIO_AF(GPIOD_LCD_B2, 14) |        \
                                      PIN_AFIO_AF(GPIOD_PIN7, 0))
@@ -721,7 +721,7 @@
                                      PIN_MODE_ALTERNATE(GPIOE_FMC_NBL1) |   \
                                      PIN_MODE_ALTERNATE(GPIOE_SPI4_SCK) |   \
                                      PIN_MODE_OUTPUT(GPIOE_SPI4_ENC0_CS) |  \
-                                     PIN_MODE_INPUT(GPIOE_PIN4) |           \
+                                     PIN_MODE_OUTPUT(GPIOE_SPI4_GYRO_CS) |  \
                                      PIN_MODE_ALTERNATE(GPIOE_SPI4_MISO) |  \
                                      PIN_MODE_ALTERNATE(GPIOE_SPI4_MOSI) |  \
                                      PIN_MODE_ALTERNATE(GPIOE_FMC_D4) |     \
@@ -737,7 +737,7 @@
                                      PIN_OTYPE_PUSHPULL(GPIOE_FMC_NBL1) |   \
                                      PIN_OTYPE_PUSHPULL(GPIOE_SPI4_SCK) |   \
                                      PIN_OTYPE_PUSHPULL(GPIOE_SPI4_ENC0_CS) | \
-                                     PIN_OTYPE_PUSHPULL(GPIOE_PIN4) |       \
+                                     PIN_OTYPE_PUSHPULL(GPIOE_SPI4_GYRO_CS) | \
                                      PIN_OTYPE_PUSHPULL(GPIOE_SPI4_MISO) |  \
                                      PIN_OTYPE_PUSHPULL(GPIOE_SPI4_MOSI) |  \
                                      PIN_OTYPE_PUSHPULL(GPIOE_FMC_D4) |     \
@@ -753,7 +753,7 @@
                                      PIN_OSPEED_100M(GPIOE_FMC_NBL1) |      \
                                      PIN_OSPEED_2M(GPIOE_SPI4_SCK) |        \
                                      PIN_OSPEED_2M(GPIOE_SPI4_ENC0_CS) |    \
-                                     PIN_OSPEED_2M(GPIOE_PIN4) |            \
+                                     PIN_OSPEED_2M(GPIOE_SPI4_GYRO_CS) |    \
                                      PIN_OSPEED_2M(GPIOE_SPI4_MISO) |       \
                                      PIN_OSPEED_2M(GPIOE_SPI4_MOSI) |       \
                                      PIN_OSPEED_100M(GPIOE_FMC_D4) |        \
@@ -769,7 +769,7 @@
                                      PIN_PUPDR_FLOATING(GPIOE_FMC_NBL1) |   \
                                      PIN_PUPDR_PULLUP(GPIOE_SPI4_SCK) |     \
                                      PIN_PUPDR_PULLUP(GPIOE_SPI4_ENC0_CS) | \
-                                     PIN_PUPDR_PULLUP(GPIOE_PIN4) |         \
+                                     PIN_PUPDR_PULLUP(GPIOE_SPI4_GYRO_CS) | \
                                      PIN_PUPDR_PULLUP(GPIOE_SPI4_MISO) |    \
                                      PIN_PUPDR_PULLUP(GPIOE_SPI4_MOSI) |    \
                                      PIN_PUPDR_FLOATING(GPIOE_FMC_D4) |     \
@@ -785,7 +785,7 @@
                                      PIN_ODR_HIGH(GPIOE_FMC_NBL1) |         \
                                      PIN_ODR_HIGH(GPIOE_SPI4_SCK) |         \
                                      PIN_ODR_HIGH(GPIOE_SPI4_ENC0_CS) |     \
-                                     PIN_ODR_HIGH(GPIOE_PIN4) |             \
+                                     PIN_ODR_HIGH(GPIOE_SPI4_GYRO_CS) |     \
                                      PIN_ODR_HIGH(GPIOE_SPI4_MISO) |        \
                                      PIN_ODR_HIGH(GPIOE_SPI4_MOSI) |        \
                                      PIN_ODR_HIGH(GPIOE_FMC_D4) |           \
@@ -801,7 +801,7 @@
                                      PIN_AFIO_AF(GPIOE_FMC_NBL1, 12) |      \
                                      PIN_AFIO_AF(GPIOE_SPI4_SCK, 5) |       \
                                      PIN_AFIO_AF(GPIOE_SPI4_ENC0_CS, 0) |   \
-                                     PIN_AFIO_AF(GPIOE_PIN4, 0) |           \
+                                     PIN_AFIO_AF(GPIOE_SPI4_GYRO_CS, 0) |   \
                                      PIN_AFIO_AF(GPIOE_SPI4_MISO, 5) |      \
                                      PIN_AFIO_AF(GPIOE_SPI4_MOSI, 5) |      \
                                      PIN_AFIO_AF(GPIOE_FMC_D4, 12))
@@ -953,8 +953,8 @@
  */
 #define VAL_GPIOG_MODER             (PIN_MODE_ALTERNATE(GPIOG_FMC_A10) |    \
                                      PIN_MODE_ALTERNATE(GPIOG_FMC_A11) |    \
-                                     PIN_MODE_INPUT(GPIOG_PIN2) |           \
-                                     PIN_MODE_INPUT(GPIOG_PIN3) |           \
+                                     PIN_MODE_OUTPUT(GPIOG_SPI5_ADC0_CS) |  \
+                                     PIN_MODE_OUTPUT(GPIOG_SPI5_ADC1_CS) |  \
                                      PIN_MODE_ALTERNATE(GPIOG_FMC_BA0) |    \
                                      PIN_MODE_ALTERNATE(GPIOG_FMC_BA1) |    \
                                      PIN_MODE_ALTERNATE(GPIOG_LCD_R7) |     \
@@ -969,8 +969,8 @@
                                      PIN_MODE_ALTERNATE(GPIOG_FMC_SDNCAS))
 #define VAL_GPIOG_OTYPER            (PIN_OTYPE_PUSHPULL(GPIOG_FMC_A10) |    \
                                      PIN_OTYPE_PUSHPULL(GPIOG_FMC_A11) |    \
-                                     PIN_OTYPE_PUSHPULL(GPIOG_PIN2) |       \
-                                     PIN_OTYPE_PUSHPULL(GPIOG_PIN3) |       \
+                                     PIN_OTYPE_PUSHPULL(GPIOG_SPI5_ADC0_CS) | \
+                                     PIN_OTYPE_PUSHPULL(GPIOG_SPI5_ADC1_CS) | \
                                      PIN_OTYPE_PUSHPULL(GPIOG_FMC_BA0) |    \
                                      PIN_OTYPE_PUSHPULL(GPIOG_FMC_BA1) |    \
                                      PIN_OTYPE_PUSHPULL(GPIOG_LCD_R7) |     \
@@ -985,8 +985,8 @@
                                      PIN_OTYPE_PUSHPULL(GPIOG_FMC_SDNCAS))
 #define VAL_GPIOG_OSPEEDR           (PIN_OSPEED_100M(GPIOG_FMC_A10) |       \
                                      PIN_OSPEED_100M(GPIOG_FMC_A11) |       \
-                                     PIN_OSPEED_2M(GPIOG_PIN2) |            \
-                                     PIN_OSPEED_2M(GPIOG_PIN3) |            \
+                                     PIN_OSPEED_2M(GPIOG_SPI5_ADC0_CS) |    \
+                                     PIN_OSPEED_2M(GPIOG_SPI5_ADC1_CS) |    \
                                      PIN_OSPEED_100M(GPIOG_FMC_BA0) |       \
                                      PIN_OSPEED_100M(GPIOG_FMC_BA1) |       \
                                      PIN_OSPEED_100M(GPIOG_LCD_R7) |        \
@@ -1001,8 +1001,8 @@
                                      PIN_OSPEED_100M(GPIOG_FMC_SDNCAS))
 #define VAL_GPIOG_PUPDR             (PIN_PUPDR_FLOATING(GPIOG_FMC_A10) |    \
                                      PIN_PUPDR_FLOATING(GPIOG_FMC_A11) |    \
-                                     PIN_PUPDR_PULLUP(GPIOG_PIN2) |         \
-                                     PIN_PUPDR_PULLUP(GPIOG_PIN3) |         \
+                                     PIN_PUPDR_PULLUP(GPIOG_SPI5_ADC0_CS) | \
+                                     PIN_PUPDR_PULLUP(GPIOG_SPI5_ADC1_CS) | \
                                      PIN_PUPDR_FLOATING(GPIOG_FMC_BA0) |    \
                                      PIN_PUPDR_FLOATING(GPIOG_FMC_BA1) |    \
                                      PIN_PUPDR_FLOATING(GPIOG_LCD_R7) |     \
@@ -1017,8 +1017,8 @@
                                      PIN_PUPDR_FLOATING(GPIOG_FMC_SDNCAS))
 #define VAL_GPIOG_ODR               (PIN_ODR_HIGH(GPIOG_FMC_A10) |          \
                                      PIN_ODR_HIGH(GPIOG_FMC_A11) |          \
-                                     PIN_ODR_HIGH(GPIOG_PIN2) |             \
-                                     PIN_ODR_HIGH(GPIOG_PIN3) |             \
+                                     PIN_ODR_HIGH(GPIOG_SPI5_ADC0_CS) |     \
+                                     PIN_ODR_HIGH(GPIOG_SPI5_ADC1_CS) |     \
                                      PIN_ODR_HIGH(GPIOG_FMC_BA0) |          \
                                      PIN_ODR_HIGH(GPIOG_FMC_BA1) |          \
                                      PIN_ODR_HIGH(GPIOG_LCD_R7) |           \
@@ -1033,8 +1033,8 @@
                                      PIN_ODR_HIGH(GPIOG_FMC_SDNCAS))
 #define VAL_GPIOG_AFRL              (PIN_AFIO_AF(GPIOG_FMC_A10, 12) |       \
                                      PIN_AFIO_AF(GPIOG_FMC_A11, 12) |       \
-                                     PIN_AFIO_AF(GPIOG_PIN2, 0) |           \
-                                     PIN_AFIO_AF(GPIOG_PIN3, 0) |           \
+                                     PIN_AFIO_AF(GPIOG_SPI5_ADC0_CS, 0) |   \
+                                     PIN_AFIO_AF(GPIOG_SPI5_ADC1_CS, 0) |   \
                                      PIN_AFIO_AF(GPIOG_FMC_BA0, 12) |       \
                                      PIN_AFIO_AF(GPIOG_FMC_BA1, 12) |       \
                                      PIN_AFIO_AF(GPIOG_LCD_R7, 14) |        \

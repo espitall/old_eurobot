@@ -1,8 +1,8 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#define TICK_PER_180DEG   1.0
-#define TICK_PER_1M       1.0
+#define TICK_PER_180DEG   10000.0
+#define TICK_PER_1M       10000.0
 
 #define LCD_SCHEDULER_PRIO LOWPRIO
 #define POSITION_SCHEDULER_PRIO HIGHPRIO

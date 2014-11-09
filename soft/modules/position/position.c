@@ -34,6 +34,7 @@ void posComputeEncoderPosition(int enc_id)
   }
   else
   {
+    palClearPad(GPIOC, GPIOC_SPI4_ENC1_CS);
   }
   spiReceive(&SPID4, 2, &raw);
 
@@ -43,6 +44,7 @@ void posComputeEncoderPosition(int enc_id)
   }
   else
   {
+    palSetPad(GPIOC, GPIOC_SPI4_ENC1_CS);
   }
 
   //libere les ressources
@@ -105,6 +107,7 @@ void posInit(void)
 {
   //initialisation du bus SPI
   palSetPad(GPIOE, GPIOE_SPI4_ENC0_CS);
+  palSetPad(GPIOC, GPIOC_SPI4_ENC1_CS);
 
   //initialisation des variables internes
   chMtxInit(&mutex);

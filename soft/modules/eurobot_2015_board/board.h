@@ -534,7 +534,7 @@
 #define VAL_GPIOC_PUPDR             (PIN_PUPDR_FLOATING(GPIOC_FMC_SDNWE) |    \
                                      PIN_PUPDR_FLOATING(GPIOC_SPI5_MEMS_CS) | \
                                      PIN_PUPDR_FLOATING(GPIOC_SPI5_LCD_CS) |  \
-                                     PIN_PUPDR_PULLUP(GPIOC_RST_MX) |         \
+                                     PIN_PUPDR_FLOATING(GPIOC_RST_MX) |         \
                                      PIN_PUPDR_FLOATING(GPIOC_OTG_HS_PSO) |   \
                                      PIN_PUPDR_FLOATING(GPIOC_OTG_HS_OC) |    \
                                      PIN_PUPDR_FLOATING(GPIOC_LCD_HSYNC) |    \

@@ -20,6 +20,8 @@ void dcmInit(void)
 {
    pwmStart(&PWM_MOTORS, &pwmcfg);
 
+   palSetPad(GPIOC, GPIOC_RST_MX);
+
    pwmEnableChannel(&PWM_MOTORS, 0, 1000); 
    pwmEnableChannel(&PWM_MOTORS, 1, 1000); 
    pwmEnableChannel(&PWM_MOTORS, 2, 1000); 

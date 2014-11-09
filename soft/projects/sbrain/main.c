@@ -4,6 +4,7 @@
 #include <field.h>
 #include <dc_motors.h>
 #include <position.h>
+#include <math.h>
 
 
 int main(void) 
@@ -22,27 +23,23 @@ int main(void)
 
   lcdPrintln("Start");
 
-  uint16_t raw = 0x0000;
+  int pwm[2] = {0, 5000};
+  int sens[2] = {1, 1};
   while (TRUE) 
   {
-    raw += 1;
-
-    //palClearPad(GPIOE, GPIOE_SPI4_ENC0_CS);
-    //spiReceive(&SPID4, 2, &raw);
-    //palSetPad(GPIOE, GPIOE_SPI4_ENC0_CS);
-    //raw = ((raw & 0xff) << 8) | (raw >> 8);
-    //raw <<= 1;
-
-    if(raw % 2)
+    int i;
+    for(i = 0; i < 2; i += 1)
     {
-      palSetPad(GPIOG, GPIOG_LED4_RED);
-    }
-    else
-    {
-      palClearPad(GPIOG, GPIOG_LED4_RED);
-    }
+      pwm[i] += 100 * sens[i];
+      if(fabs(pwm[i]) > 8000)
+      {
+        sens[i] *= -1;
+      }
+      dcmSetWidth(0, 5000);
+      dcmSetWidth(1, 2500);
 
-    lcdPrintln("raw: 0x%04X (%u)", raw, raw);
+    }
+    lcdPrintln("pwm: %d %d", pwm[0], pwm[1]);
     chThdSleepMilliseconds(500);
   }
 

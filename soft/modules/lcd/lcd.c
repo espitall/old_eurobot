@@ -36,7 +36,7 @@ static void lcdSetPixel(uint8_t layer, uint16_t x, uint16_t y, uint32_t color)
 {
   if((x < ILI9341_HEIGHT) && (y < ILI9341_WIDTH))
   {
-    frame_buffer[x * ILI9341_WIDTH + (ILI9341_WIDTH - y - 1) + ILI9341_PIXEL * layer] = color;
+    frame_buffer[(ILI9341_HEIGHT - x) * ILI9341_WIDTH + y + ILI9341_PIXEL * layer] = color;
   }
 }
 
@@ -44,7 +44,7 @@ static uint32_t lcdGetPixel(uint8_t layer, uint16_t x, uint16_t y)
 {
   if((x < ILI9341_HEIGHT) && (y < ILI9341_WIDTH))
   {
-    return frame_buffer[x * ILI9341_WIDTH + (ILI9341_WIDTH - y - 1) + ILI9341_PIXEL * layer];
+    return frame_buffer[(ILI9341_HEIGHT - x) * ILI9341_WIDTH + y + ILI9341_PIXEL * layer];
   }
   return 0;
 }

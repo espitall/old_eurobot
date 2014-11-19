@@ -1,11 +1,16 @@
 #include <ch.h>
 #include <hal.h>
+#include <math.h>
 #include <lcd.h>
 #include <field.h>
 #include <dc_motors.h>
 #include <position.h>
-#include <math.h>
+#include <asserv.h>
 
+void position_computed_hook(void)
+{
+  asservCompute();
+}
 
 int main(void) 
 {
@@ -19,10 +24,12 @@ int main(void)
   dcmInit();
   lcdInit();
   fieldInit();
-  posInit();
+  posInit(position_computed_hook);
+  asservInit();
 
   lcdPrintln("Start");
 
+  /*
   int pwm[2] = {0, 5000};
   int sens[2] = {1, 1};
   while (TRUE) 
@@ -42,6 +49,7 @@ int main(void)
     lcdPrintln("pwm: %d %d", pwm[0], pwm[1]);
     chThdSleepMilliseconds(500);
   }
+  */
 
   while(TRUE)
   {

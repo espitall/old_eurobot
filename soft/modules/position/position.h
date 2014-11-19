@@ -4,7 +4,7 @@
 /*
  * Initialisation du module de positionnement
  */
-void posInit(void);
+void posInit(void (*position_computed_hook)(void));
 
 /*
  * Coordonnée X en mm
@@ -20,5 +20,10 @@ double posGetYmm(void);
  * Angle en degrés
  */
 double posGetAdeg(void);
+
+/*
+ * Distance en mm
+ */
+double posGetDmm(void);
 
 #endif// POSITION_H

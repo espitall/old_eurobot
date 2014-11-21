@@ -29,6 +29,7 @@ int main(void)
 
   lcdPrintln("Start");
   lcdPrintln("Plop");
+  lcdPrintln("BugsByte");
   /*
   int pwm[2] = {0, 5000};
   int sens[2] = {1, 1};

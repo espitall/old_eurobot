@@ -28,7 +28,7 @@ int main(void)
   asservInit();
 
   lcdPrintln("Start");
-
+  lcdPrintln("Plop");
   /*
   int pwm[2] = {0, 5000};
   int sens[2] = {1, 1};

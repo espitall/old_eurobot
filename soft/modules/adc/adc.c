@@ -13,7 +13,7 @@ static const int spimode = 2;
 
 /**
  * TODO BugsByte :
- * Voir si il faut initialiser autre chose ?
+ * Voir si il faut initialiser autre chose
  */
 void adcInit(void)
 {
@@ -21,18 +21,26 @@ void adcInit(void)
 }
 
 /**
- * TODO BugsByte :
- * Gérer les 2 séries de canaux
+ * Gére les 2 séries de canaux
  * de 1 à 8 sur GPIOG_SPI5_ADC0_CS
  * de 9 à 16 sur GPIOG_SPI5_ADC1_CS
  */
 uint16_t adcRead (int canal)
 {
+  pad pin;
+  if (canal > 8)
+  {
+    pin = GPIOG_SPI5_ADC1_CS;
+    canal -= 8;
+  }
+  else
+    pin = GPIOG_SPI5_ADC0_CS;
+  
   //lock SPI bus
   spiAcquireBus(&SPID5);
 
   //envoi de la commande
-  uint8_t raw2send = (1 << 7) | (canal << 3) | (mode << 1);
+  uint8_t raw2send = (1 << 7) | (canal << 3) | (spimode << 1);
   
   palClearPad(PORTG, GPIOG_SPI5_ADC0_CS);
   spiSend(&SPID5, 1, &raw2send);
@@ -44,7 +52,7 @@ uint16_t adcRead (int canal)
   spiReceive(&SPID5, 2, &raw2receive);
   palSetPad(PORTG, GPIOG_SPI5_ADC0_CS);
 
-  //libere les ressources
+  //libère les ressources
   spiReleaseBus(&SPID5);
 
   //suppression MSB

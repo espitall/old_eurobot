@@ -70,7 +70,7 @@ include $(MODULES)/field_2015/config.mk
 include $(MODULES)/dc_motors/config.mk
 include $(MODULES)/position/config.mk
 include $(MODULES)/asserv/config.mk
-include $(MODULES)/adc/config.mk
+include $(MODULES)/max11628/config.mk
 
 CHIBIOS = $(MODULES)/ChibiOS/
 include $(CHIBIOS)/os/hal/platforms/STM32F4xx/platform.mk

@@ -1,6 +1,6 @@
 #include <ch.h>
 #include <hal.h>
-#include "adc.h"
+#include "max1628.h"
 
 static const SPIConfig spi5cfg = {
   NULL,
@@ -15,7 +15,7 @@ static const int spimode = 2;
  * TODO BugsByte :
  * Voir si il faut initialiser autre chose
  */
-void adcInit(void)
+void max11628Init(void)
 {
   spiStart(&SPID5, &spi5cfg);
 }
@@ -25,7 +25,7 @@ void adcInit(void)
  * de 1 à 8 sur GPIOG_SPI5_ADC0_CS
  * de 9 à 16 sur GPIOG_SPI5_ADC1_CS
  */
-uint16_t adcRead (int canal)
+uint16_t max11628Read (int canal)
 {
   pad pin;
   if (canal > 8)
@@ -61,7 +61,7 @@ uint16_t adcRead (int canal)
   return raw2receive;
 }
 
-double adcReadMV(int canal)
+double max11628ReadMV(int canal)
 {
   uint16_t val = adcRead (canal);
 

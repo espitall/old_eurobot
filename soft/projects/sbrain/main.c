@@ -6,6 +6,7 @@
 #include <dc_motors.h>
 #include <position.h>
 #include <asserv.h>
+#include <max11628.h>
 
 void position_computed_hook(void)
 {
@@ -26,8 +27,19 @@ int main(void)
   fieldInit();
   posInit(position_computed_hook);
   asservInit();
+  max11628Init();
 
   lcdPrintln("Start");
+
+  while (true)
+    {
+      for (int i = 1; i < 9; i++)
+	{
+	  lcdPrintln("%d => %d", max11628Read(i), max11628ReadMV(i));
+	}
+
+      chThdSleepMilliseconds(1000);
+    }
   /*
   int pwm[2] = {0, 5000};
   int sens[2] = {1, 1};

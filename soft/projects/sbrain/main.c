@@ -6,6 +6,7 @@
 #include <dc_motors.h>
 #include <position.h>
 #include <asserv.h>
+#include <pcm9685.h>
 
 void position_computed_hook(void)
 {
@@ -21,14 +22,18 @@ int main(void)
   palSetPad(GPIOG, GPIOG_LED4_RED);
 
   //modules and peripherals initialization
+  pcm9685Init();
   dcmInit();
   lcdInit();
   fieldInit();
   posInit(position_computed_hook);
   asservInit();
 
-  lcdPrintln("Start");
+  lcdPrintln(LCD_INFO, "Start");
 
+
+ //     dcmSetWidth(0, 5000);
+ //     dcmSetWidth(1, 2500);
   /*
   int pwm[2] = {0, 5000};
   int sens[2] = {1, 1};
@@ -51,8 +56,15 @@ int main(void)
   }
   */
 
+  int i = 0;
   while(TRUE)
   {
-    chThdSleepMilliseconds(1000);
+  pcm9685SetChannel(0, 0, 230 + i);
+  pcm9685SetChannel(1, 0, 230 + i);
+
+  i += 10;
+  i = i % 400;
+
+    chThdSleepMilliseconds(100);
   }
 }

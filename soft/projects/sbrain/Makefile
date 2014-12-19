@@ -70,6 +70,7 @@ include $(MODULES)/field_2015/config.mk
 include $(MODULES)/dc_motors/config.mk
 include $(MODULES)/position/config.mk
 include $(MODULES)/asserv/config.mk
+include $(MODULES)/pcm9685/config.mk
 
 CHIBIOS = $(MODULES)/ChibiOS/
 include $(CHIBIOS)/os/hal/platforms/STM32F4xx/platform.mk
@@ -95,6 +96,7 @@ CSRC = $(PORTSRC) \
 			 $(DCMOTORSSRC) \
 			 $(POSITIONSRC) \
 			 $(ASSERVSRC) \
+			 $(PCM9685SRC) \
        main.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
@@ -134,6 +136,7 @@ INCDIR = $(PORTINC) $(KERNINC) $(TESTINC) \
 				 $(DCMOTORSINC) \
 				 $(POSITIONINC) \
 				 $(ASSERVINC) \
+				 $(PCM9685INC) \
 				 $(FIELDINC)
 
 #

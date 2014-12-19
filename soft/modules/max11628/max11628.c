@@ -65,5 +65,5 @@ double max11628ReadMV(int canal)
 {
   uint16_t val = adcRead (canal);
 
-  return val * ADC_REFERENCE_VOLTAGE * 1000 / 0x0FFF;
+  return val * MAX11628_REFERENCE_VOLTAGE * 1000 / 0x0FFF;
 }

@@ -1285,7 +1285,7 @@
 
 #define PWM_MOTORS  PWMD1
 
-#define ADC_REFERENCE_VOLTAGE 5
+#define MAX11628_REFERENCE_VOLTAGE 5
 
 
 #if !defined(_FROM_ASM_)

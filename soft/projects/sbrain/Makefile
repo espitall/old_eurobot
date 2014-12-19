@@ -96,7 +96,7 @@ CSRC = $(PORTSRC) \
 			 $(DCMOTORSSRC) \
 			 $(POSITIONSRC) \
 			 $(ASSERVSRC) \
-			 $(MAX66128SRC) \
+			 $(MAX11628SRC) \
        main.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
@@ -137,7 +137,7 @@ INCDIR = $(PORTINC) $(KERNINC) $(TESTINC) \
 				 $(POSITIONINC) \
 				 $(ASSERVINC) \
 				 $(FIELDINC) \
-				 $(MAX66128INC)
+				 $(MAX11628INC)
 
 #
 # Project, sources and paths

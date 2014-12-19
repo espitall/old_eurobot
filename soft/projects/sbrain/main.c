@@ -33,11 +33,8 @@ int main(void)
 
   while (true)
     {
-      for (int i = 1; i < 9; i++)
-	{
-	  lcdPrintln("%d => %d", max11628Read(i), max11628ReadMV(i));
-	}
-
+      max11628ReadMV(5);
+      
       chThdSleepMilliseconds(1000);
     }
   /*

@@ -25176,6 +25176,7 @@ Based on the following sources:
 <segment>
 <wire x1="627.38" y1="-426.72" x2="645.16" y2="-426.72" width="0.1524" layer="91"/>
 <pinref part="EC13" gate="G$1" pin="6"/>
+<label x="635" y="-426.72" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="ALRM2_3V3" class="0">
@@ -25187,6 +25188,7 @@ Based on the following sources:
 <segment>
 <wire x1="589.28" y1="-426.72" x2="607.06" y2="-426.72" width="0.1524" layer="91"/>
 <pinref part="EC12" gate="G$1" pin="6"/>
+<label x="596.9" y="-426.72" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="ALRM1_3V3" class="0">
@@ -25198,6 +25200,7 @@ Based on the following sources:
 <segment>
 <wire x1="668.02" y1="-381" x2="685.8" y2="-381" width="0.1524" layer="91"/>
 <pinref part="EC11" gate="G$1" pin="6"/>
+<label x="675.64" y="-381" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="ALRM0_3V3" class="0">

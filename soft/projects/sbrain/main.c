@@ -33,7 +33,7 @@ int main(void)
 
   while (true)
     {
-      max11628ReadMV(5);
+      max11628ReadmV(5);
       
       chThdSleepMilliseconds(1000);
     }

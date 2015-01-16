@@ -10,7 +10,7 @@ static const SPIConfig spi5cfg = {
   ((0x07 << 3) & SPI_CR1_BR) | SPI_CR1_SSM | SPI_CR1_SSI | SPI_CR1_MSTR,
 };
 
-static const int spimode = 2;
+static const int spimode = 3;
 
 /**
  * TODO BugsByte :
@@ -43,37 +43,36 @@ uint16_t max11628Read (int canal)
 
   //envoi de la commande
   uint8_t raw2send = (1 << 7) | (canal << 3) | (spimode << 1);
-  
+
   palClearPad(GPIOG, pin);
   spiSend(&SPID5, 1, &raw2send);
   palSetPad(GPIOG, pin);
-  
+
+  // Attente
   chThdSleepMilliseconds(1);
-  
-  //lecture du bus SPI
-  uint8_t buffer [2];
-  uint16_t raw2receive;
+
+  //réception des données
+  uint8_t bufferSend [2] = {0, 0};
+  uint8_t bufferReceive [2];
+
   palClearPad(GPIOG, pin);
-  spiReceive(&SPID5, 2, &buffer);
+  spiExchange (&SPID5, 2, bufferSend, bufferReceive);
   palSetPad(GPIOG, pin);
+
+  //suppression MSB
+  uint16_t raw2receive;
+  raw2receive = ((bufferReceive [0] & 0xFF) << 8) | (bufferReceive [1] & 0xFF);
+  raw2receive = raw2receive & 0x0FFF;
 
   //libère les ressources
   spiReleaseBus(&SPID5);
 
-  //suppression MSB
-  raw2receive = ((buffer [0] & 0xFF) << 8) | (buffer [1] & 0xFF);
-  raw2receive = raw2receive & 0x0FFF;
-    //raw2receive = ((buffer [1] & 0xFF) << 8) | (buffer [0] & 0xFF);
-
   return raw2receive;
 }
 
-double max11628ReadMV(int canal)
+double max11628ReadmV(int canal)
 {
-  uint32_t val = max11628Read (canal);
-  double mv = val * MAX11628_REFERENCE_VOLTAGE * 1000 / 0x0FFF;
-
-  lcdPrintln("%lu => %d", val, (int) mv);
+  double val = (double) max11628Read (canal);
   
-  return mv;
+  return val;
 }

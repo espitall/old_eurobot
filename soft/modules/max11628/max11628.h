@@ -5,6 +5,6 @@ void max11628Init(void);
 
 uint16_t max11628Read (int);
 
-double max11628ReadMV(int);
+double max11628ReadmV(int);
 
 #endif// MAX11628_H

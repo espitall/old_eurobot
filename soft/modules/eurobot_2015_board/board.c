@@ -32,6 +32,12 @@ static const SPIConfig spi4cfg = {
   ((0x07 << 3) & SPI_CR1_BR) | SPI_CR1_SSM | SPI_CR1_SSI | SPI_CR1_MSTR | SPI_CR1_CPOL | 0,
 };
 
+static const I2CConfig i2c3cfg = {
+  OPMODE_I2C,
+  200000,
+  FAST_DUTY_CYCLE_2
+};
+
 
 #if HAL_USE_PAL || defined(__DOXYGEN__)
 /**
@@ -120,7 +126,48 @@ bool_t mmc_lld_is_write_protected(MMCDriver *mmcp) {
  * @brief   Board-specific initialization code.
  * @todo    Add your board-specific code, if any.
  */
-void boardInit(void) {
+
+void boardSetCS(unsigned int id)
+{
+  if(id & (1 << 0))
+  {
+    palSetPad(GPIOG, GPIOG_CS_SEL0);
+  }
+  else
+  {
+    palClearPad(GPIOG, GPIOG_CS_SEL0);
+  }
+
+  if(id & (1 << 1))
+  {
+    palSetPad(GPIOG, GPIOG_CS_SEL1);
+  }
+  else
+  {
+    palClearPad(GPIOG, GPIOG_CS_SEL1);
+  }
+
+  if(id & (1 << 2))
+  {
+    palSetPad(GPIOF, GPIOF_CS_SEL2);
+  }
+  else
+  {
+    palClearPad(GPIOF, GPIOF_CS_SEL2);
+  }
+
+  if(id & (1 << 3))
+  {
+    palSetPad(GPIOC, GPIOC_CS_SEL3);
+  }
+  else
+  {
+    palClearPad(GPIOC, GPIOC_CS_SEL3);
+  }
+}
+
+void boardInit(void) 
+{
   SDRAM_Init();
 
 #if STM32_LTDC_USE_LTDC
@@ -134,7 +181,12 @@ void boardInit(void) {
 #if ILI9341_USE_DRIVER
   ili9341ObjectInit(&ILI9341D1);
 #endif
+  
+  boardSetCS(SPI_CS_NONE);
 
   //init SPI4 bus
   spiStart(&SPID4, &spi4cfg);
+
+  //init I2C3 bus
+  i2cStart(&I2CD3, &i2c3cfg);
 }

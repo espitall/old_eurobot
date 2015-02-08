@@ -31,44 +31,19 @@ int main(void)
   asservInit();
   max11628Init();
 
-  lcdPrintln(LCD_INFO, "Start");
-
-  while (true)
-    {
-      max11628ReadmV(5);
-      
-      chThdSleepMilliseconds(1000);
-    }
-  /*
-  int pwm[2] = {0, 5000};
-  int sens[2] = {1, 1};
-  while (TRUE) 
-  {
-    int i;
-    for(i = 0; i < 2; i += 1)
-    {
-      pwm[i] += 100 * sens[i];
-      if(fabs(pwm[i]) > 8000)
-      {
-        sens[i] *= -1;
-      }
-      dcmSetWidth(0, 5000);
-      dcmSetWidth(1, 2500);
-
-    }
-    lcdPrintln("pwm: %d %d", pwm[0], pwm[1]);
-    chThdSleepMilliseconds(500);
-  }
-  */
+  lcdPrintln("Start");
 
   int i = 0;
-  while(TRUE)
+  while (true)
   {
-  pcm9685SetChannel(0, 0, 230 + i);
-  pcm9685SetChannel(1, 0, 230 + i);
+    //test adc
+    lcdPrintln("val %d",(int)(max11628ReadmV(15) * (5.1 + 1.0) / 1.0));
 
-  i += 10;
-  i = i % 400;
+    //test pwm
+    i += 10;
+    i = i % 400;
+    pcm9685SetChannel(0, 0, 230 + i);
+    pcm9685SetChannel(1, 0, 230 + i);
 
     chThdSleepMilliseconds(100);
   }

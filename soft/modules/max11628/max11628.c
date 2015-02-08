@@ -28,15 +28,14 @@ void max11628Init(void)
  */
 uint16_t max11628Read (int canal)
 {
-  canal--;
   int pin;
-  if (canal > 8)
+  if (canal >= 8)
   {
-    pin = GPIOG_SPI5_ADC1_CS;
+    pin = SPI_CS_ADC1;
     canal -= 8;
   }
   else
-    pin = GPIOG_SPI5_ADC0_CS;
+    pin = SPI_CS_ADC0;
   
   //lock SPI bus
   spiAcquireBus(&SPID5);
@@ -44,9 +43,9 @@ uint16_t max11628Read (int canal)
   //envoi de la commande
   uint8_t raw2send = (1 << 7) | (canal << 3) | (spimode << 1);
 
-  palClearPad(GPIOG, pin);
+  boardSetCS(pin);
   spiSend(&SPID5, 1, &raw2send);
-  palSetPad(GPIOG, pin);
+  boardSetCS(SPI_CS_NONE);
 
   // Attente
   chThdSleepMilliseconds(1);
@@ -55,9 +54,9 @@ uint16_t max11628Read (int canal)
   uint8_t bufferSend [2] = {0, 0};
   uint8_t bufferReceive [2];
 
-  palClearPad(GPIOG, pin);
+  boardSetCS(pin);
   spiExchange (&SPID5, 2, bufferSend, bufferReceive);
-  palSetPad(GPIOG, pin);
+  boardSetCS(SPI_CS_NONE);
 
   //suppression MSB
   uint16_t raw2receive;

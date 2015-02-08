@@ -7,6 +7,7 @@
 #include <position.h>
 #include <asserv.h>
 #include <pcm9685.h>
+#include <max11628.h>
 
 void position_computed_hook(void)
 {
@@ -28,12 +29,16 @@ int main(void)
   fieldInit();
   posInit(position_computed_hook);
   asservInit();
+  max11628Init();
 
   lcdPrintln(LCD_INFO, "Start");
 
-
- //     dcmSetWidth(0, 5000);
- //     dcmSetWidth(1, 2500);
+  while (true)
+    {
+      max11628ReadmV(5);
+      
+      chThdSleepMilliseconds(1000);
+    }
   /*
   int pwm[2] = {0, 5000};
   int sens[2] = {1, 1};

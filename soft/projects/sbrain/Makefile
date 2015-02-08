@@ -71,6 +71,7 @@ include $(MODULES)/dc_motors/config.mk
 include $(MODULES)/position/config.mk
 include $(MODULES)/asserv/config.mk
 include $(MODULES)/pcm9685/config.mk
+include $(MODULES)/max11628/config.mk
 
 CHIBIOS = $(MODULES)/ChibiOS/
 include $(CHIBIOS)/os/hal/platforms/STM32F4xx/platform.mk
@@ -97,6 +98,7 @@ CSRC = $(PORTSRC) \
 			 $(POSITIONSRC) \
 			 $(ASSERVSRC) \
 			 $(PCM9685SRC) \
+			 $(MAX11628SRC) \
        main.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
@@ -137,6 +139,7 @@ INCDIR = $(PORTINC) $(KERNINC) $(TESTINC) \
 				 $(POSITIONINC) \
 				 $(ASSERVINC) \
 				 $(PCM9685INC) \
+				 $(MAX11628INC) \
 				 $(FIELDINC)
 
 #

@@ -81,6 +81,53 @@
  * in the initialization code.
  */
 
+#define PIN_MODE_INPUT(n)           (0U << (n))
+#define PIN_MODE_OUTPUT(n)          (1U << (n))
+
+#define VAL_GPIOA_DIR              (PIN_MODE_INPUT(GPIOA_IR_CH0) |         \
+                                    PIN_MODE_INPUT(GPIOA_IR_CH1) |         \
+                                    PIN_MODE_INPUT(GPIOA_IR_CH2) |         \
+                                    PIN_MODE_INPUT(GPIOA_IR_CH3) |         \
+                                    PIN_MODE_INPUT(GPIOA_IR_CH4) |         \
+                                    PIN_MODE_INPUT(GPIOA_IR_CH5) |         \
+                                    PIN_MODE_INPUT(GPIOA_IR_CH6) |         \
+                                    PIN_MODE_INPUT(GPIOA_IR_CH7))
+
+#define VAL_GPIOB_DIR              (PIN_MODE_OUTPUT(GPIOB_ALARM) |         \
+                                    PIN_MODE_INPUT(GPIOB_PIN1)    |        \
+                                    PIN_MODE_INPUT(GPIOB_PIN2)    |        \
+                                    PIN_MODE_INPUT(GPIOB_PIN3)    |        \
+                                    PIN_MODE_INPUT(GPIOB_PIN4)    |        \
+                                    PIN_MODE_INPUT(GPIOB_PIN5)    |        \
+                                    PIN_MODE_INPUT(GPIOB_PIN6)    |        \
+                                    PIN_MODE_INPUT(GPIOB_PIN7))
+
+#define VAL_GPIOC_DIR              (PIN_MODE_OUTPUT(GPIOC_US_TRIG_CH3) |   \
+                                    PIN_MODE_OUTPUT(GPIOC_US_TRIG_CH2) |   \
+                                    PIN_MODE_INPUT(GPIOC_US_ECHO_CH3)  |   \
+                                    PIN_MODE_INPUT(GPIOC_US_ECHO_CH2)  |   \
+                                    PIN_MODE_OUTPUT(GPIOC_US_TRIG_CH1) |   \
+                                    PIN_MODE_OUTPUT(GPIOC_US_TRIG_CH0) |   \
+                                    PIN_MODE_INPUT(GPIOC_US_ECHO_CH1)  |   \
+                                    PIN_MODE_INPUT(GPIOC_US_ECHO_CH0))
+
+#define VAL_GPIOD_DIR              (PIN_MODE_OUTPUT(GPIOD_LED)      |      \
+                                    PIN_MODE_INPUT(GPIOD_PIN1)      |      \
+                                    PIN_MODE_INPUT(GPIOD_DBG_RX)    |      \
+                                    PIN_MODE_OUTPUT(GPIOD_DBG_TX)   |      \
+                                    PIN_MODE_INPUT(GPIOD_SPI_CS)    |      \
+                                    PIN_MODE_INPUT(GPIOD_SPI_MOSI)  |      \
+                                    PIN_MODE_OUTPUT(GPIOD_SPI_MISO) |      \
+                                    PIN_MODE_INPUT(GPIOD_SPI_SCK))
+
+#define VAL_GPIOE_DIR              (PIN_MODE_INPUT(GPIOE_PIN0) |           \
+                                    PIN_MODE_INPUT(GPIOE_PIN1) |           \
+                                    PIN_MODE_INPUT(GPIOE_PIN2) |           \
+                                    PIN_MODE_INPUT(GPIOE_PIN3) |           \
+                                    PIN_MODE_INPUT(GPIOE_PIN4) |           \
+                                    PIN_MODE_INPUT(GPIOE_PIN5) |           \
+                                    PIN_MODE_INPUT(GPIOE_PIN6) |           \
+                                    PIN_MODE_INPUT(GPIOE_PIN7))
 
 
 #if !defined(_FROM_ASM_)

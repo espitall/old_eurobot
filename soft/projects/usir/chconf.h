@@ -71,7 +71,7 @@
  * @note    Requires @p CH_USE_MEMCORE.
  */
 #if !defined(CH_MEMCORE_SIZE) || defined(__DOXYGEN__)
-#define CH_MEMCORE_SIZE                 128
+#define CH_MEMCORE_SIZE                 0
 #endif
 
 /**
@@ -139,7 +139,7 @@
  * @note    The default is @p TRUE.
  */
 #if !defined(CH_USE_WAITEXIT) || defined(__DOXYGEN__)
-#define CH_USE_WAITEXIT                 FALSE
+#define CH_USE_WAITEXIT                 TRUE
 #endif
 
 /**
@@ -173,7 +173,7 @@
  * @note    Requires @p CH_USE_SEMAPHORES.
  */
 #if !defined(CH_USE_SEMSW) || defined(__DOXYGEN__)
-#define CH_USE_SEMSW                    FALSE
+#define CH_USE_SEMSW                    TRUE
 #endif
 
 /**
@@ -183,7 +183,7 @@
  * @note    The default is @p TRUE.
  */
 #if !defined(CH_USE_MUTEXES) || defined(__DOXYGEN__)
-#define CH_USE_MUTEXES                  FALSE
+#define CH_USE_MUTEXES                  TRUE
 #endif
 
 /**
@@ -195,7 +195,7 @@
  * @note    Requires @p CH_USE_MUTEXES.
  */
 #if !defined(CH_USE_CONDVARS) || defined(__DOXYGEN__)
-#define CH_USE_CONDVARS                 FALSE
+#define CH_USE_CONDVARS                 TRUE
 #endif
 
 /**
@@ -207,7 +207,7 @@
  * @note    Requires @p CH_USE_CONDVARS.
  */
 #if !defined(CH_USE_CONDVARS_TIMEOUT) || defined(__DOXYGEN__)
-#define CH_USE_CONDVARS_TIMEOUT         FALSE
+#define CH_USE_CONDVARS_TIMEOUT         TRUE
 #endif
 
 /**
@@ -217,7 +217,7 @@
  * @note    The default is @p TRUE.
  */
 #if !defined(CH_USE_EVENTS) || defined(__DOXYGEN__)
-#define CH_USE_EVENTS                   FALSE
+#define CH_USE_EVENTS                   TRUE
 #endif
 
 /**
@@ -229,7 +229,7 @@
  * @note    Requires @p CH_USE_EVENTS.
  */
 #if !defined(CH_USE_EVENTS_TIMEOUT) || defined(__DOXYGEN__)
-#define CH_USE_EVENTS_TIMEOUT           FALSE
+#define CH_USE_EVENTS_TIMEOUT           TRUE
 #endif
 
 /**
@@ -240,7 +240,7 @@
  * @note    The default is @p TRUE.
  */
 #if !defined(CH_USE_MESSAGES) || defined(__DOXYGEN__)
-#define CH_USE_MESSAGES                 FALSE
+#define CH_USE_MESSAGES                 TRUE
 #endif
 
 /**
@@ -274,7 +274,7 @@
  * @note    The default is @p TRUE.
  */
 #if !defined(CH_USE_QUEUES) || defined(__DOXYGEN__)
-#define CH_USE_QUEUES                   FALSE
+#define CH_USE_QUEUES                   TRUE
 #endif
 
 /**
@@ -285,7 +285,7 @@
  * @note    The default is @p TRUE.
  */
 #if !defined(CH_USE_MEMCORE) || defined(__DOXYGEN__)
-#define CH_USE_MEMCORE                  TRUE
+#define CH_USE_MEMCORE                  FALSE
 #endif
 
 /**
@@ -324,7 +324,7 @@
  * @note    The default is @p TRUE.
  */
 #if !defined(CH_USE_MEMPOOLS) || defined(__DOXYGEN__)
-#define CH_USE_MEMPOOLS                 FALSE
+#define CH_USE_MEMPOOLS                 TRUE
 #endif
 
 /**
@@ -337,7 +337,7 @@
  * @note    Requires @p CH_USE_HEAP and/or @p CH_USE_MEMPOOLS.
  */
 #if !defined(CH_USE_DYNAMIC) || defined(__DOXYGEN__)
-#define CH_USE_DYNAMIC                  FALSE
+#define CH_USE_DYNAMIC                  TRUE
 #endif
 
 /** @} */
@@ -417,7 +417,7 @@
  * @note    The default is @p FALSE.
  */
 #if !defined(CH_DBG_FILL_THREADS) || defined(__DOXYGEN__)
-#define CH_DBG_FILL_THREADS             FALSE
+#define CH_DBG_FILL_THREADS             TRUE
 #endif
 
 /**
@@ -430,7 +430,7 @@
  *          some test cases into the test suite.
  */
 #if !defined(CH_DBG_THREADS_PROFILING) || defined(__DOXYGEN__)
-#define CH_DBG_THREADS_PROFILING        FALSE
+#define CH_DBG_THREADS_PROFILING        TRUE
 #endif
 
 /** @} */

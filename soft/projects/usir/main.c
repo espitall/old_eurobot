@@ -1,16 +1,39 @@
+#include <ch.h>
+#include <hal.h>
+
 #include <stdint.h>
 #include <avr/io.h>
 
+static WORKING_AREA(waHeartbeatThread, 256);
+
+msg_t heartbeatThread(void* arg) 
+{
+  (void)arg;
+
+  while (1)
+  {
+    palSetPad(GPIOD, GPIOD_LED);
+    chThdSleepMilliseconds(500);
+
+    palClearPad(GPIOD, GPIOD_LED);
+    chThdSleepMilliseconds(500);
+  }
+
+  return 0;
+}
+
+
 int main(void)
 {
-  PORTD.DIRSET = (1 << 0);
-  volatile uint32_t i;
+  //RTOS initialization
+  halInit();
+  chSysInit();
 
+  chThdCreateStatic(waHeartbeatThread, sizeof(waHeartbeatThread), NORMALPRIO, heartbeatThread, NULL);
 
   while(1)
   {
-    for(i = 0; i < 1000; i += 1);
-    PORTD.OUTTGL = (1 << 0);
+    chThdSleepMilliseconds(100);
   }
 
   return 0;

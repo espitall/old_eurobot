@@ -11,8 +11,8 @@ CPPOPT = $(USE_CPPOPT)
 
 # Garbage collection
 ifeq ($(USE_LINK_GC),yes)
-  OPT += -ffunction-sections -fdata-sections -fno-common
-  LDOPT := ,--gc-sections
+#  OPT += -ffunction-sections -fdata-sections -fno-common
+#  LDOPT := ,--gc-sections
 else
   LDOPT :=
 endif
@@ -24,7 +24,7 @@ endif
 
 # Link time optimizations
 ifeq ($(USE_LTO),yes)
-  OPT += -flto
+#  OPT += -flto
 endif
 
 # Output directory and files

@@ -31,15 +31,15 @@ int main(void)
   asservInit();
   max11628Init();
 
-  lcdPrintln("Start: robot secondaire");
+  lcdPrintln("Ttart: robot secondaire");
 
   int i = 0;
   while (true)
   {
-    dcmSetWidth(0, -i * 10);
-    dcmSetWidth(1, 0);
+    dcmSetWidth(1, i * 20);
+    dcmSetWidth(0, 0);
     //test adc
-    lcdPrintln("val %d",(int)(max11628ReadmV(15) * (5.1 + 1.0) / 1.0));
+    lcdPrintln("val %d %d",i * 20, (int)(max11628ReadmV(15) * (5.1 + 1.0) / 1.0));
 
     //test pwm
     i += 10;

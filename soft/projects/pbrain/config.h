@@ -24,4 +24,6 @@
 
 #define PCM9685_FREQ_HZ 50
 
+#define DC_MOTORS_TYPE DC_MOTORS_TYPE_L298N
+
 #endif// CONFIG_H

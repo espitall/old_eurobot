@@ -59,11 +59,11 @@
 #define GPIOA_MEMS_INT2             2
 #define GPIOA_LCD_B5                3
 #define GPIOA_LCD_VSYNC             4
-#define GPIOA_PIN5                  5
+#define GPIOA_PWM_M0                5
 #define GPIOA_LCD_G2                6
 #define GPIOA_ACP_RST               7
 #define GPIOA_I2C3_SCL              8
-#define GPIOA_PWM_M0                9
+#define GPIOA_PIN9                  9
 #define GPIOA_PWM_M1                10
 #define GPIOA_LCD_R4                11
 #define GPIOA_LCD_R5                12
@@ -254,11 +254,11 @@
                                      PIN_MODE_INPUT(GPIOA_MEMS_INT2) |      \
                                      PIN_MODE_ALTERNATE(GPIOA_LCD_B5) |     \
                                      PIN_MODE_ALTERNATE(GPIOA_LCD_VSYNC) |  \
-                                     PIN_MODE_INPUT(GPIOA_PIN5) |           \
+                                     PIN_MODE_ALTERNATE(GPIOA_PWM_M0) |     \
                                      PIN_MODE_ALTERNATE(GPIOA_LCD_G2) |     \
                                      PIN_MODE_INPUT(GPIOA_ACP_RST) |        \
                                      PIN_MODE_ALTERNATE(GPIOA_I2C3_SCL) |   \
-                                     PIN_MODE_ALTERNATE(GPIOA_PWM_M0) |     \
+                                     PIN_MODE_INPUT(GPIOA_PIN9) |           \
                                      PIN_MODE_ALTERNATE(GPIOA_PWM_M1) |     \
                                      PIN_MODE_ALTERNATE(GPIOA_LCD_R4) |     \
                                      PIN_MODE_ALTERNATE(GPIOA_LCD_R5) |     \
@@ -270,11 +270,11 @@
                                      PIN_OTYPE_PUSHPULL(GPIOA_MEMS_INT2) |  \
                                      PIN_OTYPE_PUSHPULL(GPIOA_LCD_B5) |     \
                                      PIN_OTYPE_PUSHPULL(GPIOA_LCD_VSYNC) |  \
-                                     PIN_OTYPE_PUSHPULL(GPIOA_PIN5) |       \
+                                     PIN_OTYPE_PUSHPULL(GPIOA_PWM_M0) |     \
                                      PIN_OTYPE_PUSHPULL(GPIOA_LCD_G2) |     \
                                      PIN_OTYPE_PUSHPULL(GPIOA_ACP_RST) |    \
                                      PIN_OTYPE_OPENDRAIN(GPIOA_I2C3_SCL) |  \
-                                     PIN_OTYPE_PUSHPULL(GPIOA_PWM_M0) |     \
+                                     PIN_OTYPE_PUSHPULL(GPIOA_PIN9) |       \
                                      PIN_OTYPE_PUSHPULL(GPIOA_PWM_M1) |     \
                                      PIN_OTYPE_PUSHPULL(GPIOA_LCD_R4) |     \
                                      PIN_OTYPE_PUSHPULL(GPIOA_LCD_R5) |     \
@@ -286,11 +286,11 @@
                                      PIN_OSPEED_2M(GPIOA_MEMS_INT2) |       \
                                      PIN_OSPEED_100M(GPIOA_LCD_B5) |        \
                                      PIN_OSPEED_100M(GPIOA_LCD_VSYNC) |     \
-                                     PIN_OSPEED_2M(GPIOA_PIN5) |            \
+                                     PIN_OSPEED_2M(GPIOA_PWM_M0) |          \
                                      PIN_OSPEED_100M(GPIOA_LCD_G2) |        \
                                      PIN_OSPEED_2M(GPIOA_ACP_RST) |         \
                                      PIN_OSPEED_100M(GPIOA_I2C3_SCL) |      \
-                                     PIN_OSPEED_2M(GPIOA_PWM_M0) |          \
+                                     PIN_OSPEED_2M(GPIOA_PIN9) |            \
                                      PIN_OSPEED_2M(GPIOA_PWM_M1) |          \
                                      PIN_OSPEED_100M(GPIOA_LCD_R4) |        \
                                      PIN_OSPEED_100M(GPIOA_LCD_R5) |        \
@@ -302,11 +302,11 @@
                                      PIN_PUPDR_FLOATING(GPIOA_MEMS_INT2) |  \
                                      PIN_PUPDR_FLOATING(GPIOA_LCD_B5) |     \
                                      PIN_PUPDR_FLOATING(GPIOA_LCD_VSYNC) |  \
-                                     PIN_PUPDR_PULLUP(GPIOA_PIN5) |         \
+                                     PIN_PUPDR_PULLUP(GPIOA_PWM_M0) |       \
                                      PIN_PUPDR_FLOATING(GPIOA_LCD_G2) |     \
                                      PIN_PUPDR_PULLUP(GPIOA_ACP_RST) |      \
                                      PIN_PUPDR_FLOATING(GPIOA_I2C3_SCL) |   \
-                                     PIN_PUPDR_PULLUP(GPIOA_PWM_M0) |       \
+                                     PIN_PUPDR_PULLUP(GPIOA_PIN9) |         \
                                      PIN_PUPDR_PULLUP(GPIOA_PWM_M1) |       \
                                      PIN_PUPDR_FLOATING(GPIOA_LCD_R4) |     \
                                      PIN_PUPDR_FLOATING(GPIOA_LCD_R5) |     \
@@ -318,11 +318,11 @@
                                      PIN_ODR_HIGH(GPIOA_MEMS_INT2) |        \
                                      PIN_ODR_HIGH(GPIOA_LCD_B5) |           \
                                      PIN_ODR_HIGH(GPIOA_LCD_VSYNC) |        \
-                                     PIN_ODR_HIGH(GPIOA_PIN5) |             \
+                                     PIN_ODR_HIGH(GPIOA_PWM_M0) |           \
                                      PIN_ODR_HIGH(GPIOA_LCD_G2) |           \
                                      PIN_ODR_HIGH(GPIOA_ACP_RST) |          \
                                      PIN_ODR_HIGH(GPIOA_I2C3_SCL) |         \
-                                     PIN_ODR_HIGH(GPIOA_PWM_M0) |           \
+                                     PIN_ODR_HIGH(GPIOA_PIN9) |             \
                                      PIN_ODR_HIGH(GPIOA_PWM_M1) |           \
                                      PIN_ODR_HIGH(GPIOA_LCD_R4) |           \
                                      PIN_ODR_HIGH(GPIOA_LCD_R5) |           \
@@ -334,11 +334,11 @@
                                      PIN_AFIO_AF(GPIOA_MEMS_INT2, 0) |      \
                                      PIN_AFIO_AF(GPIOA_LCD_B5, 14) |        \
                                      PIN_AFIO_AF(GPIOA_LCD_VSYNC, 14) |     \
-                                     PIN_AFIO_AF(GPIOA_PIN5, 0) |           \
+                                     PIN_AFIO_AF(GPIOA_PWM_M0, 1) |         \
                                      PIN_AFIO_AF(GPIOA_LCD_G2, 14) |        \
                                      PIN_AFIO_AF(GPIOA_ACP_RST, 0))
 #define VAL_GPIOA_AFRH              (PIN_AFIO_AF(GPIOA_I2C3_SCL, 4) |       \
-                                     PIN_AFIO_AF(GPIOA_PWM_M0, 1) |         \
+                                     PIN_AFIO_AF(GPIOA_PIN9, 0) |           \
                                      PIN_AFIO_AF(GPIOA_PWM_M1, 1) |         \
                                      PIN_AFIO_AF(GPIOA_LCD_R4, 14) |        \
                                      PIN_AFIO_AF(GPIOA_LCD_R5, 14) |        \
@@ -650,9 +650,9 @@
                                      PIN_OSPEED_100M(GPIOD_FMC_D1))
 #define VAL_GPIOD_PUPDR             (PIN_PUPDR_FLOATING(GPIOD_FMC_D2) |     \
                                      PIN_PUPDR_FLOATING(GPIOD_FMC_D3) |     \
-                                     PIN_PUPDR_PULLUP(GPIOD_FAULT_M0) |     \
+                                     PIN_PUPDR_FLOATING(GPIOD_FAULT_M0) |     \
                                      PIN_PUPDR_FLOATING(GPIOD_LCD_G7) |     \
-                                     PIN_PUPDR_PULLUP(GPIOD_FAULT_M1) |     \
+                                     PIN_PUPDR_FLOATING(GPIOD_FAULT_M1) |     \
                                      PIN_PUPDR_PULLUP(GPIOD_PIN5) |         \
                                      PIN_PUPDR_FLOATING(GPIOD_LCD_B2) |     \
                                      PIN_PUPDR_PULLUP(GPIOD_PIN7) |         \
@@ -1282,8 +1282,6 @@
                                      PIN_AFIO_AF(GPIOI_PIN14, 0) |          \
                                      PIN_AFIO_AF(GPIOI_PIN15, 0))
 
-
-#define PWM_MOTORS  PWMD1
 
 #define MAX11628_REFERENCE_VOLTAGE 5
 

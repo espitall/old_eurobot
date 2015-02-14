@@ -31,7 +31,7 @@ int main(void)
   asservInit();
   max11628Init();
 
-  lcdPrintln("Start: robot secondaire");
+  lcdPrintln("Start: robot principal");
 
   int i = 0;
   while (true)

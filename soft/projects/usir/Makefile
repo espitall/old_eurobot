@@ -51,6 +51,7 @@ MODULES = ../../modules
 MODULESSRC = 
 MODULESINC = 
 include $(MODULES)/usir_2015_board/config.mk
+include $(MODULES)/usir/config.mk
 
 CHIBIOS = $(MODULES)/ChibiOS/
 include $(CHIBIOS)/os/hal/platforms/XAVR/platform.mk

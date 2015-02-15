@@ -26,4 +26,6 @@
 
 #define DC_MOTORS_TYPE DC_MOTORS_TYPE_L298N
 
+#define USIR_MASTER
+
 #endif// CONFIG_H

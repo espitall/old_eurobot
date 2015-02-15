@@ -1285,9 +1285,10 @@
 
 #define MAX11628_REFERENCE_VOLTAGE 5
 
-#define SPI_CS_NONE 0
-#define SPI_CS_ADC0 1
-#define SPI_CS_ADC1 2
+#define SPI_CS_NONE   0
+#define SPI_CS_ADC0   1
+#define SPI_CS_ADC1   2
+#define SPI_CS_EXT13 13
 
 
 #if !defined(_FROM_ASM_)

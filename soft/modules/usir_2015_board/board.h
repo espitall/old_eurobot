@@ -117,7 +117,7 @@
                                     PIN_MODE_OUTPUT(GPIOD_DBG_TX)   |      \
                                     PIN_MODE_INPUT(GPIOD_SPI_CS)    |      \
                                     PIN_MODE_INPUT(GPIOD_SPI_MOSI)  |      \
-                                    PIN_MODE_OUTPUT(GPIOD_SPI_MISO) |      \
+                                    PIN_MODE_INPUT(GPIOD_SPI_MISO)  |      \
                                     PIN_MODE_INPUT(GPIOD_SPI_SCK))
 
 #define VAL_GPIOE_DIR              (PIN_MODE_INPUT(GPIOE_PIN0) |           \

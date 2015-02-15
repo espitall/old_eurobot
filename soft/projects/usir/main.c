@@ -1,8 +1,7 @@
 #include <ch.h>
 #include <hal.h>
+#include <usir.h>
 
-#include <stdint.h>
-#include <avr/io.h>
 
 static WORKING_AREA(waHeartbeatThread, 256);
 
@@ -28,6 +27,8 @@ int main(void)
   //RTOS initialization
   halInit();
   chSysInit();
+  usirInit();
+
 
   chThdCreateStatic(waHeartbeatThread, sizeof(waHeartbeatThread), NORMALPRIO, heartbeatThread, NULL);
 

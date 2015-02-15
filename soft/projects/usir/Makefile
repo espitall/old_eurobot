@@ -33,7 +33,6 @@ endif
 ifeq ($(USE_VERBOSE_COMPILE),)
   USE_VERBOSE_COMPILE = yes
 endif
-USE_VERBOSE_COMPILE = yes
 
 
 #
@@ -49,7 +48,9 @@ PROJECT = ch
 
 # Imported source files and paths
 MODULES = ../../modules
-include $(MODULES)/usir_2015_board/board.mk
+MODULESSRC = 
+MODULESINC = 
+include $(MODULES)/usir_2015_board/config.mk
 
 CHIBIOS = $(MODULES)/ChibiOS/
 include $(CHIBIOS)/os/hal/platforms/XAVR/platform.mk
@@ -68,15 +69,8 @@ CSRC = $(PORTSRC) \
        $(TESTSRC) \
        $(HALSRC) \
        $(PLATFORMSRC) \
-		 $(BOARDSRC) \
-		 $(LCDSRC) \
-		 $(FIELDSRC) \
-		 $(DCMOTORSSRC) \
-		 $(POSITIONSRC) \
-		 $(ASSERVSRC) \
-		 $(PCM9685SRC) \
-		 $(MAX11628SRC) \
-		 main.c
+       $(MODULESSRC) \
+			 main.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
@@ -111,13 +105,7 @@ INCDIR = $(PORTINC) $(KERNINC) $(TESTINC) \
          $(CHIBIOS)/os/various/devices_lib/accel \
          $(CHIBIOS)/os/various \
          $(CHIBIOS)/os/various \
-				 $(LCDINC) \
-				 $(DCMOTORSINC) \
-				 $(POSITIONINC) \
-				 $(ASSERVINC) \
-				 $(PCM9685INC) \
-				 $(MAX11628INC) \
-				 $(FIELDINC)
+				 $(MODULESINC)
 
 #
 # Project, sources and paths

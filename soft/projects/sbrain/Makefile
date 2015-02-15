@@ -64,7 +64,9 @@ PROJECT = ch
 
 # Imported source files and paths
 MODULES = ../../modules
-include $(MODULES)/eurobot_2015_board/board.mk
+MODULESSRC = 
+MODULESINC = 
+include $(MODULES)/eurobot_2015_board/config.mk
 include $(MODULES)/lcd/config.mk
 include $(MODULES)/field_2015/config.mk
 include $(MODULES)/dc_motors/config.mk
@@ -78,7 +80,7 @@ include $(CHIBIOS)/os/hal/platforms/STM32F4xx/platform.mk
 include $(CHIBIOS)/os/hal/hal.mk
 include $(CHIBIOS)/os/ports/GCC/ARMCMx/STM32F4xx/port.mk
 include $(CHIBIOS)/os/kernel/kernel.mk
-include $(CHIBIOS)/test/test.mk
+#include $(CHIBIOS)/test/test.mk
 
 # Define linker script file here
 LDSCRIPT= $(MODULES)/eurobot_2015_board/STM32f429xI_sdram.ld
@@ -91,14 +93,7 @@ CSRC = $(PORTSRC) \
        $(HALSRC) \
        $(PLATFORMSRC) \
        $(CHIBIOS)/os/various/chprintf.c \
-       $(BOARDSRC) \
-			 $(LCDSRC) \
-			 $(FIELDSRC) \
-			 $(DCMOTORSSRC) \
-			 $(POSITIONSRC) \
-			 $(ASSERVSRC) \
-			 $(PCM9685SRC) \
-			 $(MAX11628SRC) \
+       $(MODULESSRC) \
        main.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
@@ -134,14 +129,8 @@ INCDIR = $(PORTINC) $(KERNINC) $(TESTINC) \
          $(CHIBIOS)/os/various/devices_lib/accel \
          $(CHIBIOS)/os/various \
          $(CHIBIOS)/os/various \
-				 $(LCDINC) \
-				 $(DCMOTORSINC) \
-				 $(POSITIONINC) \
-				 $(ASSERVINC) \
-				 $(PCM9685INC) \
-				 $(MAX11628INC) \
-				 $(FIELDINC)
-
+				 $(MODULESINC)
+				 
 #
 # Project, sources and paths
 ##############################################################################

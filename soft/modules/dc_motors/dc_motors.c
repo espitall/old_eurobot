@@ -22,10 +22,12 @@ void dcmInit(void)
 
    palSetPad(GPIOC, GPIOC_RST_MX);
 
-   pwmEnableChannel(&PWM_MOTORS, 0, 1000); 
-   pwmEnableChannel(&PWM_MOTORS, 1, 1000); 
-   pwmEnableChannel(&PWM_MOTORS, 2, 1000); 
-   pwmEnableChannel(&PWM_MOTORS, 3, 1000); 
+   pwmEnableChannel(&PWM_MOTORS, 0, 0);
+   pwmEnableChannel(&PWM_MOTORS, 1, 0);
+   pwmEnableChannel(&PWM_MOTORS, 2, 0);
+   pwmEnableChannel(&PWM_MOTORS, 3, 0);
+   dcmSetWidth (0, 0);
+   dcmSetWidth (1, 0);
 }
 
 void dcmSetWidth(unsigned int channel, int width)

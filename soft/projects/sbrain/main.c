@@ -33,6 +33,11 @@ int main(void)
 
   lcdPrintln("Start");
 
+  dcmSetWidth (0, 2000); // On avance à fond sur la roue gauche
+  //dcmSetWidth (1, 2000); // On avance à fond sur la roue droite
+  //dcmSetWidth (0, -2000); // On recule à fond sur la roue gauche
+  //dcmSetWidth (1, -2000); // On recule à fond sur la roue droite
+
   int i = 0;
   while (true)
   {

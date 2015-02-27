@@ -40,12 +40,8 @@ void dcmInit(void)
 
    palSetPad(GPIOC, GPIOC_RST_MX);
 
-   pwmEnableChannel(&PWM_MOTORS, 0, 0);
-   pwmEnableChannel(&PWM_MOTORS, 1, 0);
-   pwmEnableChannel(&PWM_MOTORS, 2, 0);
-   pwmEnableChannel(&PWM_MOTORS, 3, 0);
-   dcmSetWidth (0, 0);
-   dcmSetWidth (1, 0);
+   dcmSetWidth(0, 0);
+   dcmSetWidth(1, 0);
 }
 
 void dcmSetWidth(unsigned int channel, int width)
@@ -86,6 +82,7 @@ void dcmSetWidth(unsigned int channel, int width)
       if(width < 0)
       {
         width = -width;
+        width = 10000 - width;
         palClearPad(GPIOC, GPIOC_DIR_M1);
       }
       else

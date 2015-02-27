@@ -33,20 +33,10 @@ int main(void)
 
   lcdPrintln("Start: robot principal");
 
-  int i = 0;
+  //int i = 0;
   while (true)
   {
-    dcmSetWidth(0, -i * 10);
-    dcmSetWidth(1, 0);
-    //test adc
-    lcdPrintln("val %d",(int)(max11628ReadmV(15) * (5.1 + 1.0) / 1.0));
-
-    //test pwm
-    i += 10;
-    i = i % 400;
-    pcm9685SetChannel(0, 0, 230 + i);
-    pcm9685SetChannel(1, 0, 230 + i);
-
+    lcdPrintln("%ld", (int32_t)posGetDmm ());
     chThdSleepMilliseconds(100);
   }
 }

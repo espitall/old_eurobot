@@ -40,7 +40,7 @@ int main(void)
   //dcmSetWidth (0, -2000); // On recule à fond sur la roue gauche
   //dcmSetWidth (1, -2000); // On recule à fond sur la roue droite
 
-  int i = 0;
+  //int i = 0;
   while (true)
   {/*
     dcmSetWidth(1, i * 20);

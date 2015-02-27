@@ -23,8 +23,8 @@ void max11628Init(void)
 
 /**
  * Gére les 2 séries de canaux
- * de 1 à 8 sur GPIOG_SPI5_ADC0_CS
- * de 9 à 16 sur GPIOG_SPI5_ADC1_CS
+ * de 0 à 7 sur GPIOG_SPI5_ADC0_CS
+ * de 8 à 15 sur GPIOG_SPI5_ADC1_CS
  */
 uint16_t max11628Read (int canal)
 {

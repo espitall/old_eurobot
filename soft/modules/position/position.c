@@ -59,7 +59,14 @@ void posComputeEncoderPosition(int enc_id)
   //calcul de la nouvelle position
   int16_t delta = raw - _enc_last_angle[enc_id];
   _enc_last_angle[enc_id] = raw;
-  _enc_value[enc_id] += delta;
+  if(enc_id == 0)
+  {
+    _enc_value[enc_id] -= delta;
+  }
+  else
+  {
+    _enc_value[enc_id] += delta;
+  }
 }
 
 static msg_t posThread(void *arg) 
@@ -70,7 +77,7 @@ static msg_t posThread(void *arg)
   systime_t time = chTimeNow();
 
   while (TRUE) {
-    //calcul l'écheance du nouveau reveil
+    //calcul l'ï¿½cheance du nouveau reveil
     time += MS2ST(10);
 
     chMtxLock(&_mutex);

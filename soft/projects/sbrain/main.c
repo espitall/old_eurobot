@@ -42,7 +42,7 @@ int main(void)
 
   int i = 0;
   while (true)
-  {
+  {/*
     dcmSetWidth(1, i * 20);
     dcmSetWidth(0, 0);
     //test adc
@@ -53,7 +53,7 @@ int main(void)
     i = i % 400;
     pcm9685SetChannel(0, 0, 230 + i);
     pcm9685SetChannel(1, 0, 230 + i);
-
+*/
     chThdSleepMilliseconds(100);
   }
 }

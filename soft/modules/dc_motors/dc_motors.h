@@ -1,6 +1,9 @@
 #ifndef DC_MOTORS_H
 #define DC_MOTORS_H
 
+#define DC_MOTORS_TYPE_LMD18200T 0
+#define DC_MOTORS_TYPE_L298N 1
+
 /*
  * Initialization of the dc motor module
  */

@@ -290,7 +290,6 @@ void chThdTerminate(Thread *tp) {
  * @api
  */
 void chThdSleep(systime_t time) {
-
   chDbgCheck(time != TIME_IMMEDIATE, "chThdSleep");
 
   chSysLock();

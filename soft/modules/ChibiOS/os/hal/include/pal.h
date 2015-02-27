@@ -393,7 +393,7 @@ typedef struct {
  * @special
  */
 #if !defined(pal_lld_setgroupmode) || defined(__DOXYGEN__)
-#define palSetGroupMode(port, mask, offset, mode)
+#define palSetGroupMode(port, mask, offset, mode) (void)mode;
 #else
 #define palSetGroupMode(port, mask, offset, mode)                           \
   pal_lld_setgroupmode(port, mask, offset, mode)

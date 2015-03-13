@@ -8,6 +8,7 @@
 #include <asserv.h>
 #include <pcm9685.h>
 #include <max11628.h>
+#include <gyro.h>
 
 void position_computed_hook(void)
 {
@@ -30,13 +31,13 @@ int main(void)
   posInit(position_computed_hook);
   asservInit();
   max11628Init();
+  gyroInit();
 
   lcdPrintln("Start: robot principal");
 
   //int i = 0;
   while (true)
   {
-    lcdPrintln("%ld", (int32_t)posGetDmm ());
     chThdSleepMilliseconds(100);
   }
 }

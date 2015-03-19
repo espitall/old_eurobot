@@ -29,7 +29,7 @@ static const SPIConfig spi4cfg = {
   NULL,
   NULL,
   0,
-  ((0x07 << 3) & SPI_CR1_BR) | SPI_CR1_SSM | SPI_CR1_SSI | SPI_CR1_MSTR | SPI_CR1_CPOL | 0,
+  ((0x07 << 3) & SPI_CR1_BR) | SPI_CR1_SSM | SPI_CR1_SSI | SPI_CR1_MSTR | 0,
 };
 
 static const I2CConfig i2c3cfg = {

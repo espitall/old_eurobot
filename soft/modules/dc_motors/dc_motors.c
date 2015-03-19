@@ -82,6 +82,7 @@ void dcmSetWidth(unsigned int channel, int width)
       if(width < 0)
       {
         width = -width;
+        width = 10000 - width;
         palClearPad(GPIOC, GPIOC_DIR_M1);
       }
       else

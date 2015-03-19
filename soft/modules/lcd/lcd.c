@@ -9,6 +9,7 @@
 #include "ili9341.h"
 #include "tm_fonts.h"
 #include "config.h"
+#include "max11628.h"
 
 typedef struct {
   struct BaseSequentialStreamVMT * vmt;
@@ -203,10 +204,12 @@ static msg_t lcdThread(void *arg)
     int32_t arel_deg = a_deg % 360;
     uint8_t pos_cor = -1;
     uint8_t time = 90;
-    uint8_t bat = 42;
+    double bat = max11628ReadmV(15) * (5.1 + 1.0);
+    uint16_t bat_decimal = (int) (bat / 1000.0);
+    uint16_t bat_float = (int) (bat) % 1000;
 
-    lcdPrintArea(&topLine, "x: %ldmm y: %ldmm a: %ld (%ld)deg\nc: %d%% t: %ds b: %d%%\n",
-             x_mm, y_mm, a_deg, arel_deg, pos_cor, time, bat);             
+    lcdPrintArea(&topLine, "x: %ldmm y: %ldmm a: %ld (%ld)deg\nc: %d%% t: %ds b: %d.%dV\n",
+             x_mm, y_mm, a_deg, arel_deg, pos_cor, time, bat_decimal, bat_float);
     
     fieldPrint();
 

@@ -39,10 +39,6 @@ int main(void)
 
   while (true)
   {
-    pcm9685SetChannel(0, 0, 300);
-    chThdSleepMilliseconds(5000);
-
-    pcm9685SetChannel(0, 0, 340);
-    chThdSleepMilliseconds(5000);
+    chThdSleepMilliseconds(100);
   }
 }

@@ -2,7 +2,7 @@
 #include <lcd.h>
 #include "gyro.h"
 
-void gyroRead(uint16_t addr, uint16_t *data)
+static void gyroRead(uint16_t addr, uint16_t *data)
 {
   (void)data;
   char buftx[4];
@@ -90,4 +90,12 @@ void gyroInit(void)
   palSetPad(GPIOE, GPIOE_SPI4_GYRO_CS);
 
   lcdPrintln("Init: gyro");
+
+  while(1)
+  {
+    uint16_t data = 0;
+    gyroRead(0x0D, &data);
+    lcdPrintln("Try read 0x%04X", data);
+    chThdSleepMilliseconds(100);
+  }
 }

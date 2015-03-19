@@ -33,13 +33,16 @@ int main(void)
   asservInit();
   max11628Init();
   usirInit();
-  gyroInit();
+  //gyroInit();
 
   lcdPrintln("Start: robot secondaire");
 
   while (true)
   {
-  
-    chThdSleepMilliseconds(100);
+    pcm9685SetChannel(0, 0, 300);
+    chThdSleepMilliseconds(5000);
+
+    pcm9685SetChannel(0, 0, 340);
+    chThdSleepMilliseconds(5000);
   }
 }

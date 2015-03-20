@@ -6,7 +6,6 @@
  */
 void asservInit(void);
 
-
 /*
  * Effectue le calcul d'asservissement
  */

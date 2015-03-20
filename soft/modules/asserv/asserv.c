@@ -11,6 +11,10 @@ static pid_t _dist_pid;
 static pid_t _angu_pid;
 static volatile int enabled;
 
+void asservSetEnable (int a)
+{
+  enabled = a;
+}
 
 void asservInit(void)
 {
@@ -27,6 +31,16 @@ void asservInit(void)
 
   rampSetMaxSpeed(&_dist_ramp, ASSERV_DIST_MAX_SPEED);
   rampSetMaxSpeed(&_angu_ramp, ASSERV_ANGU_MAX_SPEED);
+
+  pidSetKp(&_dist_pid, ASSERV_DIST_KP);
+  pidSetKd(&_dist_pid, ASSERV_DIST_KD);
+  pidSetKi(&_dist_pid, ASSERV_DIST_KI);
+  pidSetImax(&_dist_pid, ASSERV_DIST_IMAX);
+
+  pidSetKp(&_angu_pid, ASSERV_ANGU_KP);
+  pidSetKd(&_angu_pid, ASSERV_ANGU_KD);
+  pidSetKi(&_angu_pid, ASSERV_ANGU_KI);
+  pidSetImax(&_angu_pid, ASSERV_ANGU_IMAX);
 }
 
 void asservCompute(void)
@@ -37,8 +51,11 @@ void asservCompute(void)
   rampCompute(&_dist_ramp);
   rampCompute(&_angu_ramp);
 
-  pidSetSetPoint(&_dist_pid, rampGetOutput(&_dist_ramp));
-  pidSetSetPoint(&_angu_pid, rampGetOutput(&_angu_ramp));
+  //pidSetSetPoint(&_dist_pid, rampGetOutput(&_dist_ramp));
+  //pidSetSetPoint(&_angu_pid, rampGetOutput(&_angu_ramp));
+  pidSetSetPoint(&_dist_pid, 0);
+  pidSetSetPoint(&_angu_pid, 0);
+  
 
   pidCompute(&_dist_pid);
   pidCompute(&_angu_pid);
@@ -48,8 +65,29 @@ void asservCompute(void)
 
   if(enabled)
   {
-    dcmSetWidth(0, d_out + a_out);
-    dcmSetWidth(1, d_out - a_out);
+    double moteur0 = d_out + a_out;
+    double moteur1 = d_out - a_out;
+    
+    if (moteur0 < -10000)
+    {
+      moteur0 = -10000;
+    }
+    else if(moteur0 > 10000)
+    {
+      moteur0 = 10000;
+    }
+    
+    if (moteur1 < -10000)
+    {
+      moteur1 = -10000;
+    }
+    else if(moteur1 > 10000)
+    {
+      moteur1 = 10000;
+    }
+    
+    dcmSetWidth(0, moteur0);
+    dcmSetWidth(1, moteur1);
   }
   else
   {

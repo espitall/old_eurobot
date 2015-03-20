@@ -35,13 +35,32 @@ int main(void)
 
   lcdPrintln("Start: robot principal");
 
+  
   lcdPrintln("Asserv: attente 3s");
   chThdSleepMilliseconds(3000);
+  asservSetEnable(1);
   lcdPrintln("Asserv: ok");
 
+  //dcmSetWidth (0, 800);
+  //dcmSetWidth (1, -800);
+
+  //int32_t distance;
+  //int32_t angle;
+  
   //int i = 0;
   while (true)
   {
-    chThdSleepMilliseconds(100);
+    chThdSleepMilliseconds(10);
+    /*
+    dcmSetWidth(0,i);
+    i += 10;*/
+    /*
+    distance = (int) posGetDmm();
+    lcdPrintln("%ld mm", distance);
+    */
+    /*
+    angle = (int) posGetAdeg();
+    lcdPrintln("%ld deg", angle);
+    */
   }
 }

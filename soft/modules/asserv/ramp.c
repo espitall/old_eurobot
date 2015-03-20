@@ -84,3 +84,13 @@ void rampCompute(ramp_t * ramp)
   ramp->output += ramp->speed_set_point;
   chMtxUnlock();
 }
+
+void rampReset(ramp_t * ramp)
+{
+  chMtxLock(&ramp->mutex);
+
+  ramp->speed_set_point = 0;
+  ramp->output = 0;
+
+  chMtxUnlock();
+}

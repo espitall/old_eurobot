@@ -28,6 +28,7 @@ void pidSetKp(pid_t * pid, double kp);
 void pidSetKd(pid_t * pid, double kd);
 void pidSetKi(pid_t * pid, double ki);
 void pidSetImax(pid_t * pid, double imax);
+void pidReset(pid_t * pid);
 double pidGetOutput(pid_t * pid);
 
 #endif// PID_H

@@ -83,3 +83,12 @@ void pidCompute(pid_t * pid)
   chMtxUnlock();
 }
 
+void pidReset(pid_t * pid)
+{
+  chMtxLock(&pid->mutex);
+
+  pid->integral = 0;
+
+  chMtxUnlock();
+}
+

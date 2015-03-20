@@ -31,9 +31,13 @@ int main(void)
   posInit(position_computed_hook);
   asservInit();
   max11628Init();
-  gyroInit();
+  //gyroInit();
 
   lcdPrintln("Start: robot principal");
+
+  lcdPrintln("Asserv: attente 3s");
+  chThdSleepMilliseconds(3000);
+  lcdPrintln("Asserv: ok");
 
   //int i = 0;
   while (true)

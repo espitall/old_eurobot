@@ -5,14 +5,17 @@
 #include "pid.h"
 #include "config.h"
 
-ramp_t _dist_ramp;
-ramp_t _angu_ramp;
-pid_t _dist_pid;
-pid_t _angu_pid;
+static ramp_t _dist_ramp;
+static ramp_t _angu_ramp;
+static pid_t _dist_pid;
+static pid_t _angu_pid;
+static volatile int enabled;
 
 
 void asservInit(void)
 {
+  enabled = 0;
+
   rampInit(&_dist_ramp);
   rampInit(&_angu_ramp);
 
@@ -43,8 +46,23 @@ void asservCompute(void)
   double d_out = pidGetOutput(&_dist_pid);
   double a_out = pidGetOutput(&_angu_pid);
 
-  dcmSetWidth(0, d_out + a_out);
-  dcmSetWidth(1, d_out - a_out);
+  if(enabled)
+  {
+    dcmSetWidth(0, d_out + a_out);
+    dcmSetWidth(1, d_out - a_out);
+  }
+  else
+  {
+    rampReset(&_dist_ramp);
+    rampReset(&_angu_ramp);
+
+    pidReset(&_dist_pid);
+    pidReset(&_angu_pid);
+
+    dcmSetWidth(0, 0);
+    dcmSetWidth(1, 0);
+  }
+
 }
 
 void asservSetDistanceSetPoint(double set_point)

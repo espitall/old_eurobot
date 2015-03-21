@@ -65,6 +65,49 @@ static trajectoryResult_t trajectory_handle_type_d(trajectory_t * traj)
   return TRAJECTORY_RESULT_NOTHING;
 }
 
+static trajectoryResult_t trajectory_handle_type_a(trajectory_t * traj)
+{
+  double abase = floor(traj->AStartdeg / 360.0) * 360.0;
+
+  while(traj->ASetPointdeg > 180.0) {
+    traj->ASetPointdeg -= 360.0;
+  }
+  while(traj->ASetPointdeg < -180.0) {
+    traj->ASetPointdeg += 360.0;
+  }
+
+  double t1 = abase + traj->ASetPointdeg;
+  double t2 = abase + traj->ASetPointdeg + 360.0;
+  double t3 = abase + traj->ASetPointdeg - 360.0;
+
+  double dt1 = fabs(t1 - traj->AStartdeg);
+  double dt2 = fabs(t2 - traj->AStartdeg);
+  double dt3 = fabs(t3 - traj->AStartdeg);
+
+  double target = t1;
+  if(dt2 < dt1)
+  {
+    target = t2;
+    if(dt3 < dt2)
+    {
+      target = t3;
+    }
+  }
+  else if(dt3 < dt1)
+  {
+    target = t3;
+  }
+
+  if(fabs(target - posGetAdeg()) < 2.0)
+  {
+    return TRAJECTORY_RESULT_REMOVE;
+  }
+
+  asservSetAngularSetPoint(target);
+
+  return TRAJECTORY_RESULT_NOTHING;
+}
+
 static trajectoryResult_t trajectory_handle_type_t(trajectory_t * traj)
 {
 
@@ -90,7 +133,7 @@ static msg_t trajectoryThread(void *arg)
     if(readPosition != writePosition)
     {
       trajectory_t * traj = &orderList[readPosition];
-      trajectoryResult_t result = TRAJECTORY_RESULT_NOTHING;;
+      trajectoryResult_t result = TRAJECTORY_RESULT_NOTHING;
 
       if(isnan(traj->DStartmm))
       {
@@ -109,6 +152,10 @@ static msg_t trajectoryThread(void *arg)
 
         case TRAJECTORY_TYPE_D:
           result = trajectory_handle_type_d(traj);
+          break;
+
+        case TRAJECTORY_TYPE_A:
+          result = trajectory_handle_type_a(traj);
           break;
 
         case TRAJECTORY_TYPE_T:

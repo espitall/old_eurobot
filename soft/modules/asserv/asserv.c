@@ -51,10 +51,10 @@ void asservCompute(void)
   rampCompute(&_dist_ramp);
   rampCompute(&_angu_ramp);
 
-  //pidSetSetPoint(&_dist_pid, rampGetOutput(&_dist_ramp));
-  //pidSetSetPoint(&_angu_pid, rampGetOutput(&_angu_ramp));
-  pidSetSetPoint(&_dist_pid, 0);
-  pidSetSetPoint(&_angu_pid, 0);
+  pidSetSetPoint(&_dist_pid, rampGetOutput(&_dist_ramp));
+  pidSetSetPoint(&_angu_pid, rampGetOutput(&_angu_ramp));
+  //pidSetSetPoint(&_dist_pid, 0);
+  //pidSetSetPoint(&_angu_pid, 0);
   
 
   pidCompute(&_dist_pid);

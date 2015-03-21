@@ -44,10 +44,6 @@ int main(void)
   lcdPrintln("Asserv: ok");
 
   //test du module trajectoire (sans mouvement)
-  TRAJECTORY_TEMP_S(5);
-  TRAJECTORY_TEMP_S(2);
-  trajectoryWait();
-  lcdPrintln("trajec: end");
 
 
   //dcmSetWidth (0, 800);
@@ -56,7 +52,27 @@ int main(void)
   //int32_t distance;
   //int32_t angle;
   
-  //int i = 0;
+  //int i = 20;
+  //int j = 10;
+  //while(true)
+  //{
+  //  TRAJECTORY_A_DEG(-i);
+  //  trajectoryWait();
+
+  //  TRAJECTORY_A_DEG(j);
+  //  trajectoryWait();
+
+  //  i += 10;
+  //  j += 5;
+  //}
+
+  TRAJECTORY_D_MM(700);
+  TRAJECTORY_A_DEG(20);
+  TRAJECTORY_A_DEG(-20);
+  TRAJECTORY_A_DEG(180);
+  TRAJECTORY_D_MM(700);
+  trajectoryWait();
+
   while (true)
   {
     chThdSleepMilliseconds(10);

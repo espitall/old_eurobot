@@ -4,7 +4,7 @@
 #include "gyro.h"
 #include "../lcd/lcd.h"
 
-static void gyroRead(uint16_t addr, uint16_t *data)
+void gyroRead(uint16_t addr, uint16_t *data)
 {
   char buftx[4];
   char bufrx[4];

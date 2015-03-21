@@ -13,5 +13,7 @@ void asservInit(void);
 void asservCompute(void);
 void asservSetEnable(int enable);
 int asservIsEnabled(void);
+void asservSetDistanceSetPoint(double set_point);
+void asservSetAngularSetPoint(double set_point);
 
 #endif// ASSERV_H

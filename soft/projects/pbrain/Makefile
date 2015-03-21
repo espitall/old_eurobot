@@ -71,6 +71,7 @@ include $(MODULES)/lcd/config.mk
 include $(MODULES)/field_2015/config.mk
 include $(MODULES)/dc_motors/config.mk
 include $(MODULES)/position/config.mk
+include $(MODULES)/trajectory/config.mk
 include $(MODULES)/asserv/config.mk
 include $(MODULES)/pcm9685/config.mk
 include $(MODULES)/max11628/config.mk

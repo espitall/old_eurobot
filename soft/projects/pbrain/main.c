@@ -9,6 +9,7 @@
 #include <pcm9685.h>
 #include <max11628.h>
 #include <gyro.h>
+#include <trajectory.h>
 
 void position_computed_hook(void)
 {
@@ -29,6 +30,7 @@ int main(void)
   lcdInit();
   fieldInit();
   posInit(position_computed_hook);
+  trajectoryInit();
   asservInit();
   max11628Init();
   //gyroInit();
@@ -40,6 +42,13 @@ int main(void)
   chThdSleepMilliseconds(3000);
   asservSetEnable(1);
   lcdPrintln("Asserv: ok");
+
+  //test du module trajectoire (sans mouvement)
+  TRAJECTORY_TEMP_S(5);
+  TRAJECTORY_TEMP_S(2);
+  trajectoryWait();
+  lcdPrintln("trajec: end");
+
 
   //dcmSetWidth (0, 800);
   //dcmSetWidth (1, -800);

@@ -226,6 +226,8 @@ void lcdInit(void)
 
   ili9341Init((uint8_t *)frame_buffer);
 
+  current_layer = 0;
+
   //init ascii areas
   lcdPrintDriverVMT.put = lcdPutChar;
   topLine.vmt = &lcdPrintDriverVMT;

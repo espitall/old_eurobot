@@ -3,12 +3,13 @@
 #include <math.h>
 #include "position.h"
 #include "config.h"
+#include "asserv.h"
 
 #define TICK2RAD(tick)  ((((double)tick) * M_PI) / TICK_PER_180DEG) 
 #define TICK2DEG(tick)  ((((double)tick) * 180.0) / TICK_PER_180DEG) 
 #define TICK2MM(tick)  ((((double)tick) * 1000.0) / TICK_PER_1M) 
 
-static WORKING_AREA(waPosThread, 256);
+static WORKING_AREA(waPosThread, 2048);
 
 static Mutex _mutex;
 
@@ -61,11 +62,11 @@ void posComputeEncoderPosition(int enc_id)
   _enc_last_angle[enc_id] = raw;
   if(enc_id == 0)
   {
-    _enc_value[enc_id] -= delta;
+    _enc_value[enc_id] += delta;
   }
   else
   {
-    _enc_value[enc_id] += delta;
+    _enc_value[enc_id] -= delta;
   }
 }
 
@@ -105,6 +106,7 @@ static msg_t posThread(void *arg)
     _enc_distance = new_distance;
 
     chMtxUnlock();
+    asservCompute ();
 
     //attend la prochaine echeance
     chThdSleepUntil(time);

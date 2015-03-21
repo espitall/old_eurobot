@@ -78,6 +78,7 @@ void dcmSetWidth(unsigned int channel, int width)
       break;
 
     case 1:
+      width = -width;
 #if DC_MOTORS_TYPE == DC_MOTORS_TYPE_LMD18200T
       if(width < 0)
       {

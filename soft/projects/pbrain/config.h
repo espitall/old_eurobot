@@ -1,20 +1,20 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#define TICK_PER_180DEG   (57400 / 180.0)
-#define TICK_PER_1M       10000.0
+#define TICK_PER_180DEG   565694
+#define TICK_PER_1M       1051600
 
 #define ASSERV_DIST_MAX_ACCEL 100.0
 #define ASSERV_DIST_MAX_SPEED 100.0
 #define ASSERV_ANGU_MAX_ACCEL 100.0
 #define ASSERV_ANGU_MAX_SPEED 100.0
 
-#define ASSERV_DIST_KP    10
+#define ASSERV_DIST_KP    0
 #define ASSERV_DIST_KD    0
 #define ASSERV_DIST_KI    0
 #define ASSERV_DIST_IMAX  0
 
-#define ASSERV_ANGU_KP    0
+#define ASSERV_ANGU_KP    500
 #define ASSERV_ANGU_KD    0
 #define ASSERV_ANGU_KI    0
 #define ASSERV_ANGU_IMAX  0

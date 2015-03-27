@@ -1,6 +1,7 @@
 #include <ch.h>
 #include <hal.h>
 #include <math.h>
+#include <lcd.h>
 #include "position.h"
 #include "config.h"
 #include "asserv.h"
@@ -8,6 +9,7 @@
 #define TICK2RAD(tick)  ((((double)tick) * M_PI) / TICK_PER_180DEG) 
 #define TICK2DEG(tick)  ((((double)tick) * 180.0) / TICK_PER_180DEG) 
 #define TICK2MM(tick)  ((((double)tick) * 1000.0) / TICK_PER_1M) 
+#define MM2TICK(mm)  ((((double)mm) * TICK_PER_1M) / 1000.0) 
 
 static WORKING_AREA(waPosThread, 2048);
 
@@ -133,8 +135,8 @@ void posInit(void (*position_computed_hook)(void))
   _enc_value[1] = 0;
   _enc_distance = 0;
   _enc_angle = 0;
-  _enc_x = 0;
-  _enc_y = 0;
+  _enc_x = MM2TICK(500);
+  _enc_y = MM2TICK(500);
   chMtxUnlock();
 
   //lancement du calcul periodique de la position
@@ -175,4 +177,18 @@ double posGetDmm(void)
   chMtxUnlock();
 
   return d;
+}
+
+void posPrint(void)
+{
+  lcd2DPoint_t a,b;
+
+  double x = posGetXmm();
+  double y = posGetXmm();
+
+  a.x = x - ROBOT_X / 2;
+  a.y = y - ROBOT_Y / 2;
+  b.x = x + ROBOT_X / 2;
+  b.y = y + ROBOT_Y / 2;
+  lcdRect(a, b, LCD_COLOR(0, 0, 255), LCD_METRIC | LCD_FIELD);
 }

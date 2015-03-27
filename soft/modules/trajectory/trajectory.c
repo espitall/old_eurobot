@@ -65,6 +65,13 @@ static trajectoryResult_t trajectory_handle_type_d(trajectory_t * traj)
   return TRAJECTORY_RESULT_NOTHING;
 }
 
+static trajectoryResult_t trajectory_handle_type_xy(trajectory_t * traj)
+{
+  (void) traj;
+
+  return TRAJECTORY_RESULT_NOTHING;
+}
+
 static trajectoryResult_t trajectory_handle_type_a(trajectory_t * traj)
 {
   double abase = floor(traj->AStartdeg / 360.0) * 360.0;
@@ -161,6 +168,10 @@ static msg_t trajectoryThread(void *arg)
         case TRAJECTORY_TYPE_T:
           result = trajectory_handle_type_t(traj);
           break;
+
+        case TRAJECTORY_TYPE_XY:
+          result = trajectory_handle_type_xy(traj);
+          break;
       }
 
       if(result == TRAJECTORY_RESULT_REMOVE)
@@ -245,4 +256,30 @@ void _trajectoryNewOrder(trajectoryType_t type, double d, double a, double x, do
   traj.flags = flags;
 
   trajectoryAddToOrderList(&traj);
+}
+
+void trajectoryPrint(void)
+{
+  int i = readPosition;
+  while(i != writePosition)
+  {
+    trajectory_t * traj = &orderList[i];
+    switch(traj->type)
+    {
+      case TRAJECTORY_TYPE_XY:
+        {
+          lcd2DPoint_t tmp;
+          tmp.x = traj->XSetPointmm;
+          tmp.y = traj->YSetPointmm;
+          lcdCircle(tmp, 50, 0, 0, LCD_COLOR(255, 0, 0), LCD_METRIC | LCD_FIELD);
+        }
+        break;
+
+      default:
+        break;
+    }
+
+    i += 1;
+    i %= TRAJECTORY_MAX_ORDER;
+  }
 }

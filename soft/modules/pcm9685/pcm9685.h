@@ -1,6 +1,8 @@
 #ifndef PWM_H
 #define PWM_H
 
+#include <stdint.h>
+
 void pcm9685Init(void);
 void pcm9685SetChannel(uint8_t id, uint16_t delay, uint16_t width);
 

@@ -10,6 +10,9 @@
 #include <max11628.h>
 #include <gyro.h>
 #include <trajectory.h>
+#include <usir.h>
+#include <pathfinder.h>
+#include "meca.h"
 
 void position_computed_hook(void)
 {
@@ -33,59 +36,33 @@ int main(void)
   trajectoryInit();
   asservInit();
   max11628Init();
+  mecaInit();
+  usirInit();
+  pathfinderInit();
   //gyroInit();
 
   lcdPrintln("Start: robot principal");
 
+  pathfinderGotoXYmm(1200, 300);
+
+  while (true)
+  {
+    chThdSleepMilliseconds(200);
+    lcdPrintln("IR %d %d %d %d",
+               usirGetDistancemm(USIR_IR_CH0),
+               usirGetDistancemm(USIR_IR_CH1),
+               usirGetDistancemm(USIR_IR_CH2),
+               usirGetDistancemm(USIR_IR_CH3));
+  }
   
   lcdPrintln("Asserv: attente 3s");
   chThdSleepMilliseconds(3000);
   asservSetEnable(1);
   lcdPrintln("Asserv: ok");
 
-  //test du module trajectoire (sans mouvement)
-
-
-  //dcmSetWidth (0, 800);
-  //dcmSetWidth (1, -800);
-
-  //int32_t distance;
-  //int32_t angle;
-  
-  //int i = 20;
-  //int j = 10;
-  //while(true)
-  //{
-  //  TRAJECTORY_A_DEG(-i);
-  //  trajectoryWait();
-
-  //  TRAJECTORY_A_DEG(j);
-  //  trajectoryWait();
-
-  //  i += 10;
-  //  j += 5;
-  //}
-
-  TRAJECTORY_D_MM(700);
-  TRAJECTORY_A_DEG(20);
-  TRAJECTORY_A_DEG(-20);
-  TRAJECTORY_A_DEG(180);
-  TRAJECTORY_D_MM(700);
-  trajectoryWait();
 
   while (true)
   {
-    chThdSleepMilliseconds(10);
-    /*
-    dcmSetWidth(0,i);
-    i += 10;*/
-    /*
-    distance = (int) posGetDmm();
-    lcdPrintln("%ld mm", distance);
-    */
-    /*
-    angle = (int) posGetAdeg();
-    lcdPrintln("%ld deg", angle);
-    */
+    chThdSleepMilliseconds(2000);
   }
 }

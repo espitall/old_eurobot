@@ -27,4 +27,9 @@
 
 #define DC_MOTORS_TYPE DC_MOTORS_TYPE_LMD18200T
 
+#define ROBOT_X 195
+#define ROBOT_Y 360
+
+#define USIR_MASTER
+
 #endif// CONFIG_H

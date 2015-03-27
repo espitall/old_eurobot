@@ -29,6 +29,18 @@ ISR(SPID_INT_vect)
         regptr = (uint8_t *)&dist_ir[0];
         break;
 
+      case USIR_IR_CH1:
+        regptr = (uint8_t *)&dist_ir[1];
+        break;
+
+      case USIR_IR_CH2:
+        regptr = (uint8_t *)&dist_ir[2];
+        break;
+
+      case USIR_IR_CH3:
+        regptr = (uint8_t *)&dist_ir[3];
+        break;
+
       case USIR_US_CH0:
         regptr = (uint8_t *)&dist_us[0];
         break;
@@ -64,6 +76,13 @@ void usirInit(void)
  //init spi
   SPID.CTRL = SPI_ENABLE_bm | SPI_MODE_3_gc;
   SPID.INTCTRL = SPI_INTLVL_HI_gc;
+}
+
+void usirSetIRRaw(int channel, uint16_t raw)
+{
+  cli();
+  dist_ir[channel] = raw;
+  sei();
 }
 
 #endif

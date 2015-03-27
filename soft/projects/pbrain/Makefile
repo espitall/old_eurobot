@@ -76,6 +76,8 @@ include $(MODULES)/asserv/config.mk
 include $(MODULES)/pcm9685/config.mk
 include $(MODULES)/max11628/config.mk
 include $(MODULES)/gyro/config.mk
+include $(MODULES)/usir/config.mk
+include $(MODULES)/pathfinder/config.mk
 
 CHIBIOS = $(MODULES)/ChibiOS/
 include $(CHIBIOS)/os/hal/platforms/STM32F4xx/platform.mk
@@ -96,7 +98,7 @@ CSRC = $(PORTSRC) \
        $(PLATFORMSRC) \
        $(CHIBIOS)/os/various/chprintf.c \
        $(MODULESSRC) \
-       main.c
+       main.c meca.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.

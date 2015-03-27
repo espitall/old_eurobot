@@ -8,6 +8,8 @@ typedef enum
 {
   USIR_IR_CH0,
   USIR_IR_CH1,
+  USIR_IR_CH2,
+  USIR_IR_CH3,
 
   USIR_US_CH0,
   USIR_US_CH1,
@@ -15,6 +17,7 @@ typedef enum
 } usir_registers_t;
 
 void usirInit(void);
+void usirSetIRRaw(int channel, uint16_t raw);
 
 #if defined(USIR_MASTER)
 

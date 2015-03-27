@@ -4,6 +4,7 @@
 #include <chprintf.h>
 #include <field.h>
 #include <position.h>
+#include <trajectory.h>
 
 #include "lcd.h"
 #include "ili9341.h"
@@ -212,6 +213,8 @@ static msg_t lcdThread(void *arg)
              x_mm, y_mm, a_deg, arel_deg, pos_cor, time, bat_decimal, bat_float);
     
     fieldPrint();
+    posPrint();
+    trajectoryPrint();
 
     ili9341SetLayer(current_layer);
     chThdSleepMilliseconds(50);
@@ -270,6 +273,13 @@ void lcdRect(lcd2DPoint_t origin, lcd2DPoint_t dest, uint32_t color, uint16_t fl
 {
   if(flags & LCD_METRIC)
   {
+
+    if(flags & LCD_FIELD)
+    {
+      origin.x += 1500;
+      dest.x += 1500;
+    }
+
     const double ratio = 200.0 / 3000.0;
     const double xoffset = 2;
     const double yoffset = 30;
@@ -302,6 +312,12 @@ void lcdCircle(lcd2DPoint_t origin, int32_t rayon, int32_t start_angle, int32_t 
 {
   if(flags & LCD_METRIC)
   {
+
+    if(flags & LCD_FIELD)
+    {
+      origin.x += 1500;
+    }
+
     const double ratio = 200.0 / 3000.0;
     const double xoffset = 2;
     const double yoffset = 30;

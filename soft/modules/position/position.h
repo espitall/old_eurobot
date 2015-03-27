@@ -26,4 +26,6 @@ double posGetAdeg(void);
  */
 double posGetDmm(void);
 
+void posPrint(void);
+
 #endif// POSITION_H

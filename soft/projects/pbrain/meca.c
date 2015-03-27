@@ -1,0 +1,31 @@
+#include <pcm9685.h>
+#include "meca.h"
+
+#define MECA_CLAMP_HORIZONTAL_LEFT_ID 0
+#define MECA_CLAMP_HORIZONTAL_RIGHT_ID 1
+
+#define MECA_CLAMP_HORIZONTAL_LEFT_OPEN 340
+#define MECA_CLAMP_HORIZONTAL_LEFT_CLOSE 140
+#define MECA_CLAMP_HORIZONTAL_RIGHT_OPEN 0
+#define MECA_CLAMP_HORIZONTAL_RIGHT_CLOSE 0
+
+void mecaInit(void)
+{
+  mecaSetHorizontalClamp(MECA_CLAMP_OPEN);
+}
+
+void mecaSetHorizontalClamp(mecaClamp_t status)
+{
+  switch(status)
+  {
+    case MECA_CLAMP_OPEN:
+      pcm9685SetChannel(MECA_CLAMP_HORIZONTAL_LEFT_ID, 0, MECA_CLAMP_HORIZONTAL_LEFT_OPEN);
+      pcm9685SetChannel(MECA_CLAMP_HORIZONTAL_RIGHT_ID, 0, MECA_CLAMP_HORIZONTAL_RIGHT_OPEN);
+      break;
+
+    case MECA_CLAMP_CLOSE:
+      pcm9685SetChannel(MECA_CLAMP_HORIZONTAL_LEFT_ID, 0, MECA_CLAMP_HORIZONTAL_LEFT_CLOSE);
+      pcm9685SetChannel(MECA_CLAMP_HORIZONTAL_RIGHT_ID, 0, MECA_CLAMP_HORIZONTAL_RIGHT_CLOSE);
+      break;
+  }
+}

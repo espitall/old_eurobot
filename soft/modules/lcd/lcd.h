@@ -10,6 +10,7 @@
 //flags
 #define LCD_PIXEL  0x0000
 #define LCD_METRIC 0x0001
+#define LCD_FIELD  0x0002
 
 typedef struct 
 {

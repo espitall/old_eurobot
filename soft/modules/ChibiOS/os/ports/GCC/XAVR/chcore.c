@@ -28,6 +28,8 @@
 
 #include "ch.h"
 
+volatile int xmega_isr_flag;
+
 void _port_reti(void) {
   asm volatile ("reti");
 }
@@ -45,87 +47,116 @@ void _port_reti(void) {
  * @param[in] otp       the thread to be switched out
  */
 #if !defined(__DOXYGEN__)
-__attribute__((naked, weak))
+//__attribute__((naked, weak))
 #endif
 void port_switch(Thread *ntp, Thread *otp) {
   (void)ntp;
   (void)otp;
 
-  asm volatile ("push    r2");
-  asm volatile ("push    r3");
-  asm volatile ("push    r4");
-  asm volatile ("push    r5");
-  asm volatile ("push    r6");
-  asm volatile ("push    r7");
-  asm volatile ("push    r8");
-  asm volatile ("push    r9");
-  asm volatile ("push    r10");
-  asm volatile ("push    r11");
-  asm volatile ("push    r12");
-  asm volatile ("push    r13");
-  asm volatile ("push    r14");
-  asm volatile ("push    r15");
-  asm volatile ("push    r16");
-  asm volatile ("push    r17");
-  asm volatile ("push    r28");
-  asm volatile ("push    r29");
-//#if defined(EIND)                      // If EIND is available so is RAMP[D,X-Z]
-//  asm volatile ("in      r2, 0x38");   //RAMPD
-//  asm volatile ("push    r2");
-//  asm volatile ("in      r2, 0x39");   //RAMPX
-//  asm volatile ("push    r2");
-//  asm volatile ("in      r2, 0x3a");   //RAMPY
-//  asm volatile ("push    r2");
-//  asm volatile ("in      r2, 0x3b");   //RAMPZ
-//  asm volatile ("push    r2");
-//  asm volatile ("in      r2, 0x3c");   //EIND
-//  asm volatile ("push    r2");
-//#endif                                 //#if defined(EIND)
+  asm volatile (
+                "push    r0\n\t"
+                "in    r0, __SREG__\n\t"
+                "push    r0\n\t"
+                "push    r1\n\t"
+                "push    r2\n\t"
+                "push    r3\n\t"
+                "push    r4\n\t"
+                "push    r5\n\t"
+                "push    r6\n\t"
+                "push    r7\n\t"
+                "push    r8\n\t"
+                "push    r9\n\t"
+                "push    r10\n\t"
+                "push    r11\n\t"
+                "push    r12\n\t"
+                "push    r13\n\t"
+                "push    r14\n\t"
+                "push    r15\n\t"
+                "push    r16\n\t"
+                "push    r17\n\t"
+                "push    r18\n\t"
+                "push    r19\n\t"
+                "push    r20\n\t"
+                "push    r21\n\t"
+                "push    r22\n\t"
+                "push    r23\n\t"
+                "push    r24\n\t"
+                "push    r25\n\t"
+                "push    r26\n\t"
+                "push    r27\n\t"
+                "push    r28\n\t"
+                "push    r29\n\t"
+                "push    r30\n\t"
+                "push    r31\n\t"
+                "in    r16, 0x38\n\t"
+                "push    r16\n\t"
+                "in    r16, 0x39\n\t"
+                "push    r16\n\t"
+                "in    r16, 0x3a\n\t"
+                "push    r16\n\t"
+                "in    r16, 0x3b\n\t"
+                "push    r16\n\t"
+                "in    r16, 0x3c\n\t"
+                "push    r16\n\t"
 
-  asm volatile ("movw    r30, r22");
-  asm volatile ("in      r0, 0x3d");
-  asm volatile ("std     Z+5, r0");
-  asm volatile ("in      r0, 0x3e");
-  asm volatile ("std     Z+6, r0");
+                "movw    r30, r22\n\t"
+                "in    r0, 0x3d\n\t"
+                "std    Z+5, r0\n\t"
+                "in    r0, 0x3e\n\t"
+                "std    Z+6, r0\n\t"
 
-  asm volatile ("movw    r30, r24");
-  asm volatile ("ldd     r0, Z+5");
-  asm volatile ("out     0x3d, r0");
-  asm volatile ("ldd     r0, Z+6");
-  asm volatile ("out     0x3e, r0");
+                "movw    r30, r24\n\t"
+                "ldd    r0, Z+5\n\t"
+                "out    0x3d, r0\n\t"
+                "ldd    r0, Z+6\n\t"
+                "out    0x3e, r0\n\t"
 
-//#if defined(EIND)                      // If EIND is available so is RAMP[D,X-Z]
-//  asm volatile ("pop     r2");         //EIND
-//  asm volatile ("out     0x3c, r2");
-//  asm volatile ("pop     r2");         //RAMPZ
-//  asm volatile ("out     0x3b, r2");
-//  asm volatile ("pop     r2");         //RAMPY
-//  asm volatile ("out     0x3a, r2");
-//  asm volatile ("pop     r2");         //RAMPX
-//  asm volatile ("out     0x39, r2");
-//  asm volatile ("pop     r2");         //RAMPD
-//  asm volatile ("out     0x38, r2");
-//#endif                                 //#if defined(EIND)
-  
-  asm volatile ("pop     r29");
-  asm volatile ("pop     r28");
-  asm volatile ("pop     r17");
-  asm volatile ("pop     r16");
-  asm volatile ("pop     r15");
-  asm volatile ("pop     r14");
-  asm volatile ("pop     r13");
-  asm volatile ("pop     r12");
-  asm volatile ("pop     r11");
-  asm volatile ("pop     r10");
-  asm volatile ("pop     r9");
-  asm volatile ("pop     r8");
-  asm volatile ("pop     r7");
-  asm volatile ("pop     r6");
-  asm volatile ("pop     r5");
-  asm volatile ("pop     r4");
-  asm volatile ("pop     r3");
-  asm volatile ("pop     r2");
-  asm volatile ("ret");
+                "pop    r16\n\t"
+                "out    0x3c, r16\n\t"
+                "pop    r16\n\t"
+                "out    0x3b, r16\n\t"
+                "pop    r16\n\t"
+                "out    0x3a, r16\n\t"
+                "pop    r16\n\t"
+                "out    0x39, r16\n\t"
+                "pop    r16\n\t"
+                "out    0x38, r16\n\t"
+                "pop    r31\n\t"
+                "pop    r30\n\t"
+                "pop    r29\n\t"
+                "pop    r28\n\t"
+                "pop    r27\n\t"
+                "pop    r26\n\t"
+                "pop    r25\n\t"
+                "pop    r24\n\t"
+                "pop    r23\n\t"
+                "pop    r22\n\t"
+                "pop    r21\n\t"
+                "pop    r20\n\t"
+                "pop    r19\n\t"
+                "pop    r18\n\t"
+                "pop    r17\n\t"
+                "pop    r16\n\t"
+                "pop    r15\n\t"
+                "pop    r14\n\t"
+                "pop    r13\n\t"
+                "pop    r12\n\t"
+                "pop    r11\n\t"
+                "pop    r10\n\t"
+                "pop    r9\n\t"
+                "pop    r8\n\t"
+                "pop    r7\n\t"
+                "pop    r6\n\t"
+                "pop    r5\n\t"
+                "pop    r4\n\t"
+                "pop    r3\n\t"
+                "pop    r2\n\t"
+                "pop    r1\n\t"
+                "pop    r0\n\t"
+                "out    __SREG__, r0\n\t"
+                "pop    r0\n\t"
+                "ret\n\t"
+                );
 }
 
 /**

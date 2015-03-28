@@ -40,6 +40,7 @@ void __attribute__ ((noinline)) call_reti(void)
 }
 
 //CH_IRQ_HANDLER(TCD1_OVF_vect) {
+//ISR (TCD1_OVF_vect, ISR_NAKED){
 ISR (TCD1_OVF_vect, ISR_NAKED){
 
   CH_IRQ_PROLOGUE();
@@ -49,7 +50,7 @@ ISR (TCD1_OVF_vect, ISR_NAKED){
   chSysUnlockFromIsr();
 
   CH_IRQ_EPILOGUE();
-  call_reti();
+  asm volatile ("reti");
 }
 
 void boardInit(void) 

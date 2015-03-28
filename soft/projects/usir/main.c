@@ -3,7 +3,7 @@
 #include <usir.h>
 
 
-static WORKING_AREA(waHeartbeatThread, 256);
+WORKING_AREA(waHeartbeatThread, 256);
 
 msg_t heartbeatThread(void* arg) 
 {
@@ -45,7 +45,7 @@ void adcInit(void)
 {
   ADCA.CTRLA = ADC_ENABLE_bm;
   ADCA.CTRLB = ADC_FREERUN_bm;
-  ADCA.EVCTRL = ADC_EVACT_CH0123_gc;
+  ADCA.EVCTRL = ADC_SWEEP_0123_gc;
   ADCA.PRESCALER = ADC_PRESCALER_DIV512_gc;
 
   ADCA.CH0.MUXCTRL = ADC_CH_MUXPOS_PIN0_gc;
@@ -62,8 +62,8 @@ void adcInit(void)
 
   ADCA.CH0.INTCTRL = ADC_CH_INTLVL_MED_gc;
   ADCA.CH1.INTCTRL = ADC_CH_INTLVL_MED_gc;
-  ADCA.CH3.INTCTRL = ADC_CH_INTLVL_MED_gc;
   ADCA.CH2.INTCTRL = ADC_CH_INTLVL_MED_gc;
+  ADCA.CH3.INTCTRL = ADC_CH_INTLVL_MED_gc;
 }
 
 int main(void)
@@ -72,7 +72,6 @@ int main(void)
   halInit();
   chSysInit();
   usirInit();
-
   adcInit();
 
   chThdCreateStatic(waHeartbeatThread, sizeof(waHeartbeatThread), NORMALPRIO, heartbeatThread, NULL);

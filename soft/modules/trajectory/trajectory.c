@@ -69,6 +69,62 @@ static trajectoryResult_t trajectory_handle_type_xy(trajectory_t * traj)
 {
   (void) traj;
 
+  double dx = traj->XSetPointmm - posGetXmm();
+  double dy = traj->YSetPointmm - posGetYmm();
+  double dd = dx*dx + dy*dy;
+
+  if(dd < 25) 
+  {
+    return TRAJECTORY_RESULT_REMOVE;
+  }
+  else
+  {
+    double cur = posGetAdeg();
+    double target_deg = atan2(dy, dx) * 180.0 / M_PI;
+
+    double abase = floor(cur / 360.0) * 360.0;
+
+    while(target_deg > 180.0) {
+      target_deg -= 360.0;
+    }
+    while(target_deg < -180.0) {
+      target_deg += 360.0;
+    }
+
+    double t1 = abase + target_deg;
+    double t2 = abase + target_deg + 360.0;
+    double t3 = abase + target_deg - 360.0;
+
+    double dt1 = fabs(t1 - cur);
+    double dt2 = fabs(t2 - cur);
+    double dt3 = fabs(t3 - cur);
+
+    double target = t1;
+    if(dt2 < dt1)
+    {
+      target = t2;
+      if(dt3 < dt2)
+      {
+        target = t3;
+      }
+    }
+    else if(dt3 < dt1)
+    {
+      target = t3;
+    }
+    if(fabs(target - cur) < 60) 
+    {
+      asservSetDistanceSetPoint(posGetDmm() + sqrt(dd));
+    }
+    else
+    {
+      asservSetDistanceSetPoint(posGetDmm());
+    }
+
+    asservSetAngularSetPoint(target);
+  }
+
+
   return TRAJECTORY_RESULT_NOTHING;
 }
 

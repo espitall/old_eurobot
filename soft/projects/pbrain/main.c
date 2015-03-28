@@ -43,26 +43,34 @@ int main(void)
 
   lcdPrintln("Start: robot principal");
 
-  pathfinderGotoXYmm(1200, 300);
-
   while (true)
   {
+    lcdPrintln("IR: %04x %04x %04x %04x"
+                ,usirGetDistancemm(USIR_IR_CH0) 
+                ,usirGetDistancemm(USIR_IR_CH1) 
+                ,usirGetDistancemm(USIR_IR_CH2) 
+                ,usirGetDistancemm(USIR_IR_CH3) 
+               );
     chThdSleepMilliseconds(200);
-    lcdPrintln("IR %d %d %d %d",
-               usirGetDistancemm(USIR_IR_CH0),
-               usirGetDistancemm(USIR_IR_CH1),
-               usirGetDistancemm(USIR_IR_CH2),
-               usirGetDistancemm(USIR_IR_CH3));
   }
-  
+
+
   lcdPrintln("Asserv: attente 3s");
   chThdSleepMilliseconds(3000);
   asservSetEnable(1);
   lcdPrintln("Asserv: ok");
 
 
+  int i = 0;
+  int d = 500;
   while (true)
   {
-    chThdSleepMilliseconds(2000);
+    lcdPrintln("tour: %d", i);
+    i += 1;
+    TRAJECTORY_XY_MM(d, 0);
+    TRAJECTORY_XY_MM(d, d);
+    TRAJECTORY_XY_MM(0, d);
+    TRAJECTORY_XY_MM(0, 0);
+    trajectoryWait();
   }
 }

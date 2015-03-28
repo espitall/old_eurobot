@@ -135,8 +135,8 @@ void posInit(void (*position_computed_hook)(void))
   _enc_value[1] = 0;
   _enc_distance = 0;
   _enc_angle = 0;
-  _enc_x = MM2TICK(500);
-  _enc_y = MM2TICK(500);
+  _enc_x = MM2TICK(0);
+  _enc_y = MM2TICK(0);
   chMtxUnlock();
 
   //lancement du calcul periodique de la position

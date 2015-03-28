@@ -80,10 +80,18 @@ typedef uint8_t stkalign_t;
  * @note    The field @p _next is not part of the context, it represents the
  *          offset of the structure relative to the stack pointer.
  */
-struct extctx {
+struct extctx 
+{
   uint8_t       _next;
+  //uint8_t       eind;
+  //uint8_t       rampz;
+  //uint8_t       rampy;
+  //uint8_t       rampx;
+  //uint8_t       rampd;
   uint8_t       r31;
   uint8_t       r30;
+  uint8_t       r29;
+  uint8_t       r28;
   uint8_t       r27;
   uint8_t       r26;
   uint8_t       r25;
@@ -94,8 +102,24 @@ struct extctx {
   uint8_t       r20;
   uint8_t       r19;
   uint8_t       r18;
-  uint8_t       sr;
+  uint8_t       r17;
+  uint8_t       r16;
+  uint8_t       r15;
+  uint8_t       r14;
+  uint8_t       r13;
+  uint8_t       r12;
+  uint8_t       r11;
+  uint8_t       r10;
+  uint8_t       r9;
+  uint8_t       r8;
+  uint8_t       r7;
+  uint8_t       r6;
+  uint8_t       r5;
+  uint8_t       r4;
+  uint8_t       r3;
+  uint8_t       r2;
   uint8_t       r1;
+  uint8_t       sr;
   uint8_t       r0;
 #if defined(__AVR_3_BYTE_PC__) && __AVR_3_BYTE_PC__
   uint8_t       pc2;
@@ -113,8 +137,25 @@ struct extctx {
  */
 struct intctx {
   uint8_t       _next;
+  uint8_t       eind;
+  uint8_t       rampz;
+  uint8_t       rampy;
+  uint8_t       rampx;
+  uint8_t       rampd;
+  uint8_t       r31;
+  uint8_t       r30;
   uint8_t       r29;
   uint8_t       r28;
+  uint8_t       r27;
+  uint8_t       r26;
+  uint8_t       r25;
+  uint8_t       r24;
+  uint8_t       r23;
+  uint8_t       r22;
+  uint8_t       r21;
+  uint8_t       r20;
+  uint8_t       r19;
+  uint8_t       r18;
   uint8_t       r17;
   uint8_t       r16;
   uint8_t       r15;
@@ -131,6 +172,9 @@ struct intctx {
   uint8_t       r4;
   uint8_t       r3;
   uint8_t       r2;
+  uint8_t       r1;
+  uint8_t       sr;
+  uint8_t       r0;
 #if defined(__AVR_3_BYTE_PC__) && __AVR_3_BYTE_PC__
   uint8_t       pc2;
 #endif
@@ -161,6 +205,8 @@ struct context {
 #define SETUP_CONTEXT(workspace, wsize, pf, arg) {                          \
   tp->p_ctx.sp = (struct intctx*)((uint8_t *)workspace + wsize  -           \
                                   sizeof(struct intctx));                   \
+  tp->p_ctx.sp->r0 = (int)0;												\
+  tp->p_ctx.sp->r1 = (int)0;												\
   tp->p_ctx.sp->r2  = (int)pf;                                              \
   tp->p_ctx.sp->r3  = (int)pf >> 8;                                         \
   tp->p_ctx.sp->r4  = (int)arg;                                             \
@@ -175,6 +221,8 @@ struct context {
 #define SETUP_CONTEXT(workspace, wsize, pf, arg) {                        \
 tp->p_ctx.sp = (struct intctx*)((uint8_t *)workspace + wsize  -           \
                                 sizeof(struct intctx));                   \
+tp->p_ctx.sp->r0 = (int)0;												\
+tp->p_ctx.sp->r1 = (int)0;												\
 tp->p_ctx.sp->r2  = (int)pf;                                              \
 tp->p_ctx.sp->r3  = (int)pf >> 8;                                         \
 tp->p_ctx.sp->r4  = (int)arg;                                             \
@@ -237,7 +285,10 @@ tp->p_ctx.sp->pc0 = (int)_port_thread_start;                              \
  * @note    This code tricks the compiler to save all the specified registers
  *          by "touching" them.
  */
-#define PORT_IRQ_PROLOGUE() 
+extern volatile int xmega_isr_flag;
+#define PORT_IRQ_PROLOGUE()  {\
+}
+
 //#define PORT_IRQ_PROLOGUE() {                                               
 //  asm ("" : : : "r18", "r19", "r20", "r21", "r22", "r23", "r24",            
 //                "r25", "r26", "r27", "r30", "r31");                         
@@ -250,6 +301,7 @@ tp->p_ctx.sp->pc0 = (int)_port_thread_start;                              \
  */
 #define PORT_IRQ_EPILOGUE() {                                               \
   dbg_check_lock();                                                         \
+call_reti();\
   if (chSchIsPreemptionRequired()) {                                         \
     chSchDoReschedule();            }                                        \
   dbg_check_unlock();                                                       \

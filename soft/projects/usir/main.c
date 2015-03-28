@@ -3,7 +3,8 @@
 #include <usir.h>
 
 
-WORKING_AREA(waHeartbeatThread, 256);
+static WORKING_AREA(waHeartbeatThread, 256);
+static WORKING_AREA(waUSThread, 256);
 
 msg_t heartbeatThread(void* arg) 
 {
@@ -19,6 +20,54 @@ msg_t heartbeatThread(void* arg)
   }
 
   return 0;
+}
+
+ISR(TCE0_CCA_vect)
+{
+  usirSetUSRaw(0, TCE0.CCA);
+}
+
+msg_t usThread(void* arg) 
+{
+  (void)arg;
+
+  //init event system
+  EVSYS.CH0MUX = EVSYS_CHMUX_PORTC_PIN7_gc;
+  EVSYS.CH1MUX = EVSYS_CHMUX_PORTC_PIN6_gc;
+  EVSYS.CH2MUX = EVSYS_CHMUX_PORTC_PIN3_gc;
+  EVSYS.CH3MUX = EVSYS_CHMUX_PORTC_PIN2_gc;
+
+  //init timer capture
+  TCE0.CTRLD = TC_EVACT_PW_gc | TC_EVSEL_CH0_gc;
+  TCE0.CTRLB = TC0_CCAEN_bm;
+  TCE0.CTRLA = TC_CLKSEL_DIV8_gc;
+  TCE0.INTCTRLB = TC_CCAINTLVL_LO_gc;
+  TCE0.PER = 0xFFFF;
+
+
+  volatile uint32_t i;
+  while(1)
+  {
+    palSetPad(GPIOC, GPIOC_US_TRIG_CH0);
+    for(i = 0; i < 10; i += 1);
+    palClearPad(GPIOC, GPIOC_US_TRIG_CH0);
+    chThdSleepMilliseconds(20);
+
+    palSetPad(GPIOC, GPIOC_US_TRIG_CH1);
+    for(i = 0; i < 10; i += 1);
+    palClearPad(GPIOC, GPIOC_US_TRIG_CH1);
+    chThdSleepMilliseconds(20);
+
+    palSetPad(GPIOC, GPIOC_US_TRIG_CH2);
+    for(i = 0; i < 10; i += 1);
+    palClearPad(GPIOC, GPIOC_US_TRIG_CH2);
+    chThdSleepMilliseconds(20);
+
+    palSetPad(GPIOC, GPIOC_US_TRIG_CH3);
+    for(i = 0; i < 10; i += 1);
+    palClearPad(GPIOC, GPIOC_US_TRIG_CH3);
+    chThdSleepMilliseconds(20);
+  }
 }
 
 ISR(ADCA_CH0_vect)
@@ -75,6 +124,7 @@ int main(void)
   adcInit();
 
   chThdCreateStatic(waHeartbeatThread, sizeof(waHeartbeatThread), NORMALPRIO, heartbeatThread, NULL);
+  chThdCreateStatic(waUSThread, sizeof(waUSThread), NORMALPRIO, usThread, NULL);
 
   while(1)
   {

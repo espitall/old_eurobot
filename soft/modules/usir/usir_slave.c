@@ -16,18 +16,18 @@ static volatile uint16_t dist_us[4];
 
 ISR(PORTD_INT0_vect)
 {
-  regaddr = 0;
-  regptr = nextregptr;
-  if(regptr != NULL)
+  if(nextregptr != NULL)
   {
-    SPID.DATA = regptr[0];
-    nextByte = regptr[1];
+    SPID.DATA = nextregptr[0];
+    nextByte = nextregptr[1];
   }
   else
   {
     SPID.DATA = 0x00;
     nextByte = 0x00;
   }
+  regptr = nextregptr;
+  regaddr = 0;
 }
 
 ISR(SPID_INT_vect)
@@ -58,6 +58,18 @@ ISR(SPID_INT_vect)
       case USIR_US_CH0:
         nextregptr = (uint8_t *)&dist_us[0];
         break;
+
+      case USIR_US_CH1:
+        nextregptr = (uint8_t *)&dist_us[1];
+        break;
+
+      case USIR_US_CH2:
+        nextregptr = (uint8_t *)&dist_us[2];
+        break;
+
+      case USIR_US_CH3:
+        nextregptr = (uint8_t *)&dist_us[3];
+        break;
     }
   }
 
@@ -79,7 +91,7 @@ void usirInit(void)
   }
   for(i = 0; i < 4; i += 1)
   {
-    dist_us[i] = 1000;
+    dist_us[i] = 0x1234;
   }
 
    // port
@@ -97,6 +109,15 @@ void usirSetIRRaw(int channel, uint16_t raw)
 {
   cli();
   dist_ir[channel] = raw;
+  sei();
+}
+
+void usirSetUSRaw(int channel, uint16_t raw)
+{
+  raw /= 4;
+  raw = ((double)raw) / 5.8;
+  cli();
+  dist_us[channel] = raw;
   sei();
 }
 

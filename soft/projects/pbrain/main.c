@@ -45,11 +45,9 @@ int main(void)
 
   while (true)
   {
-    lcdPrintln("IR: %04x %04x %04x %04x"
+    lcdPrintln("USIR: %u %u"
                 ,usirGetDistancemm(USIR_IR_CH0) 
-                ,usirGetDistancemm(USIR_IR_CH1) 
-                ,usirGetDistancemm(USIR_IR_CH2) 
-                ,usirGetDistancemm(USIR_IR_CH3) 
+                ,usirGetDistancemm(USIR_US_CH0) 
                );
     chThdSleepMilliseconds(200);
   }

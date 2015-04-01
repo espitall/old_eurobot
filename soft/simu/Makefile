@@ -1,28 +1,43 @@
+# Le compilateur
 CC=gcc
+
+# Les dossiers
+SRCDIR=src
+HEADDIR=src
+LIBDIR=src
+BINDIR=bin
+
+# les options du compilateur
 CFLAGS=-W -Wall -Wextra -Werror -std=gnu99
-LDFLAGS=-lSDL
-EXEC=simu
-SRC= $(wildcard *.c)
-SRC_H= $(wildcard *.h)
-OBJ= $(SRC:.c=.o)
+GLLIBS=-lSDL
 
-all: $(EXEC)
+# Nom de l'exécutable
+BIN=simu2015
 
-simu: $(OBJ)
-	@$(CC) -o $@ $^ $(LDFLAGS)
+# Liste des fichiers
+SRC= $(shell find $(SRCDIR) -type f -name '*.c')
+OBJ= $(SRC:$(SRCDIR)/%.c=$(LIBDIR)/%.o)
 
-main.o: $(SRC_H)
+# Règles
+all: $(BIN)
 
-%.o: %.c
-	@$(CC) -o $@ -c $< $(CFLAGS)
+# Création de l'exécutable
+simu2015: $(OBJ)
+	$(CC) -o $(BINDIR)/$@ $^ $(CFLAGS) $(GLLIBS)
 
-.PHONY: clean mrproper run
+# Création des différents *.o à partir des *.c
+$(LIBDIR)/%.o: $(SRCDIR)/%.c $(HEADDIR)/%.h
+	$(CC) -o $@ -c $< $(CFLAGS)
+
+.PHONY: run clean mrproper
 
 run: all
-	@./$(EXEC)
+	$(BINDIR)/$(BIN)
 
 clean:
-	@rm -rf *.o *~
+	find $(SRCDIR) -type f -name '*~' -exec rm {} \;
+	find $(HEADDIR) -type f -name '*~' -exec rm {} \;
+	find $(LIBDIR) -type f -name '*.o' -exec rm {} \;
 
 mrproper: clean
-	@rm -rf $(EXEC)
+	rm -rf $(BINDIR)/$(BIN)

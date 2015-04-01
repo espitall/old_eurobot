@@ -1,17 +1,19 @@
 #include <stdio.h>
 #include <SDL/SDL.h>
 #include "field.h"
-#include "tools.h"
+#include "../tools/tools.h"
 
 /*
  * Initialisation de la matrice
  */
 void fieldMatrixInit()
 {
+    int i, j;
+
     // Escalier
-    for (int i = 10 ; i < 20 ; i++)
+    for (i = 10 ; i < 20 ; i++)
     {
-        for (int j = 5 ; j < 10; j++)
+        for (j = 5 ; j < 10; j++)
         {
             fieldMatrix[i][j] = FIELD_INACCESSIBLE;
         }
@@ -24,9 +26,11 @@ void fieldMatrixInit()
  */
 void fieldMatrixAffiche()
 {
-    for (int i = 0 ; i < FIELD_X / FIELD_RESOLUTION; i++)
+    int i, j;
+
+    for (i = 0 ; i < FIELD_X / FIELD_RESOLUTION; i++)
     {
-        for (int j = 0 ; j < FIELD_Y / FIELD_RESOLUTION; j++)
+        for (j = 0 ; j < FIELD_Y / FIELD_RESOLUTION; j++)
         {
             printf ("%d", fieldMatrix[i][j]);
         }
@@ -40,6 +44,8 @@ void fieldMatrixAffiche()
  */
 void fieldMatrixDesine()
 {
+    int i, j;
+
     SDL_Surface *ecran = NULL;
     Uint32 couleur;
     //SDL_Surface *lignes[256] = {NULL};
@@ -52,9 +58,9 @@ void fieldMatrixDesine()
 
     SDL_WM_SetCaption("Simulateur - Coupe de France de robotique 2015", NULL);
 
-    for (int i = 0 ; i < FIELD_X / FIELD_RESOLUTION; i++)
+    for (i = 0 ; i < FIELD_X / FIELD_RESOLUTION; i++)
     {
-        for (int j = 0 ; j < FIELD_Y / FIELD_RESOLUTION; j++)
+        for (j = 0 ; j < FIELD_Y / FIELD_RESOLUTION; j++)
         {
             switch(fieldMatrix[i][j]){
                 case FIELD_ACCESSIBLE:

@@ -22,11 +22,20 @@ enum {
     FIELD_TERRAIN_EQUIPE_DROITE, // Terrain reservé à l'équipe droite
     FIELD_TERRAIN_EQUIPE_DROITE2, // Terrain 2 reservé à l'équipe droite
     FIELD_TERRAIN_EQUIPE_DROITE_ACTION, // Terrain d'action reservée à l'équipe droite
-    FIELD_TERRAIN_INACESSIBLE, // Terrain inacessible
+    FIELD_TERRAIN_INACCESSIBLE, // Terrain inacessible
     FIELD_ELEMENT_NEUTRE, // Element neutre
     FIELD_ELEMENT_EQUIPE_GAUCHE, // Element reservé à l'équipe gauche
     FIELD_ELEMENT_EQUIPE_DROITE // Element reservé à l'équipe droite
 };
+
+/*
+ * Les états que peuvent prendre une case de la matrice
+ */
+enum {
+    FIELD_INACCESSIBLE, // Terrain inacessible
+    FIELD_ACCESSIBLE // Terrain acessible
+};
+
 
 /*
  * Initialisation de la matrice
@@ -42,4 +51,25 @@ void fieldMatrixAffiche();
  * Affichage graphique de la matrice
  */
 void fieldMatrixDesine();
+
+
+/*
+ * La matrice représentant les obstacles sur le terrain
+ */
+int fieldMatrixWithObstacles[FIELD_X / FIELD_RESOLUTION][FIELD_Y / FIELD_RESOLUTION];
+
+/*
+ * Initialisation de la matrice représentant les obstacles sur le terrain
+ */
+void fieldMatrixWithObstaclesInit();
+
+/*
+ * Affichage textuel de la matrice représentant les obstacles sur le terrain
+ */
+void fieldMatrixWithObstaclesAffiche();
+
+/*
+ * Affichage graphique de la matrice représentant les obstacles sur le terrain
+ */
+void fieldMatrixWithObstaclesDesine();
 #endif // FIELD_H

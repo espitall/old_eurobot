@@ -49,48 +49,52 @@ void fieldDrawCircle(int x, int y, int r, int type)
 void fieldMatrixInit()
 {
     // Escalier
-    fieldDrawRect(967, 0, 22, 580, FIELD_TERRAIN_INACESSIBLE); // Bordure gauche
-    fieldDrawRect(967 + 22 + 500, 0, 22, 580, FIELD_TERRAIN_INACESSIBLE); // Bordure centrale
-    fieldDrawRect(967 + 22 + 500 + 22 + 500, 0, 22, 580, FIELD_TERRAIN_INACESSIBLE); // Bordure droite
-    fieldDrawRect(967 + 22, 0, 500, 22, FIELD_TERRAIN_INACESSIBLE); // Bordure fond gauche
-    fieldDrawRect(967 + 22 + 500 + 22, 0, 500, 22, FIELD_TERRAIN_INACESSIBLE); // Bordure fond droit
+    fieldDrawRect(967, 0, 22, 580, FIELD_TERRAIN_INACCESSIBLE); // Bordure gauche
+    fieldDrawRect(967 + 22 + 500, 0, 22, 580, FIELD_TERRAIN_INACCESSIBLE); // Bordure centrale
+    fieldDrawRect(967 + 22 + 500 + 22 + 500, 0, 22, 580, FIELD_TERRAIN_INACCESSIBLE); // Bordure droite
+    fieldDrawRect(967 + 22, 0, 500, 22, FIELD_TERRAIN_INACCESSIBLE); // Bordure fond gauche
+    fieldDrawRect(967 + 22 + 500 + 22, 0, 500, 22, FIELD_TERRAIN_INACCESSIBLE); // Bordure fond droit
     fieldDrawRect(967 + 22, 22, 500, 580 - 22, FIELD_TERRAIN_EQUIPE_GAUCHE2); // Terrain gauche
     fieldDrawRect(967 + 22, 580 - (70 * 4), 100, 70 * 4, FIELD_TERRAIN_EQUIPE_GAUCHE_ACTION); // Terrain gauche, tapis gauche
     fieldDrawRect(967 + 22 + 500 - 100, 580 - (70 * 4), 100, 70 * 4, FIELD_TERRAIN_EQUIPE_GAUCHE_ACTION); // Terrain gauche, tapis droit
     fieldDrawRect(967 + 22 + 500 + 22, 22, 500, 580 - 22, FIELD_TERRAIN_EQUIPE_DROITE2); // Terrain droit
-    fieldDrawRect(967 + 22 + 500 + 22, 580 - (70 * 4), 100, 70 * 4, FIELD_TERRAIN_EQUIPE_GAUCHE_ACTION); // Terrain droit, tapis gauche
-    fieldDrawRect(967 + 22 + 500 + 22 + 500 - 100, 580 - (70 * 4), 100, 70 * 4, FIELD_TERRAIN_EQUIPE_GAUCHE_ACTION); // Terrain droit, tapis droit
+    fieldDrawRect(967 + 22 + 500 + 22, 580 - (70 * 4), 100, 70 * 4, FIELD_TERRAIN_EQUIPE_DROITE_ACTION); // Terrain droit, tapis gauche
+    fieldDrawRect(967 + 22 + 500 + 22 + 500 - 100, 580 - (70 * 4), 100, 70 * 4, FIELD_TERRAIN_EQUIPE_DROITE_ACTION); // Terrain droit, tapis droit
 
     // Distributeurs de popcorn
-    fieldDrawRect(300 - (70 / 2), 0, 70, 70, FIELD_TERRAIN_INACESSIBLE); // Distributeur 1
-    fieldDrawRect(600 - (70 / 2), 0, 70, 70, FIELD_TERRAIN_INACESSIBLE); // Distributeur 2
-    fieldDrawRect(2400 - (70 / 2), 0, 70, 70, FIELD_TERRAIN_INACESSIBLE); // Distributeur 3
-    fieldDrawRect(2700 - (70 / 2), 0, 70, 70, FIELD_TERRAIN_INACESSIBLE); // Distributeur 4
+    fieldDrawRect(300 - (70 / 2), 0, 70, 70, FIELD_TERRAIN_INACCESSIBLE); // Distributeur 1
+    fieldDrawRect(600 - (70 / 2), 0, 70, 70, FIELD_TERRAIN_INACCESSIBLE); // Distributeur 2
+    fieldDrawRect(2400 - (70 / 2), 0, 70, 70, FIELD_TERRAIN_INACCESSIBLE); // Distributeur 3
+    fieldDrawRect(2700 - (70 / 2), 0, 70, 70, FIELD_TERRAIN_INACCESSIBLE); // Distributeur 4
 
     // Zone de départ - Equipe gauche
     fieldDrawRect(0, 800, 450, 400, FIELD_TERRAIN_EQUIPE_GAUCHE); // Terrain - rectangle
     fieldDrawCircle(450, 1000, 200, FIELD_TERRAIN_EQUIPE_GAUCHE); // Terrain - cercle
-    fieldDrawRect(0, 800 - 22, 400, 22, FIELD_TERRAIN_INACESSIBLE); // Arrête du haut
-    fieldDrawRect(0, 800 - 22 + 444 - 22, 400, 22, FIELD_TERRAIN_INACESSIBLE); // Arrête du bas
-    fieldDrawRect(0, 1000 - (70 / 2), 70, 70, FIELD_TERRAIN_INACESSIBLE); // Plot
-    fieldDrawRect(70 - 22, 800, 22, 400, FIELD_TERRAIN_INACESSIBLE); // Arrête du font
+    fieldDrawRect(0, 800 - 22, 400, 22, FIELD_TERRAIN_INACCESSIBLE); // Arrête du haut
+    fieldDrawRect(0, 800 - 22 + 444 - 22, 400, 22, FIELD_TERRAIN_INACCESSIBLE); // Arrête du bas
+    fieldDrawRect(0, 1000 - (70 / 2), 70, 70, FIELD_TERRAIN_INACCESSIBLE); // Plot
+    fieldDrawRect(70 - 22, 800, 22, 400, FIELD_TERRAIN_INACCESSIBLE); // Arrête du font
     fieldDrawCircle(70 / 2, 1000, 35 / 2, FIELD_ELEMENT_NEUTRE); // Balle
+    fieldDrawRect(0, 400, 400, 378, FIELD_TERRAIN_EQUIPE_DROITE); // Zone adverse haut
+    fieldDrawRect(0, 1200 + 22, 400, 378, FIELD_TERRAIN_EQUIPE_DROITE); // Zone adverse bas
 
     // Zone de départ - Equipe droite
     fieldDrawRect(3000 - 450, 800, 450, 400, FIELD_TERRAIN_EQUIPE_DROITE); // Terrain - rectangle
     fieldDrawCircle(3000 - 450, 1000, 200, FIELD_TERRAIN_EQUIPE_DROITE); // Terrain - cercle
-    fieldDrawRect(3000 - 400, 800 - 22, 400, 22, FIELD_TERRAIN_INACESSIBLE); // Arrête du haut
-    fieldDrawRect(3000 - 400, 800 - 22 + 444 - 22, 400, 22, FIELD_TERRAIN_INACESSIBLE); // Arrête du bas
-    fieldDrawRect(3000 - 70, 1000 - (70 / 2), 70, 70, FIELD_TERRAIN_INACESSIBLE); // Plot
-    fieldDrawRect(3000 - 70, 800, 22, 400, FIELD_TERRAIN_INACESSIBLE); // Arrête du font
+    fieldDrawRect(3000 - 400, 800 - 22, 400, 22, FIELD_TERRAIN_INACCESSIBLE); // Arrête du haut
+    fieldDrawRect(3000 - 400, 800 - 22 + 444 - 22, 400, 22, FIELD_TERRAIN_INACCESSIBLE); // Arrête du bas
+    fieldDrawRect(3000 - 70, 1000 - (70 / 2), 70, 70, FIELD_TERRAIN_INACCESSIBLE); // Plot
+    fieldDrawRect(3000 - 70, 800, 22, 400, FIELD_TERRAIN_INACCESSIBLE); // Arrête du font
     fieldDrawCircle(3000 - (70 / 2), 1000, 35 / 2, FIELD_ELEMENT_NEUTRE); // Balle
+    fieldDrawRect(3000 - 400, 400, 400, 378, FIELD_TERRAIN_EQUIPE_GAUCHE); // Zone adverse haut
+    fieldDrawRect(3000 - 400, 1200 + 22, 400, 378, FIELD_TERRAIN_EQUIPE_GAUCHE); // Zone adverse bas
 
     // Estrade
     fieldDrawRect(1100, 2000 - 100, 800, 100, FIELD_TERRAIN_NEUTRE_ACTION); // Terrain d'action
     fieldDrawRect(1100 + 100, 2000 - 200, 800 - 100 - 100, 200, FIELD_TERRAIN_NEUTRE_ACTION); // Terrain d'action
     fieldDrawCircle(1100 + 100, 2000 - 200 + 100, 100, FIELD_TERRAIN_NEUTRE_ACTION); // Terrain d'action - cercle
     fieldDrawCircle(1100 + 800 - 100, 2000 - 200 + 100, 100, FIELD_TERRAIN_NEUTRE_ACTION); // Terrain d'action - cercle
-    fieldDrawRect(1200, 2000 - 100, 600, 100, FIELD_TERRAIN_INACESSIBLE); // Estrade
+    fieldDrawRect(1200, 2000 - 100, 600, 100, FIELD_TERRAIN_INACCESSIBLE); // Estrade
     fieldDrawCircle(1250, 2000 - (100 / 2), 35 / 2, FIELD_ELEMENT_NEUTRE); // Balle gauche
     fieldDrawCircle(1750, 2000 - (100 / 2), 35 / 2, FIELD_ELEMENT_NEUTRE); // Balle droite
 
@@ -168,7 +172,7 @@ void fieldMatrixDesine()
                 case FIELD_TERRAIN_NEUTRE_ACTION:
                     couleur = SDL_MapRGB(ecran->format, 0xf5, 0x05, 0x04); // Rouge
                     break;
-                case FIELD_TERRAIN_INACESSIBLE :
+                case FIELD_TERRAIN_INACCESSIBLE :
                     couleur = SDL_MapRGB(ecran->format, 0x72, 0x02, 0x02); // Rouge grisé
                     break;
                 case FIELD_TERRAIN_EQUIPE_GAUCHE :
@@ -190,6 +194,95 @@ void fieldMatrixDesine()
                     couleur = SDL_MapRGB(ecran->format, 0x3d, 0x75, 0x28); // Vert grisé
                     break;
                 case FIELD_ELEMENT_NEUTRE :
+                    couleur = SDL_MapRGB(ecran->format, 0xff, 0xff, 0xff); // Blanc
+                    break;
+            }
+            putpixel(ecran, i, j, couleur);
+        }
+    }
+
+
+    SDL_Flip(ecran);
+
+    pause();
+
+    SDL_Quit();
+}
+
+
+/*
+ * Initialisation de la matrice représentant les obstacles sur le terrain
+ */
+void fieldMatrixWithObstaclesInit()
+{
+    int i, j;
+
+    for (i = 0 ; i < FIELD_X / FIELD_RESOLUTION; i++)
+    {
+        for (j = 0 ; j < FIELD_Y / FIELD_RESOLUTION; j++)
+        {
+            switch (fieldMatrix[i][j]){
+                case FIELD_TERRAIN_INACCESSIBLE :
+                case FIELD_TERRAIN_EQUIPE_GAUCHE2 :
+                case FIELD_TERRAIN_EQUIPE_GAUCHE_ACTION :
+                case FIELD_TERRAIN_EQUIPE_DROITE2 :
+                case FIELD_TERRAIN_EQUIPE_DROITE_ACTION :
+                    fieldMatrixWithObstacles[i][j] = FIELD_INACCESSIBLE;
+                    break;
+                default :
+                    fieldMatrixWithObstacles[i][j] = FIELD_ACCESSIBLE;
+                    break;
+            }
+        }
+    }
+}
+
+/*
+ * Affichage textuel de la matrice représentant les obstacles sur le terrain
+ */
+void fieldMatrixWithObstaclesAffiche()
+{
+    int i, j;
+
+    for (i = 0 ; i < FIELD_X / FIELD_RESOLUTION; i++)
+    {
+        for (j = 0 ; j < FIELD_Y / FIELD_RESOLUTION; j++)
+        {
+            printf ("%d", fieldMatrixWithObstacles[i][j]);
+        }
+        printf ("\n");
+    }
+    printf ("\n");
+}
+
+/*
+ * Affichage graphique de la matrice représentant les obstacles sur le terrain
+ */
+void fieldMatrixWithObstaclesDesine()
+{
+    int i, j;
+
+    SDL_Surface *ecran = NULL;
+    Uint32 couleur;
+    //SDL_Surface *lignes[256] = {NULL};
+    //SDL_Rect position;
+    //int i = 0;
+
+    SDL_Init(SDL_INIT_VIDEO);
+
+    ecran = SDL_SetVideoMode(FIELD_X / FIELD_RESOLUTION, FIELD_Y / FIELD_RESOLUTION, 32, SDL_HWSURFACE);
+
+    SDL_WM_SetCaption("Simulateur - Coupe de France de robotique 2015", NULL);
+
+    for (i = 0 ; i < FIELD_X / FIELD_RESOLUTION; i++)
+    {
+        for (j = 0 ; j < FIELD_Y / FIELD_RESOLUTION; j++)
+        {
+            switch(fieldMatrixWithObstacles[i][j]){
+                case FIELD_INACCESSIBLE :
+                    couleur = SDL_MapRGB(ecran->format, 0x00, 0x00, 0x00); // Noir
+                    break;
+                default :
                     couleur = SDL_MapRGB(ecran->format, 0xff, 0xff, 0xff); // Blanc
                     break;
             }

@@ -9,7 +9,7 @@ BINDIR=bin
 
 # les options du compilateur
 CFLAGS=-W -Wall -Wextra -Werror -std=gnu99
-GLLIBS=-lSDL
+GLLIBS=-lSDL -lm
 
 # Nom de l'exécutable
 BIN=simu2015

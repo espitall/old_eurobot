@@ -4,8 +4,13 @@
 int main(void)
 {
   fieldMatrixInit();
+  fieldMatrixWithObstaclesInit();
 
+  //fieldMatrixAffiche();
   fieldMatrixDesine();
+
+  //fieldMatrixWithObstaclesAffiche();
+  fieldMatrixWithObstaclesDesine();
 
   return EXIT_SUCCESS;
 }

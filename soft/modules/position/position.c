@@ -164,7 +164,7 @@ double posGetXmm(void)
 double posGetYmm(void)
 {
   chMtxLock(&_mutex);
-  double y = TICK2DEG(_enc_y);
+  double y = TICK2MM(_enc_y);
   chMtxUnlock();
 
   return y;

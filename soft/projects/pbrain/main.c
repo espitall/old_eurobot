@@ -43,14 +43,14 @@ int main(void)
 
   lcdPrintln("Start: robot principal");
 
-  while (true)
-  {
-    lcdPrintln("USIR: %u %u"
-                ,usirGetDistancemm(USIR_IR_CH0) 
-                ,usirGetDistancemm(USIR_US_CH0) 
-               );
-    chThdSleepMilliseconds(200);
-  }
+  //while (true)
+  //{
+  //  lcdPrintln("USIR: %u %u"
+  //              ,usirGetDistancemm(USIR_IR_CH0) 
+  //              ,usirGetDistancemm(USIR_US_CH0) 
+  //             );
+  //  chThdSleepMilliseconds(200);
+  //}
 
 
   lcdPrintln("Asserv: attente 3s");
@@ -60,14 +60,14 @@ int main(void)
 
 
   int i = 0;
-  int d = 500;
+  int d = 400;
   while (true)
   {
     lcdPrintln("tour: %d", i);
     i += 1;
     TRAJECTORY_XY_MM(d, 0);
-    TRAJECTORY_XY_MM(d, d);
-    TRAJECTORY_XY_MM(0, d);
+    TRAJECTORY_XY_MM(d, -d);
+    TRAJECTORY_XY_MM(0, -d);
     TRAJECTORY_XY_MM(0, 0);
     trajectoryWait();
   }

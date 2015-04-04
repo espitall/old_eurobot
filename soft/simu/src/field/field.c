@@ -15,7 +15,7 @@ void fieldDrawRect(int x, int y, int largeur, int profondeur, int type)
     {
         for (j = y / FIELD_RESOLUTION ; j < (y + profondeur) / FIELD_RESOLUTION; j++)
         {
-            fieldMatrix[i][j] = type;
+            field_map[i][j] = type;
         }
     }
 }
@@ -32,10 +32,10 @@ void fieldDrawCircle(int x, int y, int r, int type)
         int j = sqrt(r*r - i*i);
         for (int k = -j ; k <= j ; k++)
         {
-            fieldMatrix[(x-k) / FIELD_RESOLUTION][(y+i) / FIELD_RESOLUTION] = type;
-            fieldMatrix[(x-k) / FIELD_RESOLUTION][(y-i) / FIELD_RESOLUTION] = type;
-            fieldMatrix[(x+i) / FIELD_RESOLUTION][(y+k) / FIELD_RESOLUTION] = type;
-            fieldMatrix[(x-i) / FIELD_RESOLUTION][(y-k) / FIELD_RESOLUTION] = type;
+            field_map[(x-k) / FIELD_RESOLUTION][(y+i) / FIELD_RESOLUTION] = type;
+            field_map[(x-k) / FIELD_RESOLUTION][(y-i) / FIELD_RESOLUTION] = type;
+            field_map[(x+i) / FIELD_RESOLUTION][(y+k) / FIELD_RESOLUTION] = type;
+            field_map[(x-i) / FIELD_RESOLUTION][(y-k) / FIELD_RESOLUTION] = type;
         }
     }
 
@@ -43,10 +43,11 @@ void fieldDrawCircle(int x, int y, int r, int type)
     fieldDrawRect(x - range + 1, y - range + 1, (2 * range - 1), (2 * range - 1), type);
 }
 
+
 /*
  * Initialisation de la matrice
  */
-void fieldMatrixInit()
+void fieldMapInit()
 {
     // Escalier
     fieldDrawRect(967, 0, 22, 580, FIELD_TERRAIN_INACCESSIBLE); // Bordure gauche
@@ -74,7 +75,7 @@ void fieldMatrixInit()
     fieldDrawRect(0, 800 - 22 + 444 - 22, 400, 22, FIELD_TERRAIN_INACCESSIBLE); // Arrête du bas
     fieldDrawRect(0, 1000 - (70 / 2), 70, 70, FIELD_TERRAIN_INACCESSIBLE); // Plot
     fieldDrawRect(70 - 22, 800, 22, 400, FIELD_TERRAIN_INACCESSIBLE); // Arrête du font
-    fieldDrawCircle(70 / 2, 1000, 35 / 2, FIELD_ELEMENT_NEUTRE); // Balle
+    fieldDrawCircle(70 / 2, 1000, 35 / 2, FIELD_ELEMENT_BALLE); // Balle
     fieldDrawRect(0, 400, 400, 378, FIELD_TERRAIN_EQUIPE_DROITE); // Zone adverse haut
     fieldDrawRect(0, 1200 + 22, 400, 378, FIELD_TERRAIN_EQUIPE_DROITE); // Zone adverse bas
 
@@ -85,7 +86,7 @@ void fieldMatrixInit()
     fieldDrawRect(3000 - 400, 800 - 22 + 444 - 22, 400, 22, FIELD_TERRAIN_INACCESSIBLE); // Arrête du bas
     fieldDrawRect(3000 - 70, 1000 - (70 / 2), 70, 70, FIELD_TERRAIN_INACCESSIBLE); // Plot
     fieldDrawRect(3000 - 70, 800, 22, 400, FIELD_TERRAIN_INACCESSIBLE); // Arrête du font
-    fieldDrawCircle(3000 - (70 / 2), 1000, 35 / 2, FIELD_ELEMENT_NEUTRE); // Balle
+    fieldDrawCircle(3000 - (70 / 2), 1000, 35 / 2, FIELD_ELEMENT_BALLE); // Balle
     fieldDrawRect(3000 - 400, 400, 400, 378, FIELD_TERRAIN_EQUIPE_GAUCHE); // Zone adverse haut
     fieldDrawRect(3000 - 400, 1200 + 22, 400, 378, FIELD_TERRAIN_EQUIPE_GAUCHE); // Zone adverse bas
 
@@ -95,15 +96,15 @@ void fieldMatrixInit()
     fieldDrawCircle(1100 + 100, 2000 - 200 + 100, 100, FIELD_TERRAIN_NEUTRE_ACTION); // Terrain d'action - cercle
     fieldDrawCircle(1100 + 800 - 100, 2000 - 200 + 100, 100, FIELD_TERRAIN_NEUTRE_ACTION); // Terrain d'action - cercle
     fieldDrawRect(1200, 2000 - 100, 600, 100, FIELD_TERRAIN_INACCESSIBLE); // Estrade
-    fieldDrawCircle(1250, 2000 - (100 / 2), 35 / 2, FIELD_ELEMENT_NEUTRE); // Balle gauche
-    fieldDrawCircle(1750, 2000 - (100 / 2), 35 / 2, FIELD_ELEMENT_NEUTRE); // Balle droite
+    fieldDrawCircle(1250, 2000 - (100 / 2), 35 / 2, FIELD_ELEMENT_BALLE); // Balle gauche
+    fieldDrawCircle(1750, 2000 - (100 / 2), 35 / 2, FIELD_ELEMENT_BALLE); // Balle droite
 
     // Gobelets
-    fieldDrawCircle(250, 1750, 95 / 2, FIELD_ELEMENT_NEUTRE); // Gobelet 1
-    fieldDrawCircle(910, 830, 95 / 2, FIELD_ELEMENT_NEUTRE); // Gobelet 2
-    fieldDrawCircle(1500, 1650, 95 / 2, FIELD_ELEMENT_NEUTRE); // Gobelet 3
-    fieldDrawCircle(2090, 830, 95 / 2, FIELD_ELEMENT_NEUTRE); // Gobelet 4
-    fieldDrawCircle(2750, 1750, 95 / 2, FIELD_ELEMENT_NEUTRE); // Gobelet 5
+    fieldDrawCircle(250, 1750, 95 / 2, FIELD_ELEMENT_GOBELET); // Gobelet 1
+    fieldDrawCircle(910, 830, 95 / 2, FIELD_ELEMENT_GOBELET); // Gobelet 2
+    fieldDrawCircle(1500, 1650, 95 / 2, FIELD_ELEMENT_GOBELET); // Gobelet 3
+    fieldDrawCircle(2090, 830, 95 / 2, FIELD_ELEMENT_GOBELET); // Gobelet 4
+    fieldDrawCircle(2750, 1750, 95 / 2, FIELD_ELEMENT_GOBELET); // Gobelet 5
 
     // Spots
     fieldDrawCircle(90, 200, 60 / 2, FIELD_ELEMENT_EQUIPE_GAUCHE); // Spot équipe gauche 1
@@ -127,7 +128,7 @@ void fieldMatrixInit()
 /*
  * Affichage textuel de la matrice
  */
-void fieldMatrixAffiche()
+void fieldMapAffiche()
 {
     int i, j;
 
@@ -135,7 +136,7 @@ void fieldMatrixAffiche()
     {
         for (j = 0 ; j < FIELD_Y / FIELD_RESOLUTION; j++)
         {
-            printf ("%d", fieldMatrix[i][j]);
+            printf ("%d", field_map[i][j]);
         }
         printf ("\n");
     }
@@ -145,7 +146,7 @@ void fieldMatrixAffiche()
 /*
  * Affichage graphique de la matrice
  */
-void fieldMatrixDesine()
+void fieldMapDesine()
 {
     int i, j;
 
@@ -165,7 +166,7 @@ void fieldMatrixDesine()
     {
         for (j = 0 ; j < FIELD_Y / FIELD_RESOLUTION; j++)
         {
-            switch(fieldMatrix[i][j]){
+            switch(field_map[i][j]){
                 case FIELD_TERRAIN_NEUTRE:
                     couleur = SDL_MapRGB(ecran->format, 0x28, 0x87, 0xd7); // Bleu
                     break;
@@ -193,7 +194,8 @@ void fieldMatrixDesine()
                 case FIELD_TERRAIN_EQUIPE_DROITE2 :
                     couleur = SDL_MapRGB(ecran->format, 0x3d, 0x75, 0x28); // Vert grisé
                     break;
-                case FIELD_ELEMENT_NEUTRE :
+                case FIELD_ELEMENT_BALLE :
+                case FIELD_ELEMENT_GOBELET :
                     couleur = SDL_MapRGB(ecran->format, 0xff, 0xff, 0xff); // Blanc
                     break;
             }
@@ -213,7 +215,7 @@ void fieldMatrixDesine()
 /*
  * Initialisation de la matrice représentant les obstacles sur le terrain
  */
-void fieldMatrixWithObstaclesInit()
+void fieldMatrixInit()
 {
     int i, j;
 
@@ -221,16 +223,16 @@ void fieldMatrixWithObstaclesInit()
     {
         for (j = 0 ; j < FIELD_Y / FIELD_RESOLUTION; j++)
         {
-            switch (fieldMatrix[i][j]){
+            switch (field_map[i][j]){
                 case FIELD_TERRAIN_INACCESSIBLE :
                 case FIELD_TERRAIN_EQUIPE_GAUCHE2 :
                 case FIELD_TERRAIN_EQUIPE_GAUCHE_ACTION :
                 case FIELD_TERRAIN_EQUIPE_DROITE2 :
                 case FIELD_TERRAIN_EQUIPE_DROITE_ACTION :
-                    fieldMatrixWithObstacles[i][j] = FIELD_INACCESSIBLE;
+                    field_matrix[i][j] = FIELD_INACCESSIBLE;
                     break;
                 default :
-                    fieldMatrixWithObstacles[i][j] = FIELD_ACCESSIBLE;
+                    field_matrix[i][j] = FIELD_ACCESSIBLE;
                     break;
             }
         }
@@ -240,7 +242,7 @@ void fieldMatrixWithObstaclesInit()
 /*
  * Affichage textuel de la matrice représentant les obstacles sur le terrain
  */
-void fieldMatrixWithObstaclesAffiche()
+void fieldMatrixAffiche()
 {
     int i, j;
 
@@ -248,7 +250,7 @@ void fieldMatrixWithObstaclesAffiche()
     {
         for (j = 0 ; j < FIELD_Y / FIELD_RESOLUTION; j++)
         {
-            printf ("%d", fieldMatrixWithObstacles[i][j]);
+            printf ("%d", field_matrix[i][j]);
         }
         printf ("\n");
     }
@@ -258,7 +260,7 @@ void fieldMatrixWithObstaclesAffiche()
 /*
  * Affichage graphique de la matrice représentant les obstacles sur le terrain
  */
-void fieldMatrixWithObstaclesDesine()
+void fieldMatrixDesine()
 {
     int i, j;
 
@@ -278,7 +280,7 @@ void fieldMatrixWithObstaclesDesine()
     {
         for (j = 0 ; j < FIELD_Y / FIELD_RESOLUTION; j++)
         {
-            switch(fieldMatrixWithObstacles[i][j]){
+            switch(field_matrix[i][j]){
                 case FIELD_INACCESSIBLE :
                     couleur = SDL_MapRGB(ecran->format, 0x00, 0x00, 0x00); // Noir
                     break;

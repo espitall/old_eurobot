@@ -3,14 +3,14 @@
 
 int main(void)
 {
+  fieldMapInit();
   fieldMatrixInit();
-  fieldMatrixWithObstaclesInit();
+
+  //fieldMapAffiche();
+  fieldMapDesine();
 
   //fieldMatrixAffiche();
   fieldMatrixDesine();
-
-  //fieldMatrixWithObstaclesAffiche();
-  fieldMatrixWithObstaclesDesine();
 
   return EXIT_SUCCESS;
 }

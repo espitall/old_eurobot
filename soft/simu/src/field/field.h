@@ -3,17 +3,17 @@
 
 #define FIELD_X 3000
 #define FIELD_Y 2000
-#define FIELD_RESOLUTION 5
+#define FIELD_RESOLUTION 2
 
 /*
- * La matrice représentant le terrain
+ * La carte représentant le terrain
  */
-int fieldMatrix[FIELD_X / FIELD_RESOLUTION][FIELD_Y / FIELD_RESOLUTION];
+int field_map[FIELD_X / FIELD_RESOLUTION][FIELD_Y / FIELD_RESOLUTION];
 
 /*
- * Les états que peuvent prendre une case de la matrice
+ * Les états que peuvent prendre une case de la carte
  */
-enum {
+enum etat_map {
     FIELD_TERRAIN_NEUTRE, // Terrain neutre
     FIELD_TERRAIN_NEUTRE_ACTION, // Terrain neutre d'action
     FIELD_TERRAIN_EQUIPE_GAUCHE, // Terrain reservée à l'équipe gauche
@@ -23,53 +23,53 @@ enum {
     FIELD_TERRAIN_EQUIPE_DROITE2, // Terrain 2 reservé à l'équipe droite
     FIELD_TERRAIN_EQUIPE_DROITE_ACTION, // Terrain d'action reservée à l'équipe droite
     FIELD_TERRAIN_INACCESSIBLE, // Terrain inacessible
-    FIELD_ELEMENT_NEUTRE, // Element neutre
+    FIELD_ELEMENT_BALLE, // Les balles
+    FIELD_ELEMENT_GOBELET, // Les gobelets
     FIELD_ELEMENT_EQUIPE_GAUCHE, // Element reservé à l'équipe gauche
     FIELD_ELEMENT_EQUIPE_DROITE // Element reservé à l'équipe droite
 };
 
 /*
- * Les états que peuvent prendre une case de la matrice
+ * Initialisation de la carte
  */
-enum {
-    FIELD_INACCESSIBLE, // Terrain inacessible
-    FIELD_ACCESSIBLE // Terrain acessible
-};
-
+void fieldMapInit();
 
 /*
- * Initialisation de la matrice
+ * Affichage textuel de la carte
  */
-void fieldMatrixInit();
+void fieldMapAffiche();
 
 /*
- * Affichage textuel de la matrice
+ * Affichage graphique de la carte
  */
-void fieldMatrixAffiche();
-
-/*
- * Affichage graphique de la matrice
- */
-void fieldMatrixDesine();
+void fieldMapDesine();
 
 
 /*
  * La matrice représentant les obstacles sur le terrain
  */
-int fieldMatrixWithObstacles[FIELD_X / FIELD_RESOLUTION][FIELD_Y / FIELD_RESOLUTION];
+int field_matrix[FIELD_X / FIELD_RESOLUTION][FIELD_Y / FIELD_RESOLUTION];
+
+/*
+ * Les états que peuvent prendre une case de la matrice
+ */
+enum etat_matrix {
+    FIELD_INACCESSIBLE, // Terrain inacessible
+    FIELD_ACCESSIBLE // Terrain acessible
+};
 
 /*
  * Initialisation de la matrice représentant les obstacles sur le terrain
  */
-void fieldMatrixWithObstaclesInit();
+void fieldMatrixInit();
 
 /*
  * Affichage textuel de la matrice représentant les obstacles sur le terrain
  */
-void fieldMatrixWithObstaclesAffiche();
+void fieldMatrixAffiche();
 
 /*
  * Affichage graphique de la matrice représentant les obstacles sur le terrain
  */
-void fieldMatrixWithObstaclesDesine();
+void fieldMatrixDesine();
 #endif // FIELD_H

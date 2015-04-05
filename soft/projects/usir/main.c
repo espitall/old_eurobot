@@ -27,6 +27,21 @@ ISR(TCE0_CCA_vect)
   usirSetUSRaw(0, TCE0.CCA);
 }
 
+ISR(TCD0_CCA_vect)
+{
+  usirSetUSRaw(1, TCD0.CCA);
+}
+
+ISR(TCC0_CCA_vect)
+{
+  usirSetUSRaw(2, TCC0.CCA);
+}
+
+ISR(TCC1_CCA_vect)
+{
+  usirSetUSRaw(3, TCC1.CCA);
+}
+
 msg_t usThread(void* arg) 
 {
   (void)arg;
@@ -44,6 +59,23 @@ msg_t usThread(void* arg)
   TCE0.INTCTRLB = TC_CCAINTLVL_LO_gc;
   TCE0.PER = 0xFFFF;
 
+  TCD0.CTRLD = TC_EVACT_PW_gc | TC_EVSEL_CH1_gc;
+  TCD0.CTRLB = TC0_CCAEN_bm;
+  TCD0.CTRLA = TC_CLKSEL_DIV8_gc;
+  TCD0.INTCTRLB = TC_CCAINTLVL_LO_gc;
+  TCD0.PER = 0xFFFF;
+
+  TCC0.CTRLD = TC_EVACT_PW_gc | TC_EVSEL_CH2_gc;
+  TCC0.CTRLB = TC0_CCAEN_bm;
+  TCC0.CTRLA = TC_CLKSEL_DIV8_gc;
+  TCC0.INTCTRLB = TC_CCAINTLVL_LO_gc;
+  TCC0.PER = 0xFFFF;
+
+  TCC1.CTRLD = TC_EVACT_PW_gc | TC_EVSEL_CH3_gc;
+  TCC1.CTRLB = TC0_CCAEN_bm;
+  TCC1.CTRLA = TC_CLKSEL_DIV8_gc;
+  TCC1.INTCTRLB = TC_CCAINTLVL_LO_gc;
+  TCC1.PER = 0xFFFF;
 
   volatile uint32_t i;
   while(1)
@@ -51,21 +83,25 @@ msg_t usThread(void* arg)
     palSetPad(GPIOC, GPIOC_US_TRIG_CH0);
     for(i = 0; i < 10; i += 1);
     palClearPad(GPIOC, GPIOC_US_TRIG_CH0);
+    ADCA.CH0.CTRL |= ADC_CH_START_bm;
     chThdSleepMilliseconds(20);
 
     palSetPad(GPIOC, GPIOC_US_TRIG_CH1);
     for(i = 0; i < 10; i += 1);
     palClearPad(GPIOC, GPIOC_US_TRIG_CH1);
+    ADCA.CH1.CTRL |= ADC_CH_START_bm;
     chThdSleepMilliseconds(20);
 
     palSetPad(GPIOC, GPIOC_US_TRIG_CH2);
     for(i = 0; i < 10; i += 1);
     palClearPad(GPIOC, GPIOC_US_TRIG_CH2);
+    ADCA.CH2.CTRL |= ADC_CH_START_bm;
     chThdSleepMilliseconds(20);
 
     palSetPad(GPIOC, GPIOC_US_TRIG_CH3);
     for(i = 0; i < 10; i += 1);
     palClearPad(GPIOC, GPIOC_US_TRIG_CH3);
+    ADCA.CH3.CTRL |= ADC_CH_START_bm;
     chThdSleepMilliseconds(20);
   }
 }
@@ -93,8 +129,8 @@ ISR(ADCA_CH3_vect)
 void adcInit(void)
 {
   ADCA.CTRLA = ADC_ENABLE_bm;
-  ADCA.CTRLB = ADC_FREERUN_bm;
-  ADCA.EVCTRL = ADC_SWEEP_0123_gc;
+  //ADCA.CTRLB = 0;//ADC_FREERUN_bm;
+  //ADCA.EVCTRL = ADC_SWEEP_0123_gc;
   ADCA.PRESCALER = ADC_PRESCALER_DIV512_gc;
 
   ADCA.CH0.MUXCTRL = ADC_CH_MUXPOS_PIN0_gc;

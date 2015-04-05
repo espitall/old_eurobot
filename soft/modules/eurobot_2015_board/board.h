@@ -1289,6 +1289,8 @@
 #define SPI_CS_ADC0   1
 #define SPI_CS_ADC1   2
 #define SPI_CS_EXT13 13
+#define SPI_CS_IOE0  14 
+#define SPI_CS_IOE1  15 
 
 
 #if !defined(_FROM_ASM_)

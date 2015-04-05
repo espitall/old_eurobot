@@ -8,6 +8,7 @@
 #include <asserv.h>
 #include <pcm9685.h>
 #include <max11628.h>
+#include <max7317.h>
 #include <gyro.h>
 #include <trajectory.h>
 #include <usir.h>
@@ -28,20 +29,29 @@ int main(void)
   palSetPad(GPIOG, GPIOG_LED4_RED);
 
   //modules and peripherals initialization
-  pcm9685Init();
   dcmInit();
+  pcm9685Init();
+  max11628Init();
+  max7317Init();
   lcdInit();
   fieldInit();
   posInit(position_computed_hook);
   trajectoryInit();
   asservInit();
-  max11628Init();
   mecaInit();
   usirInit();
   pathfinderInit();
   //gyroInit();
 
   lcdPrintln(LCD_WARNING, "Start: robot principal");
+
+  while (true)
+  {
+
+    //uint16_t in = max7317Read();
+    //lcdPrintln(LCD_INFO,"read: 0x%04x", in);
+    chThdSleepMilliseconds(500);
+  }
 
  
   lcdPrintln(LCD_INFO, "Asserv: attente 3s");

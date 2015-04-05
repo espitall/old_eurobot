@@ -18,7 +18,25 @@ static const int spimode = 3;
  */
 void max11628Init(void)
 {
+  uint8_t tx[1];
+
+  boardSetCS(SPI_CS_NONE);
   spiStart(&SPID5, &spi5cfg);
+
+  tx[0] = (1 << 6) | (1 << 5) | (1 << 3);
+
+  spiAcquireBus(&SPID5);
+
+  boardSetCS(SPI_CS_ADC0);
+  spiSend(&SPID5, 1, tx);
+  boardSetCS(SPI_CS_NONE);
+
+  boardSetCS(SPI_CS_ADC1);
+  spiSend(&SPID5, 1, tx);
+  boardSetCS(SPI_CS_NONE);
+
+
+  spiReleaseBus(&SPID5);
 }
 
 /**

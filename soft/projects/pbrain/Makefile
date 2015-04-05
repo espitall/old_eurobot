@@ -78,6 +78,7 @@ include $(MODULES)/max11628/config.mk
 include $(MODULES)/gyro/config.mk
 include $(MODULES)/usir/config.mk
 include $(MODULES)/pathfinder/config.mk
+include $(MODULES)/max7317/config.mk
 
 CHIBIOS = $(MODULES)/ChibiOS/
 include $(CHIBIOS)/os/hal/platforms/STM32F4xx/platform.mk

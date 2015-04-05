@@ -22,6 +22,7 @@ typedef struct {
   int maxRow;
   int maxCol;
   int rowModulo;
+  uint32_t color;
 } lcdPrintDriver_t;
 
 static uint32_t SDRAM frame_buffer[ILI9341_PIXEL * 2];
@@ -115,7 +116,7 @@ static msg_t lcdPutChar(void * instance, uint8_t c)
       {
         if ((b << j) & 0x8000) 
         {
-          lcdSetPixel(current_layer, xpos + j, ypos + i, LCD_COLOR(255, 255, 255));
+          lcdSetPixel(current_layer, xpos + j, ypos + i, drv->color);
         } 
         else
         {
@@ -240,6 +241,7 @@ void lcdInit(void)
   topLine.maxCol = 45;
   topLine.rowModulo = 2;
   topLine.font = &TM_Font_7x10; 
+  topLine.color = LCD_COLOR(255, 255, 255);
 
   console.vmt = &lcdPrintDriverVMT;
   console.startX = 150;
@@ -254,13 +256,29 @@ void lcdInit(void)
 }
 
 
-void lcdPrintln(const char * fmt, ...) __attribute__ ((format (printf, 1, 2)));
-void lcdPrintln(const char * fmt, ...)
+void lcdPrintln(lcd_level_t lvl, const char * fmt, ...) __attribute__ ((format (printf, 2, 3)));
+void lcdPrintln(lcd_level_t lvl, const char * fmt, ...)
 {
   chMtxLock(&mutex);
   va_list ap;
 
   va_start(ap, fmt);
+
+  switch(lvl)
+  {
+    case LCD_INFO:
+      console.color = LCD_COLOR(255, 255, 255);
+      break;
+
+    case LCD_WARNING:
+      console.color = LCD_COLOR(255, 255, 0);
+      break;
+
+    case LCD_ERROR:
+      console.color = LCD_COLOR(255, 0, 0);
+      break;
+  }
+
   lcdvPrintArea(&console, fmt, ap);
   console.rowPosition += 1;
   console.colPosition = 0;

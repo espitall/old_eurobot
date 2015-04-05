@@ -140,7 +140,7 @@ void gyroInit(void)
 
   chThdSleepMilliseconds(1);
 
-  lcdPrintln("Init: gyro");
+  lcdPrintln(LCD_INFO, "Init: gyro");
 
   int32_t somme = 0;
   int i;
@@ -154,7 +154,7 @@ void gyroInit(void)
   }
 
   int32_t delta = somme / 1000;
-  lcdPrintln("Delta : %ld", delta);
+  lcdPrintln(LCD_INFO, "Delta : %ld", delta);
   /*
   somme = 0;
   int cpt = 0;

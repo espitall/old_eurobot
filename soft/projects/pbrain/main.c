@@ -41,29 +41,20 @@ int main(void)
   pathfinderInit();
   //gyroInit();
 
-  lcdPrintln("Start: robot principal");
+  lcdPrintln(LCD_WARNING, "Start: robot principal");
 
-  //while (true)
-  //{
-  //  lcdPrintln("USIR: %u %u"
-  //              ,usirGetDistancemm(USIR_IR_CH0) 
-  //              ,usirGetDistancemm(USIR_US_CH0) 
-  //             );
-  //  chThdSleepMilliseconds(200);
-  //}
-
-
-  lcdPrintln("Asserv: attente 3s");
+ 
+  lcdPrintln(LCD_INFO, "Asserv: attente 3s");
   chThdSleepMilliseconds(3000);
   asservSetEnable(1);
-  lcdPrintln("Asserv: ok");
+  lcdPrintln(LCD_INFO, "Asserv: ok");
 
 
   int i = 0;
   int d = 400;
   while (true)
   {
-    lcdPrintln("tour: %d", i);
+    lcdPrintln(LCD_INFO, "tour: %d", i);
     i += 1;
     TRAJECTORY_XY_MM(d, 0);
     TRAJECTORY_XY_MM(d, -d);

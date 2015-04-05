@@ -18,6 +18,14 @@ typedef struct
   int32_t y;
 } lcd2DPoint_t;
 
+typedef enum 
+{
+  LCD_INFO,
+  LCD_WARNING,
+  LCD_ERROR,
+} lcd_level_t;
+
+
 /*
  * Initialization of the field module
  */
@@ -26,7 +34,7 @@ void lcdInit(void);
 /*
  * Print text in the console (lcd). Syntax is like strandard printf
  */
-void lcdPrintln(const char * fmt, ...) __attribute__ ((format (printf, 1, 2)));;
+void lcdPrintln(lcd_level_t lvl, const char * fmt, ...) __attribute__ ((format (printf, 2, 3)));;
 
 
 /* ------ DRAWING functins ------ */

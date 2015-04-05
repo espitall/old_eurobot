@@ -13,6 +13,7 @@ static volatile uint8_t nextByte;
 
 static volatile uint16_t dist_ir[8];
 static volatile uint16_t dist_us[4];
+static const uint16_t board_id = USIR_ID;
 
 ISR(PORTD_INT0_vect)
 {
@@ -39,6 +40,10 @@ ISR(SPID_INT_vect)
   {
     switch(read & 0x7F)
     {
+      case USIR_BOARD_ID:
+        nextregptr = (uint8_t *)&board_id;
+        break;
+
       case USIR_IR_CH0:
         nextregptr = (uint8_t *)&dist_ir[0];
         break;

@@ -4,8 +4,12 @@
 #include <stdint.h>
 #include <config.h>
 
+#define USIR_ID 0x1989
+
 typedef enum
 {
+  USIR_BOARD_ID,
+
   USIR_IR_CH0,
   USIR_IR_CH1,
   USIR_IR_CH2,

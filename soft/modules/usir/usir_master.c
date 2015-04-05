@@ -2,6 +2,7 @@
 #include "usir.h"
 
 #if defined(USIR_MASTER)
+#include <lcd.h>
 
 static uint16_t usirRead16(uint8_t addr)
 {
@@ -32,6 +33,12 @@ static uint16_t usirRead16(uint8_t addr)
 
 void usirInit(void)
 {
+  uint16_t board_id = usirRead16(USIR_BOARD_ID);
+  if(board_id != USIR_ID)
+  {
+    lcdPrintln(LCD_ERROR, "Carte USIR hors service");
+    lcdPrintln(LCD_ERROR, " -> recv:0x%04X (0x%04X)", board_id, USIR_ID);
+  }
 }
 
 uint16_t usirGetDistancemm(int channel)

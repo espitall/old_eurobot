@@ -102,8 +102,26 @@ static msg_t lcdPutChar(void * instance, uint8_t c)
   uint16_t xpos = drv->startX + drv->colPosition * drv->font->FontWidth;
   uint16_t ypos = drv->startY + drv->rowPosition * drv->font->FontHeight;
 
+  if(c == LCD_INFO)
+  {
+    drv->color = LCD_COLOR(255, 255, 255);
+    return 0;
+  }
+  if(c == LCD_WARNING)
+  {
+    drv->color = LCD_COLOR(255, 255, 0);
+    return 0;
+  }
+  if(c == LCD_ERROR)
+  {
+    drv->color = LCD_COLOR(255, 0, 0);
+    return 0;
+  }
+
+
   if(c != '\n') 
   {
+    
     uint16_t i,j,b;
     for (i = 0; i < drv->font->FontHeight; i++) 
     {
@@ -209,9 +227,17 @@ static msg_t lcdThread(void *arg)
     double bat = max11628ReadmV(15) * (5.1 + 1.0);
     uint16_t bat_decimal = (int) (bat / 1000.0);
     uint16_t bat_float = (int) (bat) % 1000;
+    lcd_level_t bat_lvl = LCD_INFO;
+    if(bat < BAT_ERROR_THRESHOLD_MV)
+    {
+      bat_lvl = LCD_ERROR;
+    }
+    else if(bat < BAT_WARNING_THRESHOLD_MV)
+    {
+      bat_lvl = LCD_WARNING;
+    }
 
-    lcdPrintArea(&topLine, "x: %ldmm y: %ldmm a: %ld (%ld)deg\nc: %d%% t: %ds b: %d.%dV\n",
-             x_mm, y_mm, a_deg, arel_deg, pos_cor, time, bat_decimal, bat_float);
+    lcdPrintArea(&topLine, "x: %ldmm y: %ldmm a: %ld (%ld)deg\nc: %d%% t: %ds b: %c%d.%dV%c     \n", x_mm, y_mm, a_deg, arel_deg, pos_cor, time, bat_lvl, bat_decimal, bat_float,LCD_INFO);
     
     fieldPrint();
     posPrint();

@@ -20,9 +20,9 @@ typedef struct
 
 typedef enum 
 {
-  LCD_INFO,
-  LCD_WARNING,
-  LCD_ERROR,
+  LCD_INFO = 0x0,
+  LCD_WARNING = 0x01,
+  LCD_ERROR = 0x02,
 } lcd_level_t;
 
 

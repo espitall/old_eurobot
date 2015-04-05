@@ -30,6 +30,9 @@
 #define ROBOT_X 195
 #define ROBOT_Y 360
 
+#define BAT_WARNING_THRESHOLD_MV 19000
+#define BAT_ERROR_THRESHOLD_MV 17000
+
 #define USIR_MASTER
 
 #endif// CONFIG_H

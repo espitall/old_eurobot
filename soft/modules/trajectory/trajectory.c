@@ -3,6 +3,7 @@
 #include <string.h>
 #include <math.h>
 #include <lcd.h>
+#include <max7317.h>
 #include "trajectory.h"
 #include "asserv.h"
 #include "position.h"
@@ -61,6 +62,36 @@ static trajectoryResult_t trajectory_handle_type_d(trajectory_t * traj)
   }
 
   asservSetDistanceSetPoint(traj->DStartmm + traj->DSetPointmm);
+
+  return TRAJECTORY_RESULT_NOTHING;
+}
+
+static trajectoryResult_t trajectory_handle_type_wedging(trajectory_t * traj)
+{
+  (void)traj;
+
+  asservSetDistanceSetPoint(posGetDmm() - 10);
+  uint16_t switchs = ~max7317Read();
+
+  switch(switchs & ((1 << IO_SWITCH_BACK_LEFT) | (1 << IO_SWITCH_BACK_RIGHT)))
+  {
+    case ((1 << IO_SWITCH_BACK_LEFT) | (1 << IO_SWITCH_BACK_RIGHT)):
+      asservSetDistanceSetPoint(posGetDmm() - 5);
+      asservSetAngularSetPoint(posGetAdeg());
+      return TRAJECTORY_RESULT_REMOVE;
+
+    case (1 << IO_SWITCH_BACK_LEFT):
+      asservSetAngularSetPoint(posGetAdeg() - 1);
+      break;
+
+    case (1 << IO_SWITCH_BACK_RIGHT):
+      asservSetAngularSetPoint(posGetAdeg() + 1);
+      break;
+
+    default:
+      asservSetAngularSetPoint(posGetAdeg());
+      break;
+  }
 
   return TRAJECTORY_RESULT_NOTHING;
 }
@@ -227,6 +258,10 @@ static msg_t trajectoryThread(void *arg)
 
         case TRAJECTORY_TYPE_XY:
           result = trajectory_handle_type_xy(traj);
+          break;
+
+        case TRAJECTORY_TYPE_WEDGING:
+          result = trajectory_handle_type_wedging(traj);
           break;
       }
 

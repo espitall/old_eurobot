@@ -10,6 +10,7 @@
 #define TICK2DEG(tick)  ((((double)tick) * 180.0) / TICK_PER_180DEG) 
 #define TICK2MM(tick)  ((((double)tick) * 1000.0) / TICK_PER_1M) 
 #define MM2TICK(mm)  ((((double)mm) * TICK_PER_1M) / 1000.0) 
+#define DEG2TICK(tick)  ((((double)tick) * TICK_PER_180DEG ) / 180.0) 
 
 static WORKING_AREA(waPosThread, 2048);
 
@@ -94,7 +95,7 @@ static msg_t posThread(void *arg)
     int32_t delta_disance = new_distance - _enc_distance;
 
     //calcul de l'angle
-    int32_t new_angle = _enc_value[0] - _enc_value[1] + _enc_angle_offset;      
+    int32_t new_angle = _enc_value[0] - _enc_value[1] + _enc_angle_offset; 
     int32_t delta_angle = new_angle - _enc_angle;
 
     //calcul position X et Y
@@ -135,6 +136,7 @@ void posInit(void (*position_computed_hook)(void))
   _enc_value[1] = 0;
   _enc_distance = 0;
   _enc_angle = 0;
+  _enc_angle_offset = 0;
   _enc_x = MM2TICK(0);
   _enc_y = MM2TICK(0);
   chMtxUnlock();
@@ -150,6 +152,47 @@ double posGetAdeg(void)
   chMtxUnlock();
 
   return a;
+}
+
+void posSetAdeg(double a)
+{
+  int32_t atick = DEG2TICK(a);
+  int ass = asservIsEnabled();
+  asservSetEnable(0);
+
+  chMtxLock(&_mutex);
+  _enc_angle_offset +=  atick - _enc_angle;
+  _enc_angle  = _enc_value[0] - _enc_value[1] + _enc_angle_offset; 
+  chMtxUnlock();
+
+  asservSetEnable(0); //force ramp reset
+  asservSetEnable(ass);
+}
+
+void posSetXmm(double x)
+{
+  int ass = asservIsEnabled();
+  asservSetEnable(0);
+
+  chMtxLock(&_mutex);
+  _enc_x = MM2TICK(x);
+  chMtxUnlock();
+
+  asservSetEnable(0); //force ramp reset
+  asservSetEnable(ass);
+}
+
+void posSetYmm(double y)
+{
+  int ass = asservIsEnabled();
+  asservSetEnable(0);
+
+  chMtxLock(&_mutex);
+  _enc_y = MM2TICK(y);
+  chMtxUnlock();
+
+  asservSetEnable(0); //force ramp reset
+  asservSetEnable(ass);
 }
 
 double posGetXmm(void)
@@ -177,6 +220,24 @@ double posGetDmm(void)
   chMtxUnlock();
 
   return d;
+}
+
+int32_t posGetLeftTick(void)
+{
+  chMtxLock(&_mutex);
+  int32_t l = _enc_value[1];
+  chMtxUnlock();
+
+  return l;
+}
+
+int32_t posGetRightTick(void)
+{
+  chMtxLock(&_mutex);
+  int32_t r = _enc_value[0];
+  chMtxUnlock();
+
+  return r;
 }
 
 void posPrint(void)

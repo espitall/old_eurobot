@@ -1292,6 +1292,9 @@
 #define SPI_CS_IOE0  14 
 #define SPI_CS_IOE1  15 
 
+#define IO_SWITCH_BACK_LEFT   1
+#define IO_SWITCH_BACK_RIGHT  2
+
 
 #if !defined(_FROM_ASM_)
 #ifdef __cplusplus

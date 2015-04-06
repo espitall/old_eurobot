@@ -45,13 +45,15 @@ int main(void)
 
   lcdPrintln(LCD_WARNING, "Start: robot principal");
 
-  while (true)
-  {
 
-    //uint16_t in = max7317Read();
-    //lcdPrintln(LCD_INFO,"read: 0x%04x", in);
-    chThdSleepMilliseconds(500);
-  }
+  //chThdSleepMilliseconds(3000);
+  //  dcmSetWidth(0, 500);
+  //  dcmSetWidth(1, -500);
+  //while (true)
+  //{
+  //  lcdPrintln(LCD_INFO,"l %ld, r %ld", posGetLeftTick(), posGetRightTick());
+  //  chThdSleepMilliseconds(500);
+  //}
 
  
   lcdPrintln(LCD_INFO, "Asserv: attente 3s");
@@ -59,17 +61,40 @@ int main(void)
   asservSetEnable(1);
   lcdPrintln(LCD_INFO, "Asserv: ok");
 
+  //test depart callage
+  TRAJECTORY_WEDGING();
+  trajectoryWait();
+  posSetAdeg(0);
+  posSetXmm(-1500 + 105);
 
-  int i = 0;
-  int d = 400;
-  while (true)
+  TRAJECTORY_D_MM(200);
+  TRAJECTORY_A_DEG(90);
+  TRAJECTORY_WEDGING();
+  trajectoryWait();
+  posSetAdeg(90);
+  posSetYmm(105);
+
+  TRAJECTORY_D_MM(100);
+  TRAJECTORY_XY_MM(-700, 1000);
+  TRAJECTORY_A_DEG(0);
+  TRAJECTORY_D_MM(-600);
+
+  
+  //int i = 0;
+  //int d = 400;
+  //while (true)
+  //{
+  //  lcdPrintln(LCD_INFO, "tour: %d", i);
+  //  i += 1;
+  //  TRAJECTORY_XY_MM(d, 0);
+  //  TRAJECTORY_XY_MM(d, d);
+  //  TRAJECTORY_XY_MM(0, d);
+  //  TRAJECTORY_XY_MM(0, 0);
+  //  trajectoryWait();
+  //}
+
+  while(true)
   {
-    lcdPrintln(LCD_INFO, "tour: %d", i);
-    i += 1;
-    TRAJECTORY_XY_MM(d, 0);
-    TRAJECTORY_XY_MM(d, -d);
-    TRAJECTORY_XY_MM(0, -d);
-    TRAJECTORY_XY_MM(0, 0);
-    trajectoryWait();
+    chThdSleepMilliseconds(3000);
   }
 }

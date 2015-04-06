@@ -11,9 +11,23 @@ static pid_t _dist_pid;
 static pid_t _angu_pid;
 static volatile int enabled;
 
-void asservSetEnable (int a)
+void asservSetEnable(int a)
 {
   enabled = a;
+
+  if(enabled == 0)
+  {
+    rampReset(&_dist_ramp, posGetDmm());
+    rampReset(&_angu_ramp, posGetAdeg());
+
+    pidReset(&_dist_pid);
+    pidReset(&_angu_pid);
+  }
+}
+
+int asservIsEnabled(void)
+{
+  return enabled;
 }
 
 void asservInit(void)
@@ -91,8 +105,8 @@ void asservCompute(void)
   }
   else
   {
-    rampReset(&_dist_ramp);
-    rampReset(&_angu_ramp);
+    rampReset(&_dist_ramp, posGetDmm());
+    rampReset(&_angu_ramp, posGetAdeg());
 
     pidReset(&_dist_pid);
     pidReset(&_angu_pid);

@@ -12,6 +12,7 @@ typedef enum
   TRAJECTORY_TYPE_A,
   TRAJECTORY_TYPE_T,
   TRAJECTORY_TYPE_XY,
+  TRAJECTORY_TYPE_WEDGING,
 } trajectoryType_t;
 
 void trajectoryInit(void);
@@ -25,5 +26,6 @@ void _trajectoryNewOrder(trajectoryType_t type, double d, double a, double x, do
 #define TRAJECTORY_D_MM(dist) _trajectoryNewOrder(TRAJECTORY_TYPE_D, dist, 0, 0, 0, 0, 0)
 #define TRAJECTORY_A_DEG(angu) _trajectoryNewOrder(TRAJECTORY_TYPE_A, 0, angu, 0, 0, 0, 0)
 #define TRAJECTORY_XY_MM(x, y) _trajectoryNewOrder(TRAJECTORY_TYPE_XY, 0, 0, x, y, 0, 0)
+#define TRAJECTORY_WEDGING() _trajectoryNewOrder(TRAJECTORY_TYPE_WEDGING, 0, 0, 0, 0, 0, 0);
 
 #endif //TRAJECTORY_H

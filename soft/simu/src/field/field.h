@@ -1,75 +1,69 @@
 #ifndef FIELD_H
 #define FIELD_H
 
+#include "../pathfinder/pathfinder.h"
+
 #define FIELD_X 3000
 #define FIELD_Y 2000
-#define FIELD_RESOLUTION 2
-
-/*
- * La carte représentant le terrain
- */
-int field_map[FIELD_X / FIELD_RESOLUTION][FIELD_Y / FIELD_RESOLUTION];
+#define FIELD_RESOLUTION 3
 
 /*
  * Les états que peuvent prendre une case de la carte
  */
-enum etat_map {
-    FIELD_TERRAIN_NEUTRE, // Terrain neutre
-    FIELD_TERRAIN_NEUTRE_ACTION, // Terrain neutre d'action
-    FIELD_TERRAIN_EQUIPE_GAUCHE, // Terrain reservée à l'équipe gauche
-    FIELD_TERRAIN_EQUIPE_GAUCHE2, // Terrain 2 reservée à l'équipe gauche
-    FIELD_TERRAIN_EQUIPE_GAUCHE_ACTION, // Terrain d'action reservée à l'équipe gauche
-    FIELD_TERRAIN_EQUIPE_DROITE, // Terrain reservé à l'équipe droite
-    FIELD_TERRAIN_EQUIPE_DROITE2, // Terrain 2 reservé à l'équipe droite
-    FIELD_TERRAIN_EQUIPE_DROITE_ACTION, // Terrain d'action reservée à l'équipe droite
-    FIELD_TERRAIN_INACCESSIBLE, // Terrain inacessible
-    FIELD_ELEMENT_BALLE, // Les balles
-    FIELD_ELEMENT_GOBELET, // Les gobelets
-    FIELD_ELEMENT_EQUIPE_GAUCHE, // Element reservé à l'équipe gauche
-    FIELD_ELEMENT_EQUIPE_DROITE // Element reservé à l'équipe droite
+enum field_map_etat
+{
+    FIELD_MAP_ETAT_NEUTRE, // Terrain neutre
+    FIELD_MAP_ETAT_NEUTRE_ACTION, // Terrain neutre d'action
+    FIELD_MAP_ETAT_EQUIPE_GAUCHE, // Terrain reservée à l'équipe gauche
+    FIELD_MAP_ETAT_EQUIPE_GAUCHE2, // Terrain 2 reservée à l'équipe gauche
+    FIELD_MAP_ETAT_EQUIPE_GAUCHE_ACTION, // Terrain d'action reservée à l'équipe gauche
+    FIELD_MAP_ETAT_EQUIPE_DROITE, // Terrain reservé à l'équipe droite
+    FIELD_MAP_ETAT_EQUIPE_DROITE2, // Terrain 2 reservé à l'équipe droite
+    FIELD_MAP_ETAT_EQUIPE_DROITE_ACTION, // Terrain d'action reservée à l'équipe droite
+    FIELD_MAP_ETAT_INACCESSIBLE, // Terrain inacessible
+    FIELD_MAP_ETAT_BOT, // Robot
+    FIELD_MAP_ETAT_ELEMENT_BALLE, // Balles
+    FIELD_MAP_ETAT_ELEMENT_GOBELET, // Gobelets
+    FIELD_MAP_ETAT_ELEMENT_EQUIPE_GAUCHE, // Plot de l'équipe gauche
+    FIELD_MAP_ETAT_ELEMENT_EQUIPE_DROITE // Plot de l'équipe droite
 };
+
+typedef enum field_map_etat FIELD_MAP_ETAT;
+
+/*
+ * La structure des cases de la carte
+ */
+struct field_map_point
+{
+    FIELD_MAP_ETAT type;
+    PATHFINDER_LISTES liste;
+    int f;
+    int g;
+    int h;
+    int parent_x;
+    int parent_y;
+};
+
+typedef struct field_map_point FIELD_MAP_POINT;
+
+/*
+ * La carte représentant le terrain
+ */
+FIELD_MAP_POINT field_map [FIELD_X / FIELD_RESOLUTION][FIELD_Y / FIELD_RESOLUTION];
 
 /*
  * Initialisation de la carte
  */
-void fieldMapInit();
-
-/*
- * Affichage textuel de la carte
- */
-void fieldMapAffiche();
+void fieldMapInit ();
 
 /*
  * Affichage graphique de la carte
  */
-void fieldMapDesine();
-
-
-/*
- * La matrice représentant les obstacles sur le terrain
- */
-int field_matrix[FIELD_X / FIELD_RESOLUTION][FIELD_Y / FIELD_RESOLUTION];
+void fieldMapDesine ();
 
 /*
- * Les états que peuvent prendre une case de la matrice
+ * Indique si la case de la carte est accessible
  */
-enum etat_matrix {
-    FIELD_INACCESSIBLE, // Terrain inacessible
-    FIELD_ACCESSIBLE // Terrain acessible
-};
+int fieldIsAccessible (int x, int y);
 
-/*
- * Initialisation de la matrice représentant les obstacles sur le terrain
- */
-void fieldMatrixInit();
-
-/*
- * Affichage textuel de la matrice représentant les obstacles sur le terrain
- */
-void fieldMatrixAffiche();
-
-/*
- * Affichage graphique de la matrice représentant les obstacles sur le terrain
- */
-void fieldMatrixDesine();
 #endif // FIELD_H

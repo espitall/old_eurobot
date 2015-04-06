@@ -1,16 +1,19 @@
-#include <stdlib.h>
 #include "field/field.h"
+#include "pathfinder/pathfinder.h"
+#include "screen/screen.h"
 
-int main(void)
+int main (void)
 {
-  fieldMapInit();
-  fieldMatrixInit();
+  fieldMapInit ();
+  fieldMapDesine ();
+  screenPause ();
 
-  //fieldMapAffiche();
-  fieldMapDesine();
+  pathfinderInit ();
+  pathfinderMapDesine ();
+  pathfinderGotoXYmm (2400, 500);
+  screenPause ();
 
-  //fieldMatrixAffiche();
-  fieldMatrixDesine();
+  screenStop ();
 
   return EXIT_SUCCESS;
 }

@@ -1,3 +1,4 @@
+#include "../config.h"
 #if PATHFINDER_ALGO == ASTAR
     #include "astar.h"
 #elif PATHFINDER_ALGO == DIJKSTRA

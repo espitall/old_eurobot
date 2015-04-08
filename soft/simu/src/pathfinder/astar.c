@@ -9,23 +9,23 @@
 
 void _astar_addToCloseList (PATHFINDER_POINT point)
 {
-    field_map [point.x][point.y].liste = PATHFINDER_CLOSELIST;
+    astar_map [point.x][point.y].liste = ASTAR_CLOSELIST;
 
-#ifdef ASTAR_DEBUG
-    SCREEN_COLOR couleur = {0xff, 0xff, 0x00};
-    screenSetPixel (point.x, point.y,  couleur);
-    screenRefresh ();
+    #ifdef ASTAR_DEBUG
+        SCREEN_COLOR couleur = {0xff, 0xff, 0x00};
+        screenSetPixel (point.x, point.y,  couleur);
+        screenRefresh ();
     #endif
 }
 
 void _astar_addToOpenList (PATHFINDER_POINT point)
 {
-    field_map [point.x][point.y].liste = PATHFINDER_OPENLIST;
+    astar_map [point.x][point.y].liste = ASTAR_OPENLIST;
 
-#ifdef ASTAR_DEBUG
-    SCREEN_COLOR couleur = {0x00, 0xff, 0xff};
-    screenSetPixel (point.x, point.y,  couleur);
-    screenRefresh ();
+    #ifdef ASTAR_DEBUG
+        SCREEN_COLOR couleur = {0x00, 0xff, 0xff};
+        screenSetPixel (point.x, point.y,  couleur);
+        screenRefresh ();
     #endif
 }
 
@@ -39,11 +39,11 @@ PATHFINDER_POINT _astar_getCurrentNode ()
     {
         for (j = 0; j < FIELD_Y / FIELD_RESOLUTION; j++)
         {
-            if (field_map [i][j].liste == PATHFINDER_OPENLIST)
+            if (astar_map [i][j].liste == ASTAR_OPENLIST)
             {
-                if (minF == -1 || field_map [i][j].f < minF)
+                if (minF == -1 || astar_map [i][j].f < minF)
                 {
-                    minF = field_map [i][j].f;
+                    minF = astar_map [i][j].f;
                     point.x = i;
                     point.y = j;
                 }
@@ -107,12 +107,12 @@ void _astar_getNeighbours (PATHFINDER_POINT point, PATHFINDER_POINT neighbours [
 
 int _astar_isOnOpenList (PATHFINDER_POINT point)
 {
-    return (field_map [point.x][point.y].liste == PATHFINDER_OPENLIST);
+    return (astar_map [point.x][point.y].liste == ASTAR_OPENLIST);
 }
 
 int _astar_isOnCloseList (PATHFINDER_POINT point)
 {
-    return (field_map [point.x][point.y].liste == PATHFINDER_CLOSELIST);
+    return (astar_map [point.x][point.y].liste == ASTAR_CLOSELIST);
 }
 
 int _astar_isEmptyOpenList ()
@@ -134,27 +134,27 @@ void astar (PATHFINDER_POINT start, PATHFINDER_POINT end)
     int i;
 
     #ifdef ASTAR_DEBUG
-    SCREEN_COLOR couleur;
+        SCREEN_COLOR couleur;
 
-    couleur.rouge = 0xff;
-    couleur.vert = 0x00;
-    couleur.bleu = 0x00;
-    screenSetPixel (start.x, start.y, couleur);
-    screenSetPixel (start.x + 1, start.y, couleur);
-    screenSetPixel (start.x - 1, start.y, couleur);
-    screenSetPixel (start.x, start.y + 1, couleur);
-    screenSetPixel (start.x, start.y - 1, couleur);
+        couleur.rouge = 0xff;
+        couleur.vert = 0x00;
+        couleur.bleu = 0x00;
+        screenSetPixel (start.x, start.y, couleur);
+        screenSetPixel (start.x + 1, start.y, couleur);
+        screenSetPixel (start.x - 1, start.y, couleur);
+        screenSetPixel (start.x, start.y + 1, couleur);
+        screenSetPixel (start.x, start.y - 1, couleur);
 
-    couleur.rouge = 0x00;
-    couleur.vert = 0xff;
-    couleur.bleu = 0x00;
-    screenSetPixel (end.x, end.y, couleur);
-    screenSetPixel (end.x + 1, end.y, couleur);
-    screenSetPixel (end.x - 1, end.y, couleur);
-    screenSetPixel (end.x, end.y + 1, couleur);
-    screenSetPixel (end.x, end.y - 1, couleur);
+        couleur.rouge = 0x00;
+        couleur.vert = 0xff;
+        couleur.bleu = 0x00;
+        screenSetPixel (end.x, end.y, couleur);
+        screenSetPixel (end.x + 1, end.y, couleur);
+        screenSetPixel (end.x - 1, end.y, couleur);
+        screenSetPixel (end.x, end.y + 1, couleur);
+        screenSetPixel (end.x, end.y - 1, couleur);
 
-    screenRefresh ();
+        screenRefresh ();
     #endif
 
     _astar_addToOpenList (start);
@@ -183,14 +183,14 @@ void astar (PATHFINDER_POINT start, PATHFINDER_POINT end)
             if (node.x == -1 || node.y == -1)
                 continue;
 
-            FIELD_MAP_POINT point = field_map [node.x][node.y];
+            ASTAR_MAP_POINT point = astar_map [node.x][node.y];
 
             // Si le node est un obstacle ou est dans la liste fermée ignorez-le et passer à l'analyse d'un autre node.
             if (_astar_isOnCloseList (node) || !fieldIsAccessible (node.x, node.y))
                 continue;
 
             // on calcule le nouveau g
-            FIELD_MAP_POINT parent = field_map [point.parent_x][point.parent_y];
+            ASTAR_MAP_POINT parent = astar_map [point.parent_x][point.parent_y];
             int newG = parent.g + node.poids;
 
             // on calcule le nouveau h
@@ -205,11 +205,11 @@ void astar (PATHFINDER_POINT start, PATHFINDER_POINT end)
                 //faites de CURRENT  son parent(P) et recalculez et enregistrez ses propriétés F et H.
                 if (newG < point.g)
                 {
-                    field_map [node.x][node.y].parent_x = currentNode.x;
-                    field_map [node.x][node.y].parent_y = currentNode.y;
-                    field_map [node.x][node.y].g = newG;
-                    field_map [node.x][node.y].h = newH;
-                    field_map [node.x][node.y].f = newF;
+                    astar_map [node.x][node.y].parent_x = currentNode.x;
+                    astar_map [node.x][node.y].parent_y = currentNode.y;
+                    astar_map [node.x][node.y].g = newG;
+                    astar_map [node.x][node.y].h = newH;
+                    astar_map [node.x][node.y].f = newF;
                 }
             }
             else
@@ -217,11 +217,11 @@ void astar (PATHFINDER_POINT start, PATHFINDER_POINT end)
                 //Si le node n'est pas dans la liste ouverte, ajoutez-le à la dite liste et faites de CURRENT son parent(P).
                 //Calculez et enregistrez ses propriétés F, G et H.
                 _astar_addToOpenList (node);
-                field_map [node.x][node.y].parent_x = currentNode.x;
-                field_map [node.x][node.y].parent_y = currentNode.y;
-                field_map [node.x][node.y].g = newG;
-                field_map [node.x][node.y].h = newH;
-                field_map [node.x][node.y].f = newF;
+                astar_map [node.x][node.y].parent_x = currentNode.x;
+                astar_map [node.x][node.y].parent_y = currentNode.y;
+                astar_map [node.x][node.y].g = newG;
+                astar_map [node.x][node.y].h = newH;
+                astar_map [node.x][node.y].f = newF;
             }
         }
     }
@@ -235,7 +235,7 @@ void astar (PATHFINDER_POINT start, PATHFINDER_POINT end)
     PATHFINDER_POINT lastNode = end;
     while (lastNode.x != start.x || lastNode.y != start.y)
     {
-        FIELD_MAP_POINT point = field_map [lastNode.x][lastNode.y];
+        ASTAR_MAP_POINT point = astar_map [lastNode.x][lastNode.y];
         printf ("[%d, %d]\n", lastNode.x * FIELD_RESOLUTION, lastNode.y * FIELD_RESOLUTION);
 
         lastNode.x = point.parent_x;

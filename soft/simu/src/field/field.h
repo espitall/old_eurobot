@@ -37,12 +37,6 @@ typedef enum field_map_etat FIELD_MAP_ETAT;
 struct field_map_point
 {
     FIELD_MAP_ETAT type;
-    PATHFINDER_LISTES liste;
-    int f;
-    int g;
-    int h;
-    int parent_x;
-    int parent_y;
 };
 
 typedef struct field_map_point FIELD_MAP_POINT;

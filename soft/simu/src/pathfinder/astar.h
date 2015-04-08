@@ -1,7 +1,40 @@
 #ifndef ASTAR_H
 #define ASTAR_H
 
+#include "../field/field.h"
 #include "pathfinder.h"
+
+/*
+ * Les différentes listes nécessaire pour l'algorythme
+ */
+enum astar_listes
+{
+    ASTAR_NOLISTE,
+    ASTAR_OPENLIST,
+    ASTAR_CLOSELIST
+};
+
+typedef enum astar_listes ASTAR_LISTES;
+
+/*
+ * La structure pour l'algo de l'A-star
+ */
+struct astar_map_point
+{
+    ASTAR_LISTES liste;
+    int f;
+    int g;
+    int h;
+    int parent_x;
+    int parent_y;
+};
+
+typedef struct astar_map_point ASTAR_MAP_POINT;
+
+/*
+ * La carte représentant le terrain
+ */
+ASTAR_MAP_POINT astar_map [FIELD_X / FIELD_RESOLUTION][FIELD_Y / FIELD_RESOLUTION];
 
 /*
  * Lance l'algo A* pour atteindre les coordonnées [x, y] sur la carte

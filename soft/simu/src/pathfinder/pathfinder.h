@@ -2,18 +2,6 @@
 #define PATHFINDER_H
 
 /*
- * Les différentes listes nécessaire pour l'algorythme
- */
-enum pathfinder_listes
-{
-    PATHFINDER_NOLISTE,
-    PATHFINDER_OPENLIST,
-    PATHFINDER_CLOSELIST
-};
-
-typedef enum pathfinder_listes PATHFINDER_LISTES;
-
-/*
  * Structure d'un point
  */
 struct pathfinder_point

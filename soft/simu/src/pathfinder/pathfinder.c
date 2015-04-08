@@ -1,4 +1,8 @@
-#include "astar.h"
+#if PATHFINDER_ALGO == ASTAR
+    #include "astar.h"
+#elif PATHFINDER_ALGO == DIJKSTRA
+    #include "dijkstra.h"
+#endif
 #include "../field/field.h"
 #include "pathfinder.h"
 #include "../position/position.h"
@@ -20,7 +24,11 @@ void pathfinderGotoXYmm (double x, double y)
     PATHFINDER_POINT start = {posGetXmm () / FIELD_RESOLUTION, posGetYmm () / FIELD_RESOLUTION, 1};
     PATHFINDER_POINT end = {x / FIELD_RESOLUTION, y / FIELD_RESOLUTION, 1};
 
-    astar (start, end);
+    #if PATHFINDER_ALGO == ASTAR
+        astar (start, end);
+    #elif PATHFINDER_ALGO == DIJKSTRA
+        dijkstra (start, end);
+    #endif
 }
 
 /*

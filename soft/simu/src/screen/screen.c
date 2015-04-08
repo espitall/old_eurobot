@@ -72,6 +72,7 @@ void screenPause ()
         {
             case SDL_QUIT :
                 continuer = 0;
+                break;
         }
     }
 }

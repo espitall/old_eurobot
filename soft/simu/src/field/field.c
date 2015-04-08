@@ -123,8 +123,8 @@ void _fieldMapInitEstrade ()
  */
 void _fieldMapInitBots ()
 {
-    #ifdef ROBOT_PRINCIPAL
-        #ifdef EQUIPE_GAUCHE
+    #if ROBOT == PRINCIPAL
+        #if EQUIPE == GAUCHE
             _fieldDrawRect (posRobotGauchePrincipalX, posRobotGauchePrincipalY, ROBOT_PRINCIPAL_LARGEUR, ROBOT_PRINCIPAL_PROFONDEUR, posRobotGauchePrincipalA, FIELD_MAP_ETAT_HIMSELF); // Robot principal équipe gauche
             _fieldDrawRect (posRobotGaucheSecondaireX, posRobotGaucheSecondaireY, ROBOT_SECONDAIRE_LARGEUR, ROBOT_SECONDAIRE_PROFONDEUR, posRobotGaucheSecondaireA, FIELD_MAP_ETAT_BOT); // Robot secondaire équipe gauche
             _fieldDrawRect (posRobotDroitePrincipalX, posRobotDroitePrincipalY, ROBOT_PRINCIPAL_LARGEUR, ROBOT_PRINCIPAL_PROFONDEUR, posRobotDroitePrincipalA, FIELD_MAP_ETAT_BOT); // Robot principal équipe droite
@@ -136,7 +136,7 @@ void _fieldMapInitBots ()
             _fieldDrawRect (posRobotDroiteSecondaireX, posRobotDroiteSecondaireY, ROBOT_SECONDAIRE_LARGEUR, ROBOT_SECONDAIRE_PROFONDEUR, posRobotDroiteSecondaireA, FIELD_MAP_ETAT_BOT); // Robot secondaire équipe droite
         #endif
     #else
-        #ifdef EQUIPE_GAUCHE
+        #if EQUIPE == GAUCHE
             _fieldDrawRect (posRobotGauchePrincipalX, posRobotGauchePrincipalY, ROBOT_PRINCIPAL_LARGEUR, ROBOT_PRINCIPAL_PROFONDEUR, posRobotGauchePrincipalA, FIELD_MAP_ETAT_BOT); // Robot principal équipe gauche
             _fieldDrawRect (posRobotGaucheSecondaireX, posRobotGaucheSecondaireY, ROBOT_SECONDAIRE_LARGEUR, ROBOT_SECONDAIRE_PROFONDEUR, posRobotGaucheSecondaireA, FIELD_MAP_ETAT_HIMSELF); // Robot secondaire équipe gauche
             _fieldDrawRect (posRobotDroitePrincipalX, posRobotDroitePrincipalY, ROBOT_PRINCIPAL_LARGEUR, ROBOT_PRINCIPAL_PROFONDEUR, posRobotDroitePrincipalA, FIELD_MAP_ETAT_BOT); // Robot principal équipe droite
@@ -318,7 +318,7 @@ int fieldIsAccessible (int x, int y)
         case FIELD_MAP_ETAT_ELEMENT_GOBELET :
         case FIELD_MAP_ETAT_ELEMENT_EQUIPE_GAUCHE :
         case FIELD_MAP_ETAT_ELEMENT_EQUIPE_DROITE :
-        case FIELD_MAP_ETAT_BOT :
+        case FIELD_MAP_ETAT_HIMSELF :
             return 1;
         default :
             return 0;

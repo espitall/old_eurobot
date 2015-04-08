@@ -83,14 +83,14 @@ int posPlotDroite8Y = 1400;
  */
 double posGetXmm(void)
 {
-    #ifdef ROBOT_PRINCIPAL
-        #ifdef EQUIPE_GAUCHE
+    #if ROBOT == PRINCIPAL
+        #if EQUIPE == GAUCHE
             return posRobotGauchePrincipalX;
         #else
             return posRobotDroitePrincipalX;
         #endif
     #else
-        #ifdef EQUIPE_GAUCHE
+        #if EQUIPE == GAUCHE
             return posRobotGaucheSecondaireX;
         #else
             return posRobotDroiteSecondaireX;
@@ -103,14 +103,14 @@ double posGetXmm(void)
  */
 double posGetYmm(void)
 {
-    #ifdef ROBOT_PRINCIPAL
-        #ifdef EQUIPE_GAUCHE
+    #if ROBOT == PRINCIPAL
+        #if EQUIPE == GAUCHE
             return posRobotGauchePrincipalY;
         #else
             return posRobotDroitePrincipalY;
         #endif
     #else
-        #ifdef EQUIPE_GAUCHE
+        #if EQUIPE == GAUCHE
             return posRobotGaucheSecondaireY;
         #else
             return posRobotDroiteSecondaireY;
@@ -123,14 +123,14 @@ double posGetYmm(void)
  */
 double posGetAdeg(void)
 {
-    #ifdef ROBOT_PRINCIPAL
-        #ifdef EQUIPE_GAUCHE
+    #if ROBOT == PRINCIPAL
+        #if EQUIPE == GAUCHE
             return posRobotGauchePrincipalA;
         #else
             return posRobotDroitePrincipalA;
         #endif
     #else
-        #ifdef EQUIPE_GAUCHE
+        #if EQUIPE == GAUCHE
             return posRobotGaucheSecondaireA;
         #else
             return posRobotDroiteSecondaireA;

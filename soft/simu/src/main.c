@@ -5,14 +5,15 @@
 int main (void)
 {
   fieldMapInit ();
+
   fieldMapDesine ();
   screenPause ();
-
+/*
   pathfinderInit ();
   pathfinderMapDesine ();
   pathfinderGotoXYmm (2400, 500);
   screenPause ();
-
+*/
   screenStop ();
 
   return EXIT_SUCCESS;

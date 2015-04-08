@@ -7,43 +7,44 @@
 /*
  * Permet de desiner un rectangle
  */
-void _fieldDrawRect (int x, int y, int largeur, int profondeur, int angle, FIELD_MAP_ETAT type)
+void _fieldDrawRect (double x, double y, double largeur, double profondeur, double angle, FIELD_MAP_ETAT type)
 {
     int i, j;
+    double ang_rad = (angle * M_PI) / 180;
 
-    for (i = x / FIELD_RESOLUTION ; i < (x + largeur) / FIELD_RESOLUTION ; i++)
+    for (i = (x - largeur / 2) / FIELD_RESOLUTION; i < (x + largeur / 2) / FIELD_RESOLUTION ; i++)
     {
-        for (j = y / FIELD_RESOLUTION ; j < (y + profondeur) / FIELD_RESOLUTION; j++)
+        for (j = (y - profondeur / 2) / FIELD_RESOLUTION; j < (y + profondeur / 2) / FIELD_RESOLUTION; j++)
         {
-            field_map [i][j].type = type;
+            int i_rot = x / FIELD_RESOLUTION + (i - x / FIELD_RESOLUTION) * cos (ang_rad) - (j - y / FIELD_RESOLUTION) * sin (ang_rad);
+            int j_rot = y / FIELD_RESOLUTION - (i - x / FIELD_RESOLUTION) * sin (ang_rad) + (j - y / FIELD_RESOLUTION) * cos (ang_rad);
+
+            field_map [i_rot][j_rot].type = type;
         }
     }
-
-    /* TODO : tenir compte de l'angle */
-    (void) angle;
 }
 
 /*
  * Permet de desiner un cercle
  */
-void _fieldDrawCircle (int x, int y, int r, FIELD_MAP_ETAT type)
+void _fieldDrawCircle (double x, double y, double r, FIELD_MAP_ETAT type)
 {
     float sinus = 0.70710678118; // sin(45);
-    int range = r / (2 * sinus);
+    double range = r / (2 * sinus);
     for (int i = r ; i >= range ; --i)
     {
-        int j = sqrt (r*r - i*i);
+        double j = sqrt (r*r - i*i);
         for (int k = -j ; k <= j ; k++)
         {
-            field_map [(x - k) / FIELD_RESOLUTION][(y + i) / FIELD_RESOLUTION].type = type;
-            field_map [(x - k) / FIELD_RESOLUTION][(y - i) / FIELD_RESOLUTION].type = type;
-            field_map [(x + i) / FIELD_RESOLUTION][(y + k) / FIELD_RESOLUTION].type = type;
-            field_map [(x - i) / FIELD_RESOLUTION][(y - k) / FIELD_RESOLUTION].type = type;
+            field_map [(int) (x - k) / FIELD_RESOLUTION][(int) (y + i) / FIELD_RESOLUTION].type = type;
+            field_map [(int) (x - k) / FIELD_RESOLUTION][(int) (y - i) / FIELD_RESOLUTION].type = type;
+            field_map [(int) (x + i) / FIELD_RESOLUTION][(int) (y + k) / FIELD_RESOLUTION].type = type;
+            field_map [(int) (x - i) / FIELD_RESOLUTION][(int) (y - k) / FIELD_RESOLUTION].type = type;
         }
     }
 
     range = r * sinus;
-    _fieldDrawRect (x - range + 1, y - range + 1, (2 * range - 1), (2 * range - 1), 90, type);
+    _fieldDrawRect (x - range + 1 + (2 * range - 1) / 2, y - range + 1 + (2 * range - 1) / 2, 2 * range - 1, 2 * range - 1, 0, type);
 }
 
 /*
@@ -51,17 +52,17 @@ void _fieldDrawCircle (int x, int y, int r, FIELD_MAP_ETAT type)
  */
 void _fieldMapInitEscalier ()
 {
-    _fieldDrawRect (967, 0, 22, 580, 90, FIELD_MAP_ETAT_INACCESSIBLE); // Bordure gauche
-    _fieldDrawRect (967 + 22 + 500, 0, 22, 580, 90, FIELD_MAP_ETAT_INACCESSIBLE); // Bordure centrale
-    _fieldDrawRect (967 + 22 + 500 + 22 + 500, 0, 22, 580, 90, FIELD_MAP_ETAT_INACCESSIBLE); // Bordure droite
-    _fieldDrawRect (967 + 22, 0, 500, 22, 90, FIELD_MAP_ETAT_INACCESSIBLE); // Bordure fond gauche
-    _fieldDrawRect (967 + 22 + 500 + 22, 0, 500, 22, 90, FIELD_MAP_ETAT_INACCESSIBLE); // Bordure fond droit
-    _fieldDrawRect (967 + 22, 22, 500, 580 - 22, 90, FIELD_MAP_ETAT_EQUIPE_GAUCHE2); // Terrain gauche
-    _fieldDrawRect (967 + 22, 580 - (70 * 4), 100, 70 * 4, 90, FIELD_MAP_ETAT_EQUIPE_GAUCHE_ACTION); // Terrain gauche, tapis gauche
-    _fieldDrawRect (967 + 22 + 500 - 100, 580 - (70 * 4), 100, 70 * 4, 90, FIELD_MAP_ETAT_EQUIPE_GAUCHE_ACTION); // Terrain gauche, tapis droit
-    _fieldDrawRect (967 + 22 + 500 + 22, 22, 500, 580 - 22, 90, FIELD_MAP_ETAT_EQUIPE_DROITE2); // Terrain droit
-    _fieldDrawRect (967 + 22 + 500 + 22, 580 - (70 * 4), 100, 70 * 4, 90, FIELD_MAP_ETAT_EQUIPE_DROITE_ACTION); // Terrain droit, tapis gauche
-    _fieldDrawRect (967 + 22 + 500 + 22 + 500 - 100, 580 - (70 * 4), 100, 70 * 4, 90, FIELD_MAP_ETAT_EQUIPE_DROITE_ACTION); // Terrain droit, tapis droit
+    _fieldDrawRect (967 + 22 / 2, 0 + 580 / 2, 22, 580, 0, FIELD_MAP_ETAT_INACCESSIBLE); // Bordure gauche
+    _fieldDrawRect (967 + 22 + 500 + 22 / 2, 0 + 580 / 2, 22, 580, 0, FIELD_MAP_ETAT_INACCESSIBLE); // Bordure centrale
+    _fieldDrawRect (967 + 22 + 500 + 22 + 500 + 22 / 2, 0 + 580 / 2, 22, 580, 0, FIELD_MAP_ETAT_INACCESSIBLE); // Bordure droite
+    _fieldDrawRect (967 + 22 + 500 / 2, 0 + 22 / 2, 500, 22, 0, FIELD_MAP_ETAT_INACCESSIBLE); // Bordure fond gauche
+    _fieldDrawRect (967 + 22 + 500 + 22 + 500 / 2, 0 + 22 / 2, 500, 22, 0, FIELD_MAP_ETAT_INACCESSIBLE); // Bordure fond droit
+    _fieldDrawRect (967 + 22 + 500 / 2, 22 + (580 - 22) / 2, 500, 580 - 22, 0, FIELD_MAP_ETAT_EQUIPE_GAUCHE2); // Terrain gauche
+    _fieldDrawRect (967 + 22 + 100 / 2, 580 - (70 * 4) + (70 * 4) / 2, 100, 70 * 4, 0, FIELD_MAP_ETAT_EQUIPE_GAUCHE_ACTION); // Terrain gauche, tapis gauche
+    _fieldDrawRect (967 + 22 + 500 - 100 + 100 / 2, 580 - (70 * 4) + (70 * 4) / 2, 100, 70 * 4, 0, FIELD_MAP_ETAT_EQUIPE_GAUCHE_ACTION); // Terrain gauche, tapis droit
+    _fieldDrawRect (967 + 22 + 500 + 22 + 500 / 2, 22 + (580 - 22) / 2, 500, 580 - 22, 0, FIELD_MAP_ETAT_EQUIPE_DROITE2); // Terrain droit
+    _fieldDrawRect (967 + 22 + 500 + 22 + 100 / 2, 580 - (70 * 4) + (70 * 4) / 2, 100, 70 * 4, 0, FIELD_MAP_ETAT_EQUIPE_DROITE_ACTION); // Terrain droit, tapis gauche
+    _fieldDrawRect (967 + 22 + 500 + 22 + 500 - 100 + 100 / 2, 580 - (70 * 4) + (70 * 4) / 2, 100, 70 * 4, 0, FIELD_MAP_ETAT_EQUIPE_DROITE_ACTION); // Terrain droit, tapis droit
 }
 
 /*
@@ -69,10 +70,10 @@ void _fieldMapInitEscalier ()
  */
 void _fieldMapInitDistributeur ()
 {
-    _fieldDrawRect (300 - (70 / 2), 0, 70, 70, 90, FIELD_MAP_ETAT_INACCESSIBLE); // Distributeur 1
-    _fieldDrawRect (600 - (70 / 2), 0, 70, 70, 90, FIELD_MAP_ETAT_INACCESSIBLE); // Distributeur 2
-    _fieldDrawRect (2400 - (70 / 2), 0, 70, 70, 90, FIELD_MAP_ETAT_INACCESSIBLE); // Distributeur 3
-    _fieldDrawRect (2700 - (70 / 2), 0, 70, 70, 90, FIELD_MAP_ETAT_INACCESSIBLE); // Distributeur 4
+    _fieldDrawRect (300 - (70 / 2) + 70 /2, 0 + 70 /2, 70, 70, 0, FIELD_MAP_ETAT_INACCESSIBLE); // Distributeur 1
+    _fieldDrawRect (600 - (70 / 2) + 70 /2, 0 + 70 /2, 70, 70, 0, FIELD_MAP_ETAT_INACCESSIBLE); // Distributeur 2
+    _fieldDrawRect (2400 - (70 / 2) + 70 /2, 0 + 70 /2, 70, 70, 0, FIELD_MAP_ETAT_INACCESSIBLE); // Distributeur 3
+    _fieldDrawRect (2700 - (70 / 2) + 70 /2, 0 + 70 /2, 70, 70, 0, FIELD_MAP_ETAT_INACCESSIBLE); // Distributeur 4
 }
 
 /*
@@ -80,14 +81,14 @@ void _fieldMapInitDistributeur ()
  */
 void _fieldMapInitDepartGauche ()
 {
-    _fieldDrawRect (0, 800, 450, 400, 90, FIELD_MAP_ETAT_EQUIPE_GAUCHE); // Terrain - rectangle
+    _fieldDrawRect (0 + 450 / 2, 800 + 400 / 2, 450, 400, 0, FIELD_MAP_ETAT_EQUIPE_GAUCHE); // Terrain - rectangle
     _fieldDrawCircle (450, 1000, 200, FIELD_MAP_ETAT_EQUIPE_GAUCHE); // Terrain - cercle
-    _fieldDrawRect (0, 800 - 22, 400, 22, 90, FIELD_MAP_ETAT_INACCESSIBLE); // Arrête du haut
-    _fieldDrawRect (0, 800 - 22 + 444 - 22, 400, 22, 90, FIELD_MAP_ETAT_INACCESSIBLE); // Arrête du bas
-    _fieldDrawRect (0, 1000 - (70 / 2), 70, 70, 90, FIELD_MAP_ETAT_INACCESSIBLE); // Plot
-    _fieldDrawRect (70 - 22, 800, 22, 400, 90, FIELD_MAP_ETAT_INACCESSIBLE); // Arrête du font
-    _fieldDrawRect (0, 400, 400, 378, 90, FIELD_MAP_ETAT_EQUIPE_DROITE); // Zone adverse haut
-    _fieldDrawRect (0, 1200 + 22, 400, 378, 90, FIELD_MAP_ETAT_EQUIPE_DROITE); // Zone adverse bas
+    _fieldDrawRect (0 + 400 / 2, 800 - 22 + 22 / 2, 400, 22, 0, FIELD_MAP_ETAT_INACCESSIBLE); // Arrête du haut
+    _fieldDrawRect (0 + 400 / 2, 800 - 22 + 444 - 22 + 22 / 2, 400, 22, 0, FIELD_MAP_ETAT_INACCESSIBLE); // Arrête du bas
+    _fieldDrawRect (0 + 70 / 2, 1000 - (70 / 2) + 70 / 2, 70, 70, 0, FIELD_MAP_ETAT_INACCESSIBLE); // Plot
+    _fieldDrawRect (70 - 22 + 22 / 2, 800 + 400 / 2, 22, 400, 0, FIELD_MAP_ETAT_INACCESSIBLE); // Arrête du font
+    _fieldDrawRect (0 + 400 / 2, 400 + 378 / 2, 400, 378, 0, FIELD_MAP_ETAT_EQUIPE_DROITE); // Zone adverse haut
+    _fieldDrawRect (0 + 400 / 2, 1200 + 22 + 378 / 2, 400, 378, 0, FIELD_MAP_ETAT_EQUIPE_DROITE); // Zone adverse bas
 }
 
 /*
@@ -95,14 +96,14 @@ void _fieldMapInitDepartGauche ()
  */
 void _fieldMapInitDepartDroit ()
 {
-    _fieldDrawRect (3000 - 450, 800, 450, 400, 90, FIELD_MAP_ETAT_EQUIPE_DROITE); // Terrain - rectangle
+    _fieldDrawRect (3000 - 450 + 450 / 2, 800 + 400 / 2, 450, 400, 0, FIELD_MAP_ETAT_EQUIPE_DROITE); // Terrain - rectangle
     _fieldDrawCircle (3000 - 450, 1000, 200, FIELD_MAP_ETAT_EQUIPE_DROITE); // Terrain - cercle
-    _fieldDrawRect (3000 - 400, 800 - 22, 400, 22, 90, FIELD_MAP_ETAT_INACCESSIBLE); // Arrête du haut
-    _fieldDrawRect (3000 - 400, 800 - 22 + 444 - 22, 400, 22, 90, FIELD_MAP_ETAT_INACCESSIBLE); // Arrête du bas
-    _fieldDrawRect (3000 - 70, 1000 - (70 / 2), 70, 70, 90, FIELD_MAP_ETAT_INACCESSIBLE); // Plot
-    _fieldDrawRect (3000 - 70, 800, 22, 400, 90, FIELD_MAP_ETAT_INACCESSIBLE); // Arrête du font
-    _fieldDrawRect (3000 - 400, 400, 400, 378, 90, FIELD_MAP_ETAT_EQUIPE_GAUCHE); // Zone adverse haut
-    _fieldDrawRect (3000 - 400, 1200 + 22, 400, 378, 90, FIELD_MAP_ETAT_EQUIPE_GAUCHE); // Zone adverse bas
+    _fieldDrawRect (3000 - 400 + 400 / 2, 800 - 22 + 22 / 2, 400, 22, 0, FIELD_MAP_ETAT_INACCESSIBLE); // Arrête du haut
+    _fieldDrawRect (3000 - 400 + 400 / 2, 800 - 22 + 444 - 22 + 22 / 2, 400, 22, 0, FIELD_MAP_ETAT_INACCESSIBLE); // Arrête du bas
+    _fieldDrawRect (3000 - 70 + 70 / 2, 1000 - (70 / 2) + 70 / 2, 70, 70, 0, FIELD_MAP_ETAT_INACCESSIBLE); // Plot
+    _fieldDrawRect (3000 - 70 + 22 / 2, 800 + 400 / 2, 22, 400, 0, FIELD_MAP_ETAT_INACCESSIBLE); // Arrête du font
+    _fieldDrawRect (3000 - 400 + 400 / 2, 400 + 378 / 2, 400, 378, 0, FIELD_MAP_ETAT_EQUIPE_GAUCHE); // Zone adverse haut
+    _fieldDrawRect (3000 - 400 + 400 / 2, 1200 + 22 + 378 / 2, 400, 378, 0, FIELD_MAP_ETAT_EQUIPE_GAUCHE); // Zone adverse bas
 }
 
 /*
@@ -110,11 +111,11 @@ void _fieldMapInitDepartDroit ()
  */
 void _fieldMapInitEstrade ()
 {
-    _fieldDrawRect (1100, 2000 - 100, 800, 100, 90, FIELD_MAP_ETAT_NEUTRE_ACTION); // Terrain d'action
-    _fieldDrawRect (1100 + 100, 2000 - 200, 800 - 100 - 100, 200, 90, FIELD_MAP_ETAT_NEUTRE_ACTION); // Terrain d'action
+    _fieldDrawRect (1100 + 800 / 2, 2000 - 100 + 100 / 2, 800, 100, 0, FIELD_MAP_ETAT_NEUTRE_ACTION); // Terrain d'action
+    _fieldDrawRect (1100 + 100 + (800 - 100 - 100) / 2, 2000 - 200 + 200 / 2, 800 - 100 - 100, 200, 0, FIELD_MAP_ETAT_NEUTRE_ACTION); // Terrain d'action
     _fieldDrawCircle (1100 + 100, 2000 - 200 + 100, 100, FIELD_MAP_ETAT_NEUTRE_ACTION); // Terrain d'action - cercle
     _fieldDrawCircle (1100 + 800 - 100, 2000 - 200 + 100, 100, FIELD_MAP_ETAT_NEUTRE_ACTION); // Terrain d'action - cercle
-    _fieldDrawRect (1200, 2000 - 100, 600, 100, 90, FIELD_MAP_ETAT_INACCESSIBLE); // Estrade
+    _fieldDrawRect (1200 + 600 / 2, 2000 - 100 + 100 / 2, 600, 100, 0, FIELD_MAP_ETAT_INACCESSIBLE); // Estrade
 }
 
 /*
@@ -122,10 +123,31 @@ void _fieldMapInitEstrade ()
  */
 void _fieldMapInitBots ()
 {
-    _fieldDrawRect (posGetXmm () - ROBOT_X / 2, posGetYmm () - ROBOT_Y / 2, ROBOT_X, ROBOT_Y, posGetAdeg (), FIELD_MAP_ETAT_BOT); // Robot principal équipe gauche
-    //_fieldDrawRect (posGetXmm (), posGetYmm (), ROBOT_X, ROBOT_Y, posGetAdeg (), FIELD_MAP_ETAT_BOT); // Robot secondaire équipe gauche
-    //_fieldDrawRect (posGetXmm (), posGetYmm (), ROBOT_X, ROBOT_Y, posGetAdeg (), FIELD_MAP_ETAT_BOT); // Robot principal équipe droite
-    //_fieldDrawRect(posGetXmm (), posGetYmm (), ROBOT_X, ROBOT_Y, posGetAdeg (), FIELD_MAP_ETAT_BOT); // Robot secondaire équipe droite
+    #ifdef ROBOT_PRINCIPAL
+        #ifdef EQUIPE_GAUCHE
+            _fieldDrawRect (posRobotGauchePrincipalX, posRobotGauchePrincipalY, ROBOT_PRINCIPAL_LARGEUR, ROBOT_PRINCIPAL_PROFONDEUR, posRobotGauchePrincipalA, FIELD_MAP_ETAT_HIMSELF); // Robot principal équipe gauche
+            _fieldDrawRect (posRobotGaucheSecondaireX, posRobotGaucheSecondaireY, ROBOT_SECONDAIRE_LARGEUR, ROBOT_SECONDAIRE_PROFONDEUR, posRobotGaucheSecondaireA, FIELD_MAP_ETAT_BOT); // Robot secondaire équipe gauche
+            _fieldDrawRect (posRobotDroitePrincipalX, posRobotDroitePrincipalY, ROBOT_PRINCIPAL_LARGEUR, ROBOT_PRINCIPAL_PROFONDEUR, posRobotDroitePrincipalA, FIELD_MAP_ETAT_BOT); // Robot principal équipe droite
+            _fieldDrawRect (posRobotDroiteSecondaireX, posRobotDroiteSecondaireY, ROBOT_SECONDAIRE_LARGEUR, ROBOT_SECONDAIRE_PROFONDEUR, posRobotDroiteSecondaireA, FIELD_MAP_ETAT_BOT); // Robot secondaire équipe droite
+        #else
+            _fieldDrawRect (posRobotGauchePrincipalX, posRobotGauchePrincipalY, ROBOT_PRINCIPAL_LARGEUR, ROBOT_PRINCIPAL_PROFONDEUR, posRobotGauchePrincipalA, FIELD_MAP_ETAT_BOT); // Robot principal équipe gauche
+            _fieldDrawRect (posRobotGaucheSecondaireX, posRobotGaucheSecondaireY, ROBOT_SECONDAIRE_LARGEUR, ROBOT_SECONDAIRE_PROFONDEUR, posRobotGaucheSecondaireA, FIELD_MAP_ETAT_BOT); // Robot secondaire équipe gauche
+            _fieldDrawRect (posRobotDroitePrincipalX, posRobotDroitePrincipalY, ROBOT_PRINCIPAL_LARGEUR, ROBOT_PRINCIPAL_PROFONDEUR, posRobotDroitePrincipalA, FIELD_MAP_ETAT_HIMSELF); // Robot principal équipe droite
+            _fieldDrawRect (posRobotDroiteSecondaireX, posRobotDroiteSecondaireY, ROBOT_SECONDAIRE_LARGEUR, ROBOT_SECONDAIRE_PROFONDEUR, posRobotDroiteSecondaireA, FIELD_MAP_ETAT_BOT); // Robot secondaire équipe droite
+        #endif
+    #else
+        #ifdef EQUIPE_GAUCHE
+            _fieldDrawRect (posRobotGauchePrincipalX, posRobotGauchePrincipalY, ROBOT_PRINCIPAL_LARGEUR, ROBOT_PRINCIPAL_PROFONDEUR, posRobotGauchePrincipalA, FIELD_MAP_ETAT_BOT); // Robot principal équipe gauche
+            _fieldDrawRect (posRobotGaucheSecondaireX, posRobotGaucheSecondaireY, ROBOT_SECONDAIRE_LARGEUR, ROBOT_SECONDAIRE_PROFONDEUR, posRobotGaucheSecondaireA, FIELD_MAP_ETAT_HIMSELF); // Robot secondaire équipe gauche
+            _fieldDrawRect (posRobotDroitePrincipalX, posRobotDroitePrincipalY, ROBOT_PRINCIPAL_LARGEUR, ROBOT_PRINCIPAL_PROFONDEUR, posRobotDroitePrincipalA, FIELD_MAP_ETAT_BOT); // Robot principal équipe droite
+            _fieldDrawRect (posRobotDroiteSecondaireX, posRobotDroiteSecondaireY, ROBOT_SECONDAIRE_LARGEUR, ROBOT_SECONDAIRE_PROFONDEUR, posRobotDroiteSecondaireA, FIELD_MAP_ETAT_BOT); // Robot secondaire équipe droite
+        #else
+            _fieldDrawRect (posRobotGauchePrincipalX, posRobotGauchePrincipalY, ROBOT_PRINCIPAL_LARGEUR, ROBOT_PRINCIPAL_PROFONDEUR, posRobotGauchePrincipalA, FIELD_MAP_ETAT_BOT); // Robot principal équipe gauche
+            _fieldDrawRect (posRobotGaucheSecondaireX, posRobotGaucheSecondaireY, ROBOT_SECONDAIRE_LARGEUR, ROBOT_SECONDAIRE_PROFONDEUR, posRobotGaucheSecondaireA, FIELD_MAP_ETAT_BOT); // Robot secondaire équipe gauche
+            _fieldDrawRect (posRobotDroitePrincipalX, posRobotDroitePrincipalY, ROBOT_PRINCIPAL_LARGEUR, ROBOT_PRINCIPAL_PROFONDEUR, posRobotDroitePrincipalA, FIELD_MAP_ETAT_BOT); // Robot principal équipe droite
+            _fieldDrawRect (posRobotDroiteSecondaireX, posRobotDroiteSecondaireY, ROBOT_SECONDAIRE_LARGEUR, ROBOT_SECONDAIRE_PROFONDEUR, posRobotDroiteSecondaireA, FIELD_MAP_ETAT_HIMSELF); // Robot secondaire équipe droite
+        #endif
+    #endif
 }
 
 /*
@@ -133,10 +155,10 @@ void _fieldMapInitBots ()
  */
 void _fieldMapInitBalles ()
 {
-    _fieldDrawCircle (70 / 2, 1000, 35 / 2, FIELD_MAP_ETAT_ELEMENT_BALLE);
-    _fieldDrawCircle (3000 - (70 / 2), 1000, 35 / 2, FIELD_MAP_ETAT_ELEMENT_BALLE);
-    _fieldDrawCircle (1250, 2000 - (100 / 2), 35 / 2, FIELD_MAP_ETAT_ELEMENT_BALLE);
-    _fieldDrawCircle (1750, 2000 - (100 / 2), 35 / 2, FIELD_MAP_ETAT_ELEMENT_BALLE);
+    _fieldDrawCircle (posBalle1X, posBalle1Y, 35 / 2, FIELD_MAP_ETAT_ELEMENT_BALLE);
+    _fieldDrawCircle (posBalle2X, posBalle2Y, 35 / 2, FIELD_MAP_ETAT_ELEMENT_BALLE);
+    _fieldDrawCircle (posBalle3X, posBalle3Y, 35 / 2, FIELD_MAP_ETAT_ELEMENT_BALLE);
+    _fieldDrawCircle (posBalle4X, posBalle4Y, 35 / 2, FIELD_MAP_ETAT_ELEMENT_BALLE);
 }
 
 /*
@@ -144,11 +166,11 @@ void _fieldMapInitBalles ()
  */
 void _fieldMapInitGobelets ()
 {
-    _fieldDrawCircle (250, 1750, 95 / 2, FIELD_MAP_ETAT_ELEMENT_GOBELET); // Gobelet 1
-    _fieldDrawCircle (910, 830, 95 / 2, FIELD_MAP_ETAT_ELEMENT_GOBELET); // Gobelet 2
-    _fieldDrawCircle (1500, 1650, 95 / 2, FIELD_MAP_ETAT_ELEMENT_GOBELET); // Gobelet 3
-    _fieldDrawCircle (2090, 830, 95 / 2, FIELD_MAP_ETAT_ELEMENT_GOBELET); // Gobelet 4
-    _fieldDrawCircle (2750, 1750, 95 / 2, FIELD_MAP_ETAT_ELEMENT_GOBELET); // Gobelet 5
+    _fieldDrawCircle (posGebelet1X, posGebelet1Y, 95 / 2, FIELD_MAP_ETAT_ELEMENT_GOBELET); // Gobelet 1
+    _fieldDrawCircle (posGebelet2X, posGebelet2Y, 95 / 2, FIELD_MAP_ETAT_ELEMENT_GOBELET); // Gobelet 2
+    _fieldDrawCircle (posGebelet3X, posGebelet3Y, 95 / 2, FIELD_MAP_ETAT_ELEMENT_GOBELET); // Gobelet 3
+    _fieldDrawCircle (posGebelet4X, posGebelet4Y, 95 / 2, FIELD_MAP_ETAT_ELEMENT_GOBELET); // Gobelet 4
+    _fieldDrawCircle (posGebelet5X, posGebelet5Y, 95 / 2, FIELD_MAP_ETAT_ELEMENT_GOBELET); // Gobelet 5
 }
 
 /*
@@ -156,22 +178,22 @@ void _fieldMapInitGobelets ()
  */
 void _fieldMapInitPlots ()
 {
-    _fieldDrawCircle (90, 200, 60 / 2, FIELD_MAP_ETAT_ELEMENT_EQUIPE_GAUCHE); // Spot équipe gauche 1
-    _fieldDrawCircle (90, 1750, 60 / 2, FIELD_MAP_ETAT_ELEMENT_EQUIPE_GAUCHE); // Spot équipe gauche 2
-    _fieldDrawCircle (90, 1850, 60 / 2, FIELD_MAP_ETAT_ELEMENT_EQUIPE_GAUCHE); // Spot équipe gauche 3
-    _fieldDrawCircle (850, 100, 60 / 2, FIELD_MAP_ETAT_ELEMENT_EQUIPE_GAUCHE); // Spot équipe gauche 4
-    _fieldDrawCircle (850, 200, 60 / 2, FIELD_MAP_ETAT_ELEMENT_EQUIPE_GAUCHE); // Spot équipe gauche 5
-    _fieldDrawCircle (870, 1355, 60 / 2, FIELD_MAP_ETAT_ELEMENT_EQUIPE_GAUCHE); // Spot équipe gauche 6
-    _fieldDrawCircle (1100, 1770, 60 / 2, FIELD_MAP_ETAT_ELEMENT_EQUIPE_GAUCHE); // Spot équipe gauche 7
-    _fieldDrawCircle (1300, 1400, 60 / 2, FIELD_MAP_ETAT_ELEMENT_EQUIPE_GAUCHE); // Spot équipe gauche 8
-    _fieldDrawCircle (3000 - 90, 200, 60 / 2, FIELD_MAP_ETAT_ELEMENT_EQUIPE_DROITE); // Spot équipe droite 1
-    _fieldDrawCircle (3000 - 90, 1750, 60 / 2, FIELD_MAP_ETAT_ELEMENT_EQUIPE_DROITE); // Spot équipe droite 2
-    _fieldDrawCircle (3000 - 90, 1850, 60 / 2, FIELD_MAP_ETAT_ELEMENT_EQUIPE_DROITE); // Spot équipe droite 3
-    _fieldDrawCircle (3000 - 850, 100, 60 / 2, FIELD_MAP_ETAT_ELEMENT_EQUIPE_DROITE); // Spot équipe droite 4
-    _fieldDrawCircle (3000 - 850, 200, 60 / 2, FIELD_MAP_ETAT_ELEMENT_EQUIPE_DROITE); // Spot équipe droite 5
-    _fieldDrawCircle (3000 - 870, 1355, 60 / 2, FIELD_MAP_ETAT_ELEMENT_EQUIPE_DROITE); // Spot équipe droite 6
-    _fieldDrawCircle (3000 - 1100, 1770, 60 / 2, FIELD_MAP_ETAT_ELEMENT_EQUIPE_DROITE); // Spot équipe droite 7
-    _fieldDrawCircle (3000 - 1300, 1400, 60 / 2, FIELD_MAP_ETAT_ELEMENT_EQUIPE_DROITE); // Spot équipe droite 8
+    _fieldDrawCircle (posPlotGauche1X, posPlotGauche1Y, 60 / 2, FIELD_MAP_ETAT_ELEMENT_EQUIPE_GAUCHE); // Spot équipe gauche 1
+    _fieldDrawCircle (posPlotGauche2X, posPlotGauche2Y, 60 / 2, FIELD_MAP_ETAT_ELEMENT_EQUIPE_GAUCHE); // Spot équipe gauche 2
+    _fieldDrawCircle (posPlotGauche3X, posPlotGauche3Y, 60 / 2, FIELD_MAP_ETAT_ELEMENT_EQUIPE_GAUCHE); // Spot équipe gauche 3
+    _fieldDrawCircle (posPlotGauche4X, posPlotGauche4Y, 60 / 2, FIELD_MAP_ETAT_ELEMENT_EQUIPE_GAUCHE); // Spot équipe gauche 4
+    _fieldDrawCircle (posPlotGauche5X, posPlotGauche5Y, 60 / 2, FIELD_MAP_ETAT_ELEMENT_EQUIPE_GAUCHE); // Spot équipe gauche 5
+    _fieldDrawCircle (posPlotGauche6X, posPlotGauche6Y, 60 / 2, FIELD_MAP_ETAT_ELEMENT_EQUIPE_GAUCHE); // Spot équipe gauche 6
+    _fieldDrawCircle (posPlotGauche7X, posPlotGauche7Y, 60 / 2, FIELD_MAP_ETAT_ELEMENT_EQUIPE_GAUCHE); // Spot équipe gauche 7
+    _fieldDrawCircle (posPlotGauche8X, posPlotGauche8Y, 60 / 2, FIELD_MAP_ETAT_ELEMENT_EQUIPE_GAUCHE); // Spot équipe gauche 8
+    _fieldDrawCircle (posPlotDroite1X, posPlotDroite1Y, 60 / 2, FIELD_MAP_ETAT_ELEMENT_EQUIPE_DROITE); // Spot équipe droite 1
+    _fieldDrawCircle (posPlotDroite2X, posPlotDroite2Y, 60 / 2, FIELD_MAP_ETAT_ELEMENT_EQUIPE_DROITE); // Spot équipe droite 2
+    _fieldDrawCircle (posPlotDroite3X, posPlotDroite3Y, 60 / 2, FIELD_MAP_ETAT_ELEMENT_EQUIPE_DROITE); // Spot équipe droite 3
+    _fieldDrawCircle (posPlotDroite4X, posPlotDroite4Y, 60 / 2, FIELD_MAP_ETAT_ELEMENT_EQUIPE_DROITE); // Spot équipe droite 4
+    _fieldDrawCircle (posPlotDroite5X, posPlotDroite5Y, 60 / 2, FIELD_MAP_ETAT_ELEMENT_EQUIPE_DROITE); // Spot équipe droite 5
+    _fieldDrawCircle (posPlotDroite6X, posPlotDroite6Y, 60 / 2, FIELD_MAP_ETAT_ELEMENT_EQUIPE_DROITE); // Spot équipe droite 6
+    _fieldDrawCircle (posPlotDroite7X, posPlotDroite7Y, 60 / 2, FIELD_MAP_ETAT_ELEMENT_EQUIPE_DROITE); // Spot équipe droite 7
+    _fieldDrawCircle (posPlotDroite8X, posPlotDroite8Y, 60 / 2, FIELD_MAP_ETAT_ELEMENT_EQUIPE_DROITE); // Spot équipe droite 8
 }
 
 /*
@@ -256,10 +278,15 @@ void fieldMapDesine ()
                     couleur.vert = 0xff;
                     couleur.bleu = 0xff;
                     break;
-                case FIELD_MAP_ETAT_BOT : // Orange
+                case FIELD_MAP_ETAT_BOT : // Violet
                     couleur.rouge = 0xff;
                     couleur.vert = 0x9d;
                     couleur.bleu = 0x00;
+                    break;
+                case FIELD_MAP_ETAT_HIMSELF : // Orange
+                    couleur.rouge = 0xe3;
+                    couleur.vert = 0x29;
+                    couleur.bleu = 0xe5;
                     break;
                 case FIELD_MAP_ETAT_NEUTRE :
                 default : // Bleu

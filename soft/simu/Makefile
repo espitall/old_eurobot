@@ -23,7 +23,7 @@ all: $(BIN)
 
 # Création de l'exécutable
 simu2015: $(OBJ)
-	$(CC) -o $(BINDIR)/$@ $^ $(CFLAGS) $(GLLIBS)
+	$(CC) -o $(BINDIR)/$(BIN) $^ $(CFLAGS) $(GLLIBS)
 
 # Création des différents *.o à partir des *.c
 $(LIBDIR)/%.o: $(SRCDIR)/%.c $(HEADDIR)/%.h

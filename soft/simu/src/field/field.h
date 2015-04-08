@@ -21,6 +21,7 @@ enum field_map_etat
     FIELD_MAP_ETAT_EQUIPE_DROITE2, // Terrain 2 reservé à l'équipe droite
     FIELD_MAP_ETAT_EQUIPE_DROITE_ACTION, // Terrain d'action reservée à l'équipe droite
     FIELD_MAP_ETAT_INACCESSIBLE, // Terrain inacessible
+    FIELD_MAP_ETAT_HIMSELF, // Robot simulé
     FIELD_MAP_ETAT_BOT, // Robot
     FIELD_MAP_ETAT_ELEMENT_BALLE, // Balles
     FIELD_MAP_ETAT_ELEMENT_GOBELET, // Gobelets

@@ -8,7 +8,7 @@
 #define ASTAR 0
 #define DIJKSTRA 1
 
-#define ROBOT PRINCIPAL
+#define ROBOT SECONDAIRE
 #define EQUIPE GAUCHE
 
 #define PATHFINDER_ALGO ASTAR

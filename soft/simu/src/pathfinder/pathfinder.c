@@ -25,11 +25,14 @@ void pathfinderGotoXYmm (double x, double y)
     PATHFINDER_POINT start = {posGetXmm () / FIELD_RESOLUTION, posGetYmm () / FIELD_RESOLUTION, 1};
     PATHFINDER_POINT end = {x / FIELD_RESOLUTION, y / FIELD_RESOLUTION, 1};
 
-    #if PATHFINDER_ALGO == ASTAR
-        astar (start, end);
-    #elif PATHFINDER_ALGO == DIJKSTRA
-        dijkstra (start, end);
-    #endif
+    if (fieldIsAccessible (end.x, end.y))
+    {
+        #if PATHFINDER_ALGO == ASTAR
+            astar(start, end);
+        #elif PATHFINDER_ALGO == DIJKSTRA
+            dijkstra (start, end);
+        #endif
+    }
 }
 
 /*

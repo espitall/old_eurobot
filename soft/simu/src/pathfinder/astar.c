@@ -33,7 +33,7 @@ void _astar_addToOpenList (PATHFINDER_POINT point)
 PATHFINDER_POINT _astar_getCurrentNode ()
 {
     int i, j;
-    int minF = -1;
+    double minF = -1;
     PATHFINDER_POINT point;
 
     for (i = 0 ; i < FIELD_X / FIELD_RESOLUTION; i++)
@@ -63,12 +63,12 @@ PATHFINDER_POINT _astar_getCurrentNode ()
 
 void _astar_getNeighbours (PATHFINDER_POINT point, PATHFINDER_POINT neighbours [8])
 {
-    PATHFINDER_POINT point_up = {point.x, point.y - 1, 1};
     PATHFINDER_POINT point_up_left = {point.x - 1, point.y - 1, sqrt (2)};
     PATHFINDER_POINT point_up_right = {point.x + 1, point.y - 1, sqrt (2)};
-    PATHFINDER_POINT point_down = {point.x, point.y + 1, 1};
     PATHFINDER_POINT point_down_left = {point.x - 1, point.y + 1, sqrt (2)};
     PATHFINDER_POINT point_down_right = {point.x + 1, point.y + 1, sqrt (2)};
+    PATHFINDER_POINT point_up = {point.x, point.y - 1, 1};
+    PATHFINDER_POINT point_down = {point.x, point.y + 1, 1};
     PATHFINDER_POINT point_left = {point.x - 1, point.y, 1};
     PATHFINDER_POINT point_right = {point.x + 1, point.y, 1};
 
@@ -179,50 +179,31 @@ void astar (PATHFINDER_POINT start, PATHFINDER_POINT end)
         // Pour chacun des 8 nodes adjacents à CURRENT appliquer la méthode suivante:
         for (i = 0; i < 8; ++i)
         {
-            PATHFINDER_POINT node = neighbours [i];
+            PATHFINDER_POINT neighbour = neighbours [i];
 
-            if (node.x == -1 || node.y == -1)
+            if (neighbour.x == -1 || neighbour.y == -1)
                 continue;
 
-            ASTAR_MAP_POINT point = astar_map [node.x][node.y];
-
-            // Si le node est un obstacle ou est dans la liste fermée ignorez-le et passer à l'analyse d'un autre node.
-            if (_astar_isOnCloseList (node) || !fieldIsAccessible (node.x, node.y))
+            // Si le neighbour est un obstacle ou est dans la liste fermée ignorez-le et passer à l'analyse d'un autre neighbour.
+            if (_astar_isOnCloseList (neighbour) || !fieldIsAccessible (neighbour.x, neighbour.y))
                 continue;
 
             // on calcule le nouveau g
-            ASTAR_MAP_POINT parent = astar_map [point.parent_x][point.parent_y];
-            int newG = parent.g + node.poids;
+            double newG = astar_map [currentNode.x][currentNode.y].g + neighbour.poids;
 
-            // on calcule le nouveau h
-            int newH = (abs (end.y - node.y) + abs (end.x - node.x)) * node.poids;
-
-            // on calcule le nouveau F
-            int newF = newH + newG;
-
-            if (_astar_isOnOpenList (node))
+            //Si le neighbour est déjà dans la liste ouverte ou qu'on ait trouvé un meilleur G
+            if (!_astar_isOnOpenList (neighbour) || astar_map [neighbour.x][neighbour.y].g == 0.0 || newG < astar_map [neighbour.x][neighbour.y].g)
             {
-                //Si le node est déjà dans la liste ouverte, recalculez son G, s'il est inférieur à l'ancien,
-                //faites de CURRENT  son parent(P) et recalculez et enregistrez ses propriétés F et H.
-                if (newG < point.g)
+                astar_map [neighbour.x][neighbour.y].g = newG;
+                if (astar_map [neighbour.x][neighbour.y].h == 0.0)
                 {
-                    astar_map [node.x][node.y].parent_x = currentNode.x;
-                    astar_map [node.x][node.y].parent_y = currentNode.y;
-                    astar_map [node.x][node.y].g = newG;
-                    astar_map [node.x][node.y].h = newH;
-                    astar_map [node.x][node.y].f = newF;
+                    astar_map [neighbour.x][neighbour.y].h = heuristique (abs (neighbour.x - end.x), abs (neighbour.y - end.y));
                 }
-            }
-            else
-            {
-                //Si le node n'est pas dans la liste ouverte, ajoutez-le à la dite liste et faites de CURRENT son parent(P).
-                //Calculez et enregistrez ses propriétés F, G et H.
-                _astar_addToOpenList (node);
-                astar_map [node.x][node.y].parent_x = currentNode.x;
-                astar_map [node.x][node.y].parent_y = currentNode.y;
-                astar_map [node.x][node.y].g = newG;
-                astar_map [node.x][node.y].h = newH;
-                astar_map [node.x][node.y].f = newF;
+                astar_map [neighbour.x][neighbour.y].f = astar_map [neighbour.x][neighbour.y].g + astar_map [neighbour.x][neighbour.y].h;
+                astar_map [neighbour.x][neighbour.y].parent_x = currentNode.x;
+                astar_map [neighbour.x][neighbour.y].parent_y = currentNode.y;
+
+                _astar_addToOpenList (neighbour);
             }
         }
     }
@@ -239,11 +220,11 @@ void astar (PATHFINDER_POINT start, PATHFINDER_POINT end)
         ASTAR_MAP_POINT point = astar_map [lastNode.x][lastNode.y];
         printf ("[%d, %d]\n", lastNode.x * FIELD_RESOLUTION, lastNode.y * FIELD_RESOLUTION);
 
-    #ifdef ASTAR_DEBUG
+        #ifdef ASTAR_DEBUG
             SCREEN_COLOR couleur = {0xff, 0x00, 0xff};
             screenSetPixel (lastNode.x, lastNode.y,  couleur);
             screenRefresh ();
-    #endif
+        #endif
 
         lastNode.x = point.parent_x;
         lastNode.y = point.parent_y;

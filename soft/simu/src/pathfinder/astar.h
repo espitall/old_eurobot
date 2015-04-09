@@ -22,9 +22,9 @@ typedef enum astar_listes ASTAR_LISTES;
 struct astar_map_point
 {
     ASTAR_LISTES liste;
-    int f;
-    int g;
-    int h;
+    double f;
+    double g;
+    double h;
     int parent_x;
     int parent_y;
 };

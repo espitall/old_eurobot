@@ -5,6 +5,7 @@
     #include "dijkstra.h"
 #endif
 #include "../field/field.h"
+#include <math.h>
 #include "pathfinder.h"
 #include "../position/position.h"
 #include "../screen/screen.h"
@@ -69,4 +70,28 @@ void pathfinderMapDesine ()
     }
 
     screenRefresh ();
+}
+
+/*
+ * Calcul de la distance entre 2 poitns en utilisant une certaine heuristique
+ */
+double heuristique (double dx, double dy)
+{
+    #if PATHFINDER_HEURISTIQUE == MANHATTAN
+        return dx + dy;
+    #elif PATHFINDER_HEURISTIQUE == EUCLIDEAN
+        return sqrt (dx * dx + dy * dy);
+    #elif PATHFINDER_HEURISTIQUE == OCTILE
+        double F = sqrt (2) - 1;
+        return (dx < dy) ? F * dx + dy : F * dy + dx;
+    #elif PATHFINDER_HEURISTIQUE == CHEBYSHEV
+        if (dx > dy)
+        {
+            return dx;
+        }
+        else
+        {
+            return dy;
+        }
+    #endif
 }

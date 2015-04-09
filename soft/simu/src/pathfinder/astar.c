@@ -1,5 +1,6 @@
 #include "astar.h"
 #include "../field/field.h"
+#include <math.h>
 #include "pathfinder.h"
 #include "../screen/screen.h"
 #include <stdio.h>
@@ -63,11 +64,11 @@ PATHFINDER_POINT _astar_getCurrentNode ()
 void _astar_getNeighbours (PATHFINDER_POINT point, PATHFINDER_POINT neighbours [8])
 {
     PATHFINDER_POINT point_up = {point.x, point.y - 1, 1};
-    PATHFINDER_POINT point_up_left = {point.x - 1, point.y - 1, 1.42};
-    PATHFINDER_POINT point_up_right = {point.x + 1, point.y - 1, 1.42};
+    PATHFINDER_POINT point_up_left = {point.x - 1, point.y - 1, sqrt (2)};
+    PATHFINDER_POINT point_up_right = {point.x + 1, point.y - 1, sqrt (2)};
     PATHFINDER_POINT point_down = {point.x, point.y + 1, 1};
-    PATHFINDER_POINT point_down_left = {point.x - 1, point.y + 1, 1.42};
-    PATHFINDER_POINT point_down_right = {point.x + 1, point.y + 1, 1.42};
+    PATHFINDER_POINT point_down_left = {point.x - 1, point.y + 1, sqrt (2)};
+    PATHFINDER_POINT point_down_right = {point.x + 1, point.y + 1, sqrt (2)};
     PATHFINDER_POINT point_left = {point.x - 1, point.y, 1};
     PATHFINDER_POINT point_right = {point.x + 1, point.y, 1};
 
@@ -237,6 +238,12 @@ void astar (PATHFINDER_POINT start, PATHFINDER_POINT end)
     {
         ASTAR_MAP_POINT point = astar_map [lastNode.x][lastNode.y];
         printf ("[%d, %d]\n", lastNode.x * FIELD_RESOLUTION, lastNode.y * FIELD_RESOLUTION);
+
+    #ifdef ASTAR_DEBUG
+            SCREEN_COLOR couleur = {0xff, 0x00, 0xff};
+            screenSetPixel (lastNode.x, lastNode.y,  couleur);
+            screenRefresh ();
+    #endif
 
         lastNode.x = point.parent_x;
         lastNode.y = point.parent_y;

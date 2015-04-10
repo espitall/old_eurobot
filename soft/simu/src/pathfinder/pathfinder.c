@@ -23,8 +23,17 @@ void pathfinderInit (void)
  */
 void pathfinderGotoXYmm (double x, double y)
 {
-    PATHFINDER_POINT start = {posGetXmm () / FIELD_RESOLUTION, posGetYmm () / FIELD_RESOLUTION, 1};
-    PATHFINDER_POINT end = {x / FIELD_RESOLUTION, y / FIELD_RESOLUTION, 1};
+    PATHFINDER_POINT start;
+    start.x = posGetXmm () / FIELD_RESOLUTION;
+    start.y = posGetYmm () / FIELD_RESOLUTION;
+    start.poids = 0;
+    start.malus = 0;
+
+    PATHFINDER_POINT end;
+    end.x = x / FIELD_RESOLUTION;
+    end.y = y / FIELD_RESOLUTION;
+    end.poids = 0;
+    end.malus = 0;
 
     if (fieldIsAccessible (end.x, end.y))
     {
@@ -75,7 +84,7 @@ void pathfinderMapDesine ()
 /*
  * Calcul de la distance entre 2 poitns en utilisant une certaine heuristique
  */
-double heuristique (double dx, double dy)
+double pathfinderHeuristique (double dx, double dy)
 {
     #if PATHFINDER_HEURISTIQUE == MANHATTAN
         return dx + dy;
@@ -94,4 +103,77 @@ double heuristique (double dx, double dy)
             return dy;
         }
     #endif
+}
+
+/*
+ * Calcule l'angle entre 2 points adjacents
+ */
+double pathfinderAngle (PATHFINDER_POINT parent, PATHFINDER_POINT point)
+{
+    double angle;
+
+    if (parent.x == point.x + 1 && parent.y == point.x)
+    {
+        angle = 90;
+    }
+    else if (parent.x == point.x + 1 && parent.y == point.y + 1)
+    {
+        angle = 135;
+    }
+    else if (parent.x == point.x && parent.y == point.y + 1)
+    {
+        angle = -180;
+    }
+    else if (parent.x == point.x - 1 && parent.y == point.y + 1)
+    {
+        angle = -135;
+    }
+    else if (parent.x == point.x - 1 && parent.y == point.y)
+    {
+        angle = -90;
+    }
+    else if (parent.x == point.x - 1 && parent.y == point.y - 1)
+    {
+        angle = -45;
+    }
+    else if (parent.x == point.x && parent.y == point.y - 1)
+    {
+        angle = 0;
+    }
+    else if (parent.x == point.x + 1 && parent.y == point.y - 1)
+    {
+        angle = 45;
+    }
+
+    return angle;
+}
+
+/*
+ * Calcule le delta entre 2 angles
+ */
+double pathfinderDeltaAngle (double angleCourant, double angleDestination)
+{
+    double delta;
+    double sensHoraire, sensTrigo;
+
+    sensHoraire = abs (angleDestination - angleCourant);
+    if (angleDestination > angleCourant)
+    {
+        sensTrigo = abs (angleCourant + 360 - angleDestination);
+    }
+    else
+    {
+        sensTrigo = abs (360 - angleCourant + angleDestination);
+    }
+
+    if (sensHoraire > sensTrigo)
+    {
+        delta = sensTrigo;
+    }
+    else
+    {
+        delta = sensHoraire;
+    }
+
+    return delta;
 }

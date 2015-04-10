@@ -2,6 +2,7 @@
 #include "../field/field.h"
 #include <math.h>
 #include "pathfinder.h"
+#include "../position/position.h"
 #include "../screen/screen.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,7 +14,10 @@ void _astar_addToCloseList (PATHFINDER_POINT point)
     astar_map [point.x][point.y].liste = ASTAR_CLOSELIST;
 
     #ifdef ASTAR_DEBUG
-        SCREEN_COLOR couleur = {0xff, 0xff, 0x00};
+        SCREEN_COLOR couleur;
+        couleur.rouge = 0xff;
+        couleur.vert = 0xff;
+        couleur.bleu = 0x00;
         screenSetPixel (point.x, point.y,  couleur);
         screenRefresh ();
     #endif
@@ -24,7 +28,10 @@ void _astar_addToOpenList (PATHFINDER_POINT point)
     astar_map [point.x][point.y].liste = ASTAR_OPENLIST;
 
     #ifdef ASTAR_DEBUG
-        SCREEN_COLOR couleur = {0x00, 0xff, 0xff};
+        SCREEN_COLOR couleur;
+        couleur.rouge = 0x00;
+        couleur.vert = 0xff;
+        couleur.bleu = 0xff;
         screenSetPixel (point.x, point.y,  couleur);
         screenRefresh ();
     #endif
@@ -42,6 +49,7 @@ PATHFINDER_POINT _astar_getCurrentNode ()
         {
             if (astar_map [i][j].liste == ASTAR_OPENLIST)
             {
+//                printf ("%d %d : %f\n", i, j, astar_map [i][j].f);
                 if (minF == -1 || astar_map [i][j].f < minF)
                 {
                     minF = astar_map [i][j].f;
@@ -58,19 +66,108 @@ PATHFINDER_POINT _astar_getCurrentNode ()
         point.y = -1;
     }
 
+//    printf ("=> %d %d\n", point.x, point.y);
+
     return point;
 }
 
 void _astar_getNeighbours (PATHFINDER_POINT point, PATHFINDER_POINT neighbours [8])
 {
-    PATHFINDER_POINT point_up_left = {point.x - 1, point.y - 1, sqrt (2)};
-    PATHFINDER_POINT point_up_right = {point.x + 1, point.y - 1, sqrt (2)};
-    PATHFINDER_POINT point_down_left = {point.x - 1, point.y + 1, sqrt (2)};
-    PATHFINDER_POINT point_down_right = {point.x + 1, point.y + 1, sqrt (2)};
-    PATHFINDER_POINT point_up = {point.x, point.y - 1, 1};
-    PATHFINDER_POINT point_down = {point.x, point.y + 1, 1};
-    PATHFINDER_POINT point_left = {point.x - 1, point.y, 1};
-    PATHFINDER_POINT point_right = {point.x + 1, point.y, 1};
+    // On récupère l'angle actuel du robot
+    ASTAR_MAP_POINT parent = astar_map [point.x][point.y];
+    int parent_x = parent.parent_x;
+    int parent_y = parent.parent_y;
+    double angle;
+    if (parent_x == 0 && parent_y == 0)
+    {
+        // On commence juste le parcours
+        // Il faut donc regarder l'angle du robot
+        angle = posGetAdeg ();
+    }
+    else
+    {
+        PATHFINDER_POINT parentPoint;
+        parentPoint.x = parent_x;
+        parentPoint.y = parent_y;
+        parentPoint.poids = 0;
+        parentPoint.malus = 0;
+        angle = pathfinderAngle (parentPoint, point);
+    }
+
+    double distance;
+    double delta_angle;
+
+    // Voisin à 0°
+    distance = 1;
+    delta_angle = pathfinderDeltaAngle (angle, 0);
+    PATHFINDER_POINT point_up;
+    point_up.x = point.x;
+    point_up.y = point.y - 1;
+    point_up.poids = distance;
+    point_up.malus = delta_angle * PATHFINDER_MALUS_ROTATION;
+
+    // Voisin à 45°
+    distance = sqrt (2);
+    delta_angle = pathfinderDeltaAngle (angle, 45);
+    PATHFINDER_POINT point_up_right;
+    point_up_right.x = point.x + 1;
+    point_up_right.y = point.y - 1;
+    point_up_right.poids = distance;
+    point_up_right.malus = delta_angle * PATHFINDER_MALUS_ROTATION;
+
+    // Voisin à 90°
+    distance = 1;
+    delta_angle = pathfinderDeltaAngle (angle, 90);
+    PATHFINDER_POINT point_right;
+    point_right.x = point.x + 1;
+    point_right.y = point.y;
+    point_right.poids = distance;
+    point_right.malus = delta_angle * PATHFINDER_MALUS_ROTATION;
+
+    // Voisin à 135°
+    distance = sqrt (2);
+    delta_angle = pathfinderDeltaAngle (angle, 135);
+    PATHFINDER_POINT point_down_right;
+    point_down_right.x = point.x + 1;
+    point_down_right.y = point.y + 1;
+    point_down_right.poids = distance;
+    point_down_right.malus = delta_angle * PATHFINDER_MALUS_ROTATION;
+
+    // Voisin à 180°
+    distance = 1;
+    delta_angle = pathfinderDeltaAngle (angle, 180);
+    PATHFINDER_POINT point_down;
+    point_down.x = point.x;
+    point_down.y = point.y + 1;
+    point_down.poids = distance;
+    point_down.malus = delta_angle * PATHFINDER_MALUS_ROTATION;
+
+    // Voisin à -135°
+    distance = sqrt (2);
+    delta_angle = pathfinderDeltaAngle (angle, -135);
+    PATHFINDER_POINT point_down_left;
+    point_down_left.x = point.x - 1;
+    point_down_left.y = point.y + 1;
+    point_down_left.poids = distance;
+    point_down_left.malus = delta_angle * PATHFINDER_MALUS_ROTATION;
+
+    // Voisin à -90°
+    distance = 1;
+    delta_angle = pathfinderDeltaAngle (angle, -90);
+    PATHFINDER_POINT point_left;
+    point_left.x = point.x - 1;
+    point_left.y = point.y;
+    point_left.poids = distance;
+    point_left.malus = delta_angle * PATHFINDER_MALUS_ROTATION;
+
+    // Voisin à -45°
+    distance = sqrt (2);
+    delta_angle = pathfinderDeltaAngle (angle, -45);
+    PATHFINDER_POINT point_up_left;
+    point_up_left.x = point.x - 1;
+    point_up_left.y = point.y - 1;
+    point_up_left.poids = distance;
+    point_up_left.malus = delta_angle * PATHFINDER_MALUS_ROTATION;
 
     if (point_up.y < 0)
     {
@@ -134,6 +231,10 @@ void astar (PATHFINDER_POINT start, PATHFINDER_POINT end)
     PATHFINDER_POINT currentNode;
     int i;
 
+    printf ("Start : %d %d\n", start.x, start.y);
+    printf ("End : %d %d\n", end.x, end.y);
+    printf ("Distance : %f\n", pathfinderHeuristique (abs (end.x - start.x), abs (end.y - start.y)));
+
     #ifdef ASTAR_DEBUG
         SCREEN_COLOR couleur;
 
@@ -160,10 +261,19 @@ void astar (PATHFINDER_POINT start, PATHFINDER_POINT end)
 
     _astar_addToOpenList (start);
 
+//    int cpt = 0;
     while (!_astar_isEmptyOpenList ()) //  stopper la boucle si la liste ouverte est vide
     {
         // a. Récupération du node avec le plus petit F contenu dans la liste ouverte. On le nommera CURRENT.
         currentNode = _astar_getCurrentNode ();
+//        printf ("Meilleur : %d %d (%f)\n",
+//                currentNode.x,
+//                currentNode.y,
+//                astar_map [currentNode.x][currentNode.y].f);
+
+//        cpt++;
+//        if (cpt > 1)
+//            return;
 
         //  stopper la boucle si n ajoute le noeud d'arrivée à la liste fermée
         if (currentNode.x == end.x && currentNode.y == end.y)
@@ -189,21 +299,28 @@ void astar (PATHFINDER_POINT start, PATHFINDER_POINT end)
                 continue;
 
             // on calcule le nouveau g
-            double newG = astar_map [currentNode.x][currentNode.y].g + neighbour.poids;
+            double newG = astar_map [currentNode.x][currentNode.y].g + neighbour.poids + neighbour.malus;
 
-            //Si le neighbour est déjà dans la liste ouverte ou qu'on ait trouvé un meilleur G
-            if (!_astar_isOnOpenList (neighbour) || astar_map [neighbour.x][neighbour.y].g == 0.0 || newG < astar_map [neighbour.x][neighbour.y].g)
+            // Si il n'a jamais été analysé ou qu'on lui ait trouvé un meilleur G
+            if (astar_map [neighbour.x][neighbour.y].g == 0.0 || newG < astar_map [neighbour.x][neighbour.y].g)
             {
                 astar_map [neighbour.x][neighbour.y].g = newG;
                 if (astar_map [neighbour.x][neighbour.y].h == 0.0)
                 {
-                    astar_map [neighbour.x][neighbour.y].h = heuristique (abs (neighbour.x - end.x), abs (neighbour.y - end.y));
+                    astar_map [neighbour.x][neighbour.y].h = pathfinderHeuristique (abs (neighbour.x - end.x),
+                                                                                    abs (neighbour.y - end.y));
                 }
-                astar_map [neighbour.x][neighbour.y].f = astar_map [neighbour.x][neighbour.y].g + astar_map [neighbour.x][neighbour.y].h;
+                astar_map [neighbour.x][neighbour.y].f = astar_map [neighbour.x][neighbour.y].g
+                                                         + astar_map [neighbour.x][neighbour.y].h;
                 astar_map [neighbour.x][neighbour.y].parent_x = currentNode.x;
                 astar_map [neighbour.x][neighbour.y].parent_y = currentNode.y;
 
                 _astar_addToOpenList (neighbour);
+
+//                printf ("Neighbour : %d %d - %f %f %f\n", neighbour.x, neighbour.y,
+//                        astar_map [neighbour.x][neighbour.y].g,
+//                        astar_map [neighbour.x][neighbour.y].h,
+//                        astar_map [neighbour.x][neighbour.y].f);
             }
         }
     }
@@ -221,7 +338,10 @@ void astar (PATHFINDER_POINT start, PATHFINDER_POINT end)
         printf ("[%d, %d]\n", lastNode.x * FIELD_RESOLUTION, lastNode.y * FIELD_RESOLUTION);
 
         #ifdef ASTAR_DEBUG
-            SCREEN_COLOR couleur = {0xff, 0x00, 0xff};
+            SCREEN_COLOR couleur;
+            couleur.rouge = 0xff;
+            couleur.vert = 0x00;
+            couleur.bleu = 0xff;
             screenSetPixel (lastNode.x, lastNode.y,  couleur);
             screenRefresh ();
         #endif

@@ -9,6 +9,25 @@
 
 #define ASTAR_DEBUG
 
+void _astar_init ()
+{
+    int i, j = 0;
+    for (i = 0; i < FIELD_X / FIELD_RESOLUTION; i++)
+    {
+        for (j = 0; j < FIELD_Y / FIELD_RESOLUTION; j++)
+        {
+            ASTAR_MAP_POINT point;
+            point.liste = ASTAR_NOLISTE;
+            point.g = 0;
+            point.h = 0;
+            point.f = 0;
+            point.parent_x = -1;
+            point.parent_y = -1;
+            astar_map [i][j] = point;
+        }
+    }
+}
+
 void _astar_addToCloseList (PATHFINDER_POINT point)
 {
     astar_map [point.x][point.y].liste = ASTAR_CLOSELIST;
@@ -77,8 +96,9 @@ void _astar_getNeighbours (PATHFINDER_POINT point, PATHFINDER_POINT neighbours [
     ASTAR_MAP_POINT parent = astar_map [point.x][point.y];
     int parent_x = parent.parent_x;
     int parent_y = parent.parent_y;
+
     double angle;
-    if (parent_x == 0 && parent_y == 0)
+    if (parent_x == -1 && parent_y == -1)
     {
         // On commence juste le parcours
         // Il faut donc regarder l'angle du robot
@@ -93,6 +113,8 @@ void _astar_getNeighbours (PATHFINDER_POINT point, PATHFINDER_POINT neighbours [
         parentPoint.malus = 0;
         angle = pathfinderAngle (parentPoint, point);
     }
+
+    printf ("Angle par rapport au noeud précédent : %f\n", angle);
 
     double distance;
     double delta_angle;
@@ -228,12 +250,13 @@ int _astar_isEmptyOpenList ()
 
 void astar (PATHFINDER_POINT start, PATHFINDER_POINT end)
 {
+    _astar_init ();
     PATHFINDER_POINT currentNode;
     int i;
 
-    printf ("Start : %d %d\n", start.x, start.y);
-    printf ("End : %d %d\n", end.x, end.y);
-    printf ("Distance : %f\n", pathfinderHeuristique (abs (end.x - start.x), abs (end.y - start.y)));
+    printf ("Start : [%d, %d]\n", start.x, start.y);
+    printf ("End : [%d, %d]\n", end.x, end.y);
+    printf ("Distance : %f\n\n", pathfinderHeuristique (abs (end.x - start.x), abs (end.y - start.y)));
 
     #ifdef ASTAR_DEBUG
         SCREEN_COLOR couleur;
@@ -261,19 +284,17 @@ void astar (PATHFINDER_POINT start, PATHFINDER_POINT end)
 
     _astar_addToOpenList (start);
 
-//    int cpt = 0;
+    int cpt = 1;
     while (!_astar_isEmptyOpenList ()) //  stopper la boucle si la liste ouverte est vide
     {
+        printf ("itération n°%d : \n", cpt);
         // a. Récupération du node avec le plus petit F contenu dans la liste ouverte. On le nommera CURRENT.
         currentNode = _astar_getCurrentNode ();
-//        printf ("Meilleur : %d %d (%f)\n",
-//                currentNode.x,
-//                currentNode.y,
-//                astar_map [currentNode.x][currentNode.y].f);
+        printf ("Noeud étudié : [%d, %d]\n", currentNode.x, currentNode.y);
 
-//        cpt++;
-//        if (cpt > 1)
-//            return;
+        cpt++;
+        if (cpt > 2)
+            return;
 
         //  stopper la boucle si n ajoute le noeud d'arrivée à la liste fermée
         if (currentNode.x == end.x && currentNode.y == end.y)
@@ -298,6 +319,7 @@ void astar (PATHFINDER_POINT start, PATHFINDER_POINT end)
             if (_astar_isOnCloseList (neighbour) || !fieldIsAccessible (neighbour.x, neighbour.y))
                 continue;
 
+
             // on calcule le nouveau g
             double newG = astar_map [currentNode.x][currentNode.y].g + neighbour.poids + neighbour.malus;
 
@@ -317,10 +339,13 @@ void astar (PATHFINDER_POINT start, PATHFINDER_POINT end)
 
                 _astar_addToOpenList (neighbour);
 
-//                printf ("Neighbour : %d %d - %f %f %f\n", neighbour.x, neighbour.y,
-//                        astar_map [neighbour.x][neighbour.y].g,
-//                        astar_map [neighbour.x][neighbour.y].h,
-//                        astar_map [neighbour.x][neighbour.y].f);
+                printf ("Voisin %d : [%d, %d] (%f + %f = %f)\n",
+                        i,
+                        neighbour.x,
+                        neighbour.y,
+                        astar_map [neighbour.x][neighbour.y].g,
+                        astar_map [neighbour.x][neighbour.y].h,
+                        astar_map [neighbour.x][neighbour.y].f);
             }
         }
     }

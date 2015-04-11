@@ -201,6 +201,17 @@ void _fieldMapInitPlots ()
  */
 void fieldMapInit ()
 {
+    int i, j = 0;
+    for (i = 0; i < FIELD_X / FIELD_RESOLUTION; i++)
+    {
+        for (j = 0; j < FIELD_Y / FIELD_RESOLUTION; j++)
+        {
+            FIELD_MAP_POINT point;
+            point.type = FIELD_MAP_ETAT_NEUTRE;
+            field_map [i][j] = point;
+        }
+    }
+
     _fieldMapInitEscalier ();
     _fieldMapInitDistributeur ();
     _fieldMapInitDepartGauche ();

@@ -145,6 +145,9 @@ double pathfinderAngle (PATHFINDER_POINT parent, PATHFINDER_POINT point)
         angle = 45;
     }
 
+    if (angle != 0)
+        angle = 1;
+
     return angle;
 }
 
@@ -153,6 +156,11 @@ double pathfinderAngle (PATHFINDER_POINT parent, PATHFINDER_POINT point)
  */
 double pathfinderDeltaAngle (double angleCourant, double angleDestination)
 {
+    if (angleCourant == -1)
+        return 0;
+    else
+        return angleCourant == angleDestination;
+
     double delta;
     double sensHoraire, sensTrigo;
 

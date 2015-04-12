@@ -56,10 +56,12 @@ void _astar_addToOpenList (PATHFINDER_POINT point)
     #endif
 }
 
-PATHFINDER_POINT _astar_getCurrentNode ()
+PATHFINDER_POINT _astar_getCurrentNode (PATHFINDER_POINT currentNode)
 {
     int i, j;
     double minF = -1;
+    double MinDistance = -1;
+    double distance;
     PATHFINDER_POINT point;
 
     for (i = 0 ; i < FIELD_X / FIELD_RESOLUTION; i++)
@@ -69,11 +71,25 @@ PATHFINDER_POINT _astar_getCurrentNode ()
             if (astar_map [i][j].liste == ASTAR_OPENLIST)
             {
 //                printf ("%d %d : %f\n", i, j, astar_map [i][j].f);
-                if (minF == -1 || astar_map [i][j].f < minF)
+                if (minF == -1 || astar_map [i][j].f <= minF)
                 {
-                    minF = astar_map [i][j].f;
-                    point.x = i;
-                    point.y = j;
+                    if (astar_map [i][j].f == minF)
+                    {
+                        distance = pathfinderHeuristique (abs (currentNode.x - i), abs (currentNode.y - j));
+                        if (MinDistance == -1 || distance < MinDistance)
+                        {
+                            minF = astar_map [i][j].f;
+                            point.x = i;
+                            point.y = j;
+                        }
+                    }
+                    else
+                    {
+                        minF = astar_map [i][j].f;
+                        point.x = i;
+                        point.y = j;
+                        MinDistance = -1;
+                    }
                 }
             }
         }
@@ -127,15 +143,32 @@ void _astar_getNeighbours (PATHFINDER_POINT point, PATHFINDER_POINT neighbours [
     point_up.y = point.y - 1;
     point_up.poids = distance;
     point_up.malus = delta_angle * PATHFINDER_MALUS_ROTATION;
+    if (point_up.y < 0)
+    {
+        point_up.x = -1;
+        point_up.y = -1;
+    }
+    printf ("Voisin 0° : [%d, %d] deltaAngle = %f\n", point_up.x, point_up.y, delta_angle);
 
     // Voisin à 45°
-    distance = sqrt (2);
+    distance = 2;
     delta_angle = pathfinderDeltaAngle (angle, 45);
     PATHFINDER_POINT point_up_right;
     point_up_right.x = point.x + 1;
     point_up_right.y = point.y - 1;
     point_up_right.poids = distance;
     point_up_right.malus = delta_angle * PATHFINDER_MALUS_ROTATION;
+    if (point_up_right.y < 0)
+    {
+        point_up_right.x = -1;
+        point_up_right.y = -1;
+    }
+    if (point_up_right.x > FIELD_X / FIELD_RESOLUTION)
+    {
+        point_up_right.x = -1;
+        point_up_right.y = -1;
+    }
+    printf ("Voisin 45° : [%d, %d] deltaAngle = %f\n", point_up_right.x, point_up_right.y, delta_angle);
 
     // Voisin à 90°
     distance = 1;
@@ -145,15 +178,32 @@ void _astar_getNeighbours (PATHFINDER_POINT point, PATHFINDER_POINT neighbours [
     point_right.y = point.y;
     point_right.poids = distance;
     point_right.malus = delta_angle * PATHFINDER_MALUS_ROTATION;
+    if (point_right.x > FIELD_X / FIELD_RESOLUTION)
+    {
+        point_right.x = -1;
+        point_right.y = -1;
+    }
+    printf ("Voisin 90° : [%d, %d] deltaAngle = %f\n", point_right.x, point_right.y, delta_angle);
 
     // Voisin à 135°
-    distance = sqrt (2);
+    distance = 2;
     delta_angle = pathfinderDeltaAngle (angle, 135);
     PATHFINDER_POINT point_down_right;
     point_down_right.x = point.x + 1;
     point_down_right.y = point.y + 1;
     point_down_right.poids = distance;
     point_down_right.malus = delta_angle * PATHFINDER_MALUS_ROTATION;
+    if (point_down_right.y >= FIELD_Y / FIELD_RESOLUTION)
+    {
+        point_down_right.x = -1;
+        point_down_right.y = -1;
+    }
+    if (point_down_right.x > FIELD_X / FIELD_RESOLUTION)
+    {
+        point_down_right.x = -1;
+        point_down_right.y = -1;
+    }
+    printf ("Voisin 135° : [%d, %d] deltaAngle = %f\n", point_down_right.x, point_down_right.y, delta_angle);
 
     // Voisin à 180°
     distance = 1;
@@ -163,15 +213,32 @@ void _astar_getNeighbours (PATHFINDER_POINT point, PATHFINDER_POINT neighbours [
     point_down.y = point.y + 1;
     point_down.poids = distance;
     point_down.malus = delta_angle * PATHFINDER_MALUS_ROTATION;
+    if (point_down.y >= FIELD_Y / FIELD_RESOLUTION)
+    {
+        point_down.x = -1;
+        point_down.y = -1;
+    }
+    printf ("Voisin 180° : [%d, %d] deltaAngle = %f\n", point_down.x, point_down.y, delta_angle);
 
     // Voisin à -135°
-    distance = sqrt (2);
+    distance = 2;
     delta_angle = pathfinderDeltaAngle (angle, -135);
     PATHFINDER_POINT point_down_left;
     point_down_left.x = point.x - 1;
     point_down_left.y = point.y + 1;
     point_down_left.poids = distance;
     point_down_left.malus = delta_angle * PATHFINDER_MALUS_ROTATION;
+    if (point_down_left.y >= FIELD_Y / FIELD_RESOLUTION)
+    {
+        point_down_left.x = -1;
+        point_down_left.y = -1;
+    }
+    if (point_down_left.x < 0)
+    {
+        point_down_left.x = -1;
+        point_down_left.y = -1;
+    }
+    printf ("Voisin -135° : [%d, %d] deltaAngle = %f\n", point_down_left.x, point_down_left.y, delta_angle);
 
     // Voisin à -90°
     distance = 1;
@@ -181,39 +248,32 @@ void _astar_getNeighbours (PATHFINDER_POINT point, PATHFINDER_POINT neighbours [
     point_left.y = point.y;
     point_left.poids = distance;
     point_left.malus = delta_angle * PATHFINDER_MALUS_ROTATION;
+    if (point_left.x < 0)
+    {
+        point_left.x = -1;
+        point_left.y = -1;
+    }
+    printf ("Voisin -90° : [%d, %d] deltaAngle = %f\n", point_left.x, point_left.y, delta_angle);
 
     // Voisin à -45°
-    distance = sqrt (2);
+    distance = 2;
     delta_angle = pathfinderDeltaAngle (angle, -45);
     PATHFINDER_POINT point_up_left;
     point_up_left.x = point.x - 1;
     point_up_left.y = point.y - 1;
     point_up_left.poids = distance;
     point_up_left.malus = delta_angle * PATHFINDER_MALUS_ROTATION;
-
-    if (point_up.y < 0)
+    if (point_up_left.y < 0)
     {
-        point_up.x = -1;
-        point_up.y = -1;
+        point_up_left.x = -1;
+        point_up_left.y = -1;
     }
-
-    if (point_down.y >= FIELD_Y / FIELD_RESOLUTION)
+    if (point_up_left.x < 0)
     {
-        point_down.x = -1;
-        point_down.y = -1;
+        point_up_left.x = -1;
+        point_up_left.y = -1;
     }
-
-    if (point_left.x < 0)
-    {
-        point_left.x = -1;
-        point_left.y = -1;
-    }
-
-    if (point_right.x > FIELD_X / FIELD_RESOLUTION)
-    {
-        point_right.x = -1;
-        point_right.y = -1;
-    }
+    printf ("Voisin -45° : [%d, %d] deltaAngle = %f\n", point_up_left.x, point_up_left.y, delta_angle);
 
     neighbours [0] = point_right;
     neighbours [1] = point_left;
@@ -237,15 +297,18 @@ int _astar_isOnCloseList (PATHFINDER_POINT point)
 
 int _astar_isEmptyOpenList ()
 {
-    PATHFINDER_POINT currentNode = _astar_getCurrentNode ();
-    if (currentNode.x == -1 || currentNode.y == -1)
+    int i, j;
+
+    for (i = 0 ; i < FIELD_X / FIELD_RESOLUTION; i++)
     {
-        return 1;
+        for (j = 0; j < FIELD_Y / FIELD_RESOLUTION; j++)
+        {
+            if (astar_map [i][j].liste == ASTAR_OPENLIST)
+                return 0;
+        }
     }
-    else
-    {
-        return 0;
-    }
+
+    return 1;
 }
 
 void astar (PATHFINDER_POINT start, PATHFINDER_POINT end)
@@ -289,12 +352,12 @@ void astar (PATHFINDER_POINT start, PATHFINDER_POINT end)
     {
         printf ("itération n°%d : \n", cpt);
         // a. Récupération du node avec le plus petit F contenu dans la liste ouverte. On le nommera CURRENT.
-        currentNode = _astar_getCurrentNode ();
-        printf ("Noeud étudié : [%d, %d]\n", currentNode.x, currentNode.y);
+        currentNode = _astar_getCurrentNode (currentNode);
+        printf ("Noeud étudié : [%d, %d] (f = %f)\n", currentNode.x, currentNode.y, astar_map [currentNode.x][currentNode.y].f);
 
-        cpt++;
-        if (cpt > 2)
-            return;
+        cpt++;/*
+        if (cpt > 3)
+            return;*/
 
         //  stopper la boucle si n ajoute le noeud d'arrivée à la liste fermée
         if (currentNode.x == end.x && currentNode.y == end.y)
@@ -307,10 +370,17 @@ void astar (PATHFINDER_POINT start, PATHFINDER_POINT end)
         PATHFINDER_POINT neighbours [8];
         _astar_getNeighbours (currentNode, neighbours);
 
+        printf ("Seuls les voisins suivants reste à étudier :\n");
+
         // Pour chacun des 8 nodes adjacents à CURRENT appliquer la méthode suivante:
         for (i = 0; i < 8; ++i)
         {
             PATHFINDER_POINT neighbour = neighbours [i];
+
+            printf ("Voisin %d : [%d, %d]\n",
+                    i,
+                    neighbour.x,
+                    neighbour.y);
 
             if (neighbour.x == -1 || neighbour.y == -1)
                 continue;
@@ -319,9 +389,17 @@ void astar (PATHFINDER_POINT start, PATHFINDER_POINT end)
             if (_astar_isOnCloseList (neighbour) || !fieldIsAccessible (neighbour.x, neighbour.y))
                 continue;
 
+            printf ("Voisin %d : [%d, %d] (%f + %f = %f)\n",
+                    i,
+                    neighbour.x,
+                    neighbour.y,
+                    astar_map [neighbour.x][neighbour.y].g,
+                    astar_map [neighbour.x][neighbour.y].h,
+                    astar_map [neighbour.x][neighbour.y].f);
 
             // on calcule le nouveau g
             double newG = astar_map [currentNode.x][currentNode.y].g + neighbour.poids + neighbour.malus;
+            printf ("newG = %f\n", newG);
 
             // Si il n'a jamais été analysé ou qu'on lui ait trouvé un meilleur G
             if (astar_map [neighbour.x][neighbour.y].g == 0.0 || newG < astar_map [neighbour.x][neighbour.y].g)
@@ -339,7 +417,7 @@ void astar (PATHFINDER_POINT start, PATHFINDER_POINT end)
 
                 _astar_addToOpenList (neighbour);
 
-                printf ("Voisin %d : [%d, %d] (%f + %f = %f)\n",
+                printf ("Ajout ou modif voisin %d : [%d, %d] (%f + %f = %f)\n",
                         i,
                         neighbour.x,
                         neighbour.y,

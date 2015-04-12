@@ -114,27 +114,27 @@ double pathfinderAngle (PATHFINDER_POINT parent, PATHFINDER_POINT point)
 
     if (parent.x == point.x + 1 && parent.y == point.x)
     {
-        angle = 90;
+        angle = -90;
     }
     else if (parent.x == point.x + 1 && parent.y == point.y + 1)
     {
-        angle = 135;
+        angle = -135;
     }
     else if (parent.x == point.x && parent.y == point.y + 1)
     {
-        angle = -180;
+        angle = 180;
     }
     else if (parent.x == point.x - 1 && parent.y == point.y + 1)
     {
-        angle = -135;
+        angle = 135;
     }
     else if (parent.x == point.x - 1 && parent.y == point.y)
     {
-        angle = -90;
+        angle = 90;
     }
     else if (parent.x == point.x - 1 && parent.y == point.y - 1)
     {
-        angle = -45;
+        angle = 45;
     }
     else if (parent.x == point.x && parent.y == point.y - 1)
     {
@@ -142,11 +142,8 @@ double pathfinderAngle (PATHFINDER_POINT parent, PATHFINDER_POINT point)
     }
     else if (parent.x == point.x + 1 && parent.y == point.y - 1)
     {
-        angle = 45;
+        angle = -45;
     }
-
-    if (angle != 0)
-        angle = 1;
 
     return angle;
 }
@@ -159,7 +156,7 @@ double pathfinderDeltaAngle (double angleCourant, double angleDestination)
     if (angleCourant == -1)
         return 0;
     else
-        return angleCourant == angleDestination;
+        return !(angleCourant == angleDestination);
 
     double delta;
     double sensHoraire, sensTrigo;

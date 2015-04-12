@@ -7,8 +7,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define ASTAR_DEBUG
-
 void _astar_init ()
 {
     int i, j = 0;

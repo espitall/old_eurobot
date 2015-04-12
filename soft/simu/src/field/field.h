@@ -1,11 +1,8 @@
 #ifndef FIELD_H
 #define FIELD_H
 
+#include "../config.h"
 #include "../pathfinder/pathfinder.h"
-
-#define FIELD_X 3000
-#define FIELD_Y 2000
-#define FIELD_RESOLUTION 3
 
 /*
  * Les états que peuvent prendre une case de la carte

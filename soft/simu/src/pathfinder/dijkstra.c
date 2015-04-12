@@ -5,8 +5,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define DIJKSTRA_DEBUG
-
 void dijkstra (PATHFINDER_POINT start, PATHFINDER_POINT end)
 {
     #ifdef DIJKSTRA_DEBUG

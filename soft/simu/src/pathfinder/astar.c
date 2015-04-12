@@ -104,7 +104,11 @@ PATHFINDER_POINT _astar_getCurrentNode (PATHFINDER_POINT currentNode)
     return point;
 }
 
+#if PATHFINDER_WITH_DIAGONALE == TRUE
 void _astar_getNeighbours (PATHFINDER_POINT point, PATHFINDER_POINT neighbours [8])
+#else
+void _astar_getNeighbours (PATHFINDER_POINT point, PATHFINDER_POINT neighbours [4])
+#endif
 {
     // On récupère l'angle actuel du robot
     ASTAR_MAP_POINT parent = astar_map [point.x][point.y];
@@ -128,7 +132,7 @@ void _astar_getNeighbours (PATHFINDER_POINT point, PATHFINDER_POINT neighbours [
         angle = pathfinderAngle (parentPoint, point);
     }
 
-    printf ("Angle par rapport au noeud précédent : %f\n", angle);
+    printf ("Angle par rapport au noeud précédent [%d, %d] : %f\n", parent_x, parent_y, angle);
 
     double distance;
     double delta_angle;
@@ -148,8 +152,9 @@ void _astar_getNeighbours (PATHFINDER_POINT point, PATHFINDER_POINT neighbours [
     }
     printf ("Voisin 0° : [%d, %d] deltaAngle = %f\n", point_up.x, point_up.y, delta_angle);
 
+    #if PATHFINDER_WITH_DIAGONALE == TRUE
     // Voisin à 45°
-    distance = 2;
+    distance = PATHFINDER_COUT_DIAGONALE;
     delta_angle = pathfinderDeltaAngle (angle, 45);
     PATHFINDER_POINT point_up_right;
     point_up_right.x = point.x + 1;
@@ -167,6 +172,7 @@ void _astar_getNeighbours (PATHFINDER_POINT point, PATHFINDER_POINT neighbours [
         point_up_right.y = -1;
     }
     printf ("Voisin 45° : [%d, %d] deltaAngle = %f\n", point_up_right.x, point_up_right.y, delta_angle);
+    #endif
 
     // Voisin à 90°
     distance = 1;
@@ -183,8 +189,9 @@ void _astar_getNeighbours (PATHFINDER_POINT point, PATHFINDER_POINT neighbours [
     }
     printf ("Voisin 90° : [%d, %d] deltaAngle = %f\n", point_right.x, point_right.y, delta_angle);
 
+    #if PATHFINDER_WITH_DIAGONALE == TRUE
     // Voisin à 135°
-    distance = 2;
+    distance = PATHFINDER_COUT_DIAGONALE;
     delta_angle = pathfinderDeltaAngle (angle, 135);
     PATHFINDER_POINT point_down_right;
     point_down_right.x = point.x + 1;
@@ -202,6 +209,7 @@ void _astar_getNeighbours (PATHFINDER_POINT point, PATHFINDER_POINT neighbours [
         point_down_right.y = -1;
     }
     printf ("Voisin 135° : [%d, %d] deltaAngle = %f\n", point_down_right.x, point_down_right.y, delta_angle);
+    #endif
 
     // Voisin à 180°
     distance = 1;
@@ -218,8 +226,9 @@ void _astar_getNeighbours (PATHFINDER_POINT point, PATHFINDER_POINT neighbours [
     }
     printf ("Voisin 180° : [%d, %d] deltaAngle = %f\n", point_down.x, point_down.y, delta_angle);
 
+    #if PATHFINDER_WITH_DIAGONALE == TRUE
     // Voisin à -135°
-    distance = 2;
+    distance = PATHFINDER_COUT_DIAGONALE;
     delta_angle = pathfinderDeltaAngle (angle, -135);
     PATHFINDER_POINT point_down_left;
     point_down_left.x = point.x - 1;
@@ -237,6 +246,7 @@ void _astar_getNeighbours (PATHFINDER_POINT point, PATHFINDER_POINT neighbours [
         point_down_left.y = -1;
     }
     printf ("Voisin -135° : [%d, %d] deltaAngle = %f\n", point_down_left.x, point_down_left.y, delta_angle);
+    #endif
 
     // Voisin à -90°
     distance = 1;
@@ -253,8 +263,9 @@ void _astar_getNeighbours (PATHFINDER_POINT point, PATHFINDER_POINT neighbours [
     }
     printf ("Voisin -90° : [%d, %d] deltaAngle = %f\n", point_left.x, point_left.y, delta_angle);
 
+    #if PATHFINDER_WITH_DIAGONALE == TRUE
     // Voisin à -45°
-    distance = 2;
+    distance = PATHFINDER_COUT_DIAGONALE;
     delta_angle = pathfinderDeltaAngle (angle, -45);
     PATHFINDER_POINT point_up_left;
     point_up_left.x = point.x - 1;
@@ -272,15 +283,18 @@ void _astar_getNeighbours (PATHFINDER_POINT point, PATHFINDER_POINT neighbours [
         point_up_left.y = -1;
     }
     printf ("Voisin -45° : [%d, %d] deltaAngle = %f\n", point_up_left.x, point_up_left.y, delta_angle);
+    #endif
 
-    neighbours [0] = point_right;
-    neighbours [1] = point_left;
+    neighbours [0] = point_up;
+    neighbours [1] = point_right;
     neighbours [2] = point_down;
-    neighbours [3] = point_up;
-    neighbours [4] = point_up_left;
-    neighbours [5] = point_up_right;
+    neighbours [3] = point_left;
+    #if PATHFINDER_WITH_DIAGONALE == TRUE
+    neighbours [4] = point_up_right;
+    neighbours [5] = point_down_right;
     neighbours [6] = point_down_left;
-    neighbours [7] = point_down_right;
+    neighbours [7] = point_up_left;
+    #endif
 }
 
 int _astar_isOnOpenList (PATHFINDER_POINT point)
@@ -348,14 +362,14 @@ void astar (PATHFINDER_POINT start, PATHFINDER_POINT end)
     int cpt = 1;
     while (!_astar_isEmptyOpenList ()) //  stopper la boucle si la liste ouverte est vide
     {
-        printf ("itération n°%d : \n", cpt);
+        printf ("\nItération n°%d : \n", cpt);
         // a. Récupération du node avec le plus petit F contenu dans la liste ouverte. On le nommera CURRENT.
         currentNode = _astar_getCurrentNode (currentNode);
         printf ("Noeud étudié : [%d, %d] (f = %f)\n", currentNode.x, currentNode.y, astar_map [currentNode.x][currentNode.y].f);
 
-        cpt++;/*
-        if (cpt > 3)
-            return;*/
+        cpt++;
+//        if (cpt > 800 - 126 + 5)
+//            return;
 
         //  stopper la boucle si n ajoute le noeud d'arrivée à la liste fermée
         if (currentNode.x == end.x && currentNode.y == end.y)
@@ -365,13 +379,21 @@ void astar (PATHFINDER_POINT start, PATHFINDER_POINT end)
         _astar_addToCloseList (currentNode);
 
         //  récupération des voisins de CURRENT
+        #if PATHFINDER_WITH_DIAGONALE == TRUE
         PATHFINDER_POINT neighbours [8];
+        #else
+        PATHFINDER_POINT neighbours [4];
+        #endif
         _astar_getNeighbours (currentNode, neighbours);
 
         printf ("Seuls les voisins suivants reste à étudier :\n");
 
         // Pour chacun des 8 nodes adjacents à CURRENT appliquer la méthode suivante:
+        #if PATHFINDER_WITH_DIAGONALE == TRUE
         for (i = 0; i < 8; ++i)
+        #else
+        for (i = 0; i < 4; ++i)
+        #endif
         {
             PATHFINDER_POINT neighbour = neighbours [i];
 
@@ -400,7 +422,7 @@ void astar (PATHFINDER_POINT start, PATHFINDER_POINT end)
             printf ("newG = %f\n", newG);
 
             // Si il n'a jamais été analysé ou qu'on lui ait trouvé un meilleur G
-            if (astar_map [neighbour.x][neighbour.y].g == 0.0 || newG < astar_map [neighbour.x][neighbour.y].g)
+            if (astar_map [neighbour.x][neighbour.y].g == 0.0 || newG <= astar_map [neighbour.x][neighbour.y].g)
             {
                 astar_map [neighbour.x][neighbour.y].g = newG;
                 if (astar_map [neighbour.x][neighbour.y].h == 0.0)

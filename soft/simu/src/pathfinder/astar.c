@@ -132,7 +132,9 @@ void _astar_getNeighbours (PATHFINDER_POINT point, PATHFINDER_POINT neighbours [
         angle = pathfinderAngle (parentPoint, point);
     }
 
+    #ifdef ASTAR_DEBUG2
     printf ("Angle par rapport au noeud précédent [%d, %d] : %f\n", parent_x, parent_y, angle);
+    #endif
 
     double distance;
     double delta_angle;
@@ -150,7 +152,9 @@ void _astar_getNeighbours (PATHFINDER_POINT point, PATHFINDER_POINT neighbours [
         point_up.x = -1;
         point_up.y = -1;
     }
+    #ifdef ASTAR_DEBUG2
     printf ("Voisin 0° : [%d, %d] deltaAngle = %f\n", point_up.x, point_up.y, delta_angle);
+    #endif
 
     #if PATHFINDER_WITH_DIAGONALE == TRUE
     // Voisin à 45°
@@ -171,7 +175,9 @@ void _astar_getNeighbours (PATHFINDER_POINT point, PATHFINDER_POINT neighbours [
         point_up_right.x = -1;
         point_up_right.y = -1;
     }
+    #ifdef ASTAR_DEBUG2
     printf ("Voisin 45° : [%d, %d] deltaAngle = %f\n", point_up_right.x, point_up_right.y, delta_angle);
+    #endif
     #endif
 
     // Voisin à 90°
@@ -187,7 +193,9 @@ void _astar_getNeighbours (PATHFINDER_POINT point, PATHFINDER_POINT neighbours [
         point_right.x = -1;
         point_right.y = -1;
     }
+    #ifdef ASTAR_DEBUG2
     printf ("Voisin 90° : [%d, %d] deltaAngle = %f\n", point_right.x, point_right.y, delta_angle);
+    #endif
 
     #if PATHFINDER_WITH_DIAGONALE == TRUE
     // Voisin à 135°
@@ -208,7 +216,9 @@ void _astar_getNeighbours (PATHFINDER_POINT point, PATHFINDER_POINT neighbours [
         point_down_right.x = -1;
         point_down_right.y = -1;
     }
+    #ifdef ASTAR_DEBUG2
     printf ("Voisin 135° : [%d, %d] deltaAngle = %f\n", point_down_right.x, point_down_right.y, delta_angle);
+    #endif
     #endif
 
     // Voisin à 180°
@@ -224,7 +234,9 @@ void _astar_getNeighbours (PATHFINDER_POINT point, PATHFINDER_POINT neighbours [
         point_down.x = -1;
         point_down.y = -1;
     }
+    #ifdef ASTAR_DEBUG2
     printf ("Voisin 180° : [%d, %d] deltaAngle = %f\n", point_down.x, point_down.y, delta_angle);
+    #endif
 
     #if PATHFINDER_WITH_DIAGONALE == TRUE
     // Voisin à -135°
@@ -245,7 +257,9 @@ void _astar_getNeighbours (PATHFINDER_POINT point, PATHFINDER_POINT neighbours [
         point_down_left.x = -1;
         point_down_left.y = -1;
     }
+    #ifdef ASTAR_DEBUG2
     printf ("Voisin -135° : [%d, %d] deltaAngle = %f\n", point_down_left.x, point_down_left.y, delta_angle);
+    #endif
     #endif
 
     // Voisin à -90°
@@ -261,7 +275,9 @@ void _astar_getNeighbours (PATHFINDER_POINT point, PATHFINDER_POINT neighbours [
         point_left.x = -1;
         point_left.y = -1;
     }
+    #ifdef ASTAR_DEBUG2
     printf ("Voisin -90° : [%d, %d] deltaAngle = %f\n", point_left.x, point_left.y, delta_angle);
+    #endif
 
     #if PATHFINDER_WITH_DIAGONALE == TRUE
     // Voisin à -45°
@@ -282,7 +298,9 @@ void _astar_getNeighbours (PATHFINDER_POINT point, PATHFINDER_POINT neighbours [
         point_up_left.x = -1;
         point_up_left.y = -1;
     }
+    #ifdef ASTAR_DEBUG2
     printf ("Voisin -45° : [%d, %d] deltaAngle = %f\n", point_up_left.x, point_up_left.y, delta_angle);
+    #endif
     #endif
 
     neighbours [0] = point_up;
@@ -329,9 +347,11 @@ void astar (PATHFINDER_POINT start, PATHFINDER_POINT end)
     PATHFINDER_POINT currentNode;
     int i;
 
+    #ifdef ASTAR_DEBUG2
     printf ("Start : [%d, %d]\n", start.x, start.y);
     printf ("End : [%d, %d]\n", end.x, end.y);
     printf ("Distance : %f\n\n", pathfinderHeuristique (abs (end.x - start.x), abs (end.y - start.y)));
+    #endif
 
     #ifdef ASTAR_DEBUG
         SCREEN_COLOR couleur;
@@ -362,10 +382,14 @@ void astar (PATHFINDER_POINT start, PATHFINDER_POINT end)
     int cpt = 1;
     while (!_astar_isEmptyOpenList ()) //  stopper la boucle si la liste ouverte est vide
     {
+        #ifdef ASTAR_DEBUG2
         printf ("\nItération n°%d : \n", cpt);
+        #endif
         // a. Récupération du node avec le plus petit F contenu dans la liste ouverte. On le nommera CURRENT.
         currentNode = _astar_getCurrentNode (currentNode);
+        #ifdef ASTAR_DEBUG2
         printf ("Noeud étudié : [%d, %d] (f = %f)\n", currentNode.x, currentNode.y, astar_map [currentNode.x][currentNode.y].f);
+        #endif
 
         cpt++;
 //        if (cpt > 800 - 126 + 5)
@@ -386,7 +410,9 @@ void astar (PATHFINDER_POINT start, PATHFINDER_POINT end)
         #endif
         _astar_getNeighbours (currentNode, neighbours);
 
+        #ifdef ASTAR_DEBUG2
         printf ("Seuls les voisins suivants reste à étudier :\n");
+        #endif
 
         // Pour chacun des 8 nodes adjacents à CURRENT appliquer la méthode suivante:
         #if PATHFINDER_WITH_DIAGONALE == TRUE
@@ -397,10 +423,12 @@ void astar (PATHFINDER_POINT start, PATHFINDER_POINT end)
         {
             PATHFINDER_POINT neighbour = neighbours [i];
 
+            #ifdef ASTAR_DEBUG2
             printf ("Voisin %d : [%d, %d]\n",
                     i,
                     neighbour.x,
                     neighbour.y);
+            #endif
 
             if (neighbour.x == -1 || neighbour.y == -1)
                 continue;
@@ -409,6 +437,7 @@ void astar (PATHFINDER_POINT start, PATHFINDER_POINT end)
             if (_astar_isOnCloseList (neighbour) || !fieldIsAccessible (neighbour.x, neighbour.y))
                 continue;
 
+            #ifdef ASTAR_DEBUG2
             printf ("Voisin %d : [%d, %d] (%f + %f = %f)\n",
                     i,
                     neighbour.x,
@@ -416,10 +445,13 @@ void astar (PATHFINDER_POINT start, PATHFINDER_POINT end)
                     astar_map [neighbour.x][neighbour.y].g,
                     astar_map [neighbour.x][neighbour.y].h,
                     astar_map [neighbour.x][neighbour.y].f);
+            #endif
 
             // on calcule le nouveau g
             double newG = astar_map [currentNode.x][currentNode.y].g + neighbour.poids + neighbour.malus;
+            #ifdef ASTAR_DEBUG2
             printf ("newG = %f\n", newG);
+            #endif
 
             // Si il n'a jamais été analysé ou qu'on lui ait trouvé un meilleur G
             if (astar_map [neighbour.x][neighbour.y].g == 0.0 || newG <= astar_map [neighbour.x][neighbour.y].g)
@@ -437,6 +469,7 @@ void astar (PATHFINDER_POINT start, PATHFINDER_POINT end)
 
                 _astar_addToOpenList (neighbour);
 
+                #ifdef ASTAR_DEBUG2
                 printf ("Ajout ou modif voisin %d : [%d, %d] (%f + %f = %f)\n",
                         i,
                         neighbour.x,
@@ -444,6 +477,7 @@ void astar (PATHFINDER_POINT start, PATHFINDER_POINT end)
                         astar_map [neighbour.x][neighbour.y].g,
                         astar_map [neighbour.x][neighbour.y].h,
                         astar_map [neighbour.x][neighbour.y].f);
+                #endif
             }
         }
     }
@@ -458,7 +492,9 @@ void astar (PATHFINDER_POINT start, PATHFINDER_POINT end)
     while (lastNode.x != start.x || lastNode.y != start.y)
     {
         ASTAR_MAP_POINT point = astar_map [lastNode.x][lastNode.y];
+        #ifdef ASTAR_DEBUG2
         printf ("[%d, %d]\n", lastNode.x * FIELD_RESOLUTION, lastNode.y * FIELD_RESOLUTION);
+        #endif
 
         #ifdef ASTAR_DEBUG
             SCREEN_COLOR couleur;

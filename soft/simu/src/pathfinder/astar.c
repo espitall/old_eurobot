@@ -58,7 +58,7 @@ PATHFINDER_POINT _astar_getCurrentNode (PATHFINDER_POINT currentNode)
 {
     int i, j;
     double minF = -1;
-    double MinDistance = -1;
+    double minDistance = -1;
     double distance;
     PATHFINDER_POINT point;
 
@@ -68,17 +68,24 @@ PATHFINDER_POINT _astar_getCurrentNode (PATHFINDER_POINT currentNode)
         {
             if (astar_map [i][j].liste == ASTAR_OPENLIST)
             {
-//                printf ("%d %d : %f\n", i, j, astar_map [i][j].f);
+//                if (currentNode.x == 800 && currentNode.y == 333)
+//                    printf ("%d %d : %f : ", i, j, astar_map [i][j].f);
+
                 if (minF == -1 || astar_map [i][j].f <= minF)
                 {
+//                    if (currentNode.x == 800 && currentNode.y == 333)
+//                        printf ("<");
                     if (astar_map [i][j].f == minF)
                     {
+//                        if (currentNode.x == 800 && currentNode.y == 333)
+//                            printf ("=");
                         distance = pathfinderHeuristique (abs (currentNode.x - i), abs (currentNode.y - j));
-                        if (MinDistance == -1 || distance < MinDistance)
+                        if (minDistance == -1 || distance < minDistance)
                         {
                             minF = astar_map [i][j].f;
                             point.x = i;
                             point.y = j;
+                            minDistance = distance;
                         }
                     }
                     else
@@ -86,9 +93,11 @@ PATHFINDER_POINT _astar_getCurrentNode (PATHFINDER_POINT currentNode)
                         minF = astar_map [i][j].f;
                         point.x = i;
                         point.y = j;
-                        MinDistance = -1;
+                        minDistance = -1;
                     }
                 }
+//                if (currentNode.x == 800 && currentNode.y == 333)
+//                    printf ("\n");
             }
         }
     }
@@ -99,7 +108,8 @@ PATHFINDER_POINT _astar_getCurrentNode (PATHFINDER_POINT currentNode)
         point.y = -1;
     }
 
-//    printf ("=> %d %d\n", point.x, point.y);
+    if (currentNode.x == 800 && currentNode.y == 333)
+        printf ("=> %d %d\n", point.x, point.y);
 
     return point;
 }
@@ -386,14 +396,15 @@ void astar (PATHFINDER_POINT start, PATHFINDER_POINT end)
         printf ("\nItération n°%d : \n", cpt);
         #endif
         // a. Récupération du node avec le plus petit F contenu dans la liste ouverte. On le nommera CURRENT.
+        /* TODO : la 1ère fois, currentNode n'est pas initialisé */
         currentNode = _astar_getCurrentNode (currentNode);
         #ifdef ASTAR_DEBUG2
         printf ("Noeud étudié : [%d, %d] (f = %f)\n", currentNode.x, currentNode.y, astar_map [currentNode.x][currentNode.y].f);
         #endif
 
         cpt++;
-//        if (cpt > 800 - 126 + 5)
-//            return;
+        if (cpt > 800 - 126 + 5)
+            return;
 
         //  stopper la boucle si n ajoute le noeud d'arrivée à la liste fermée
         if (currentNode.x == end.x && currentNode.y == end.y)

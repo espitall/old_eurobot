@@ -23,7 +23,9 @@ enum field_map_etat
     FIELD_MAP_ETAT_ELEMENT_BALLE, // Balles
     FIELD_MAP_ETAT_ELEMENT_GOBELET, // Gobelets
     FIELD_MAP_ETAT_ELEMENT_EQUIPE_GAUCHE, // Plot de l'équipe gauche
-    FIELD_MAP_ETAT_ELEMENT_EQUIPE_DROITE // Plot de l'équipe droite
+    FIELD_MAP_ETAT_ELEMENT_EQUIPE_DROITE, // Plot de l'équipe droite
+    FIELD_MAP_ETAT_DANGER, // Zone de danger (trop près des obstacles)
+    FIELD_MAP_ETAT_DANGER_INACCESSIBLE // Zone de danger (inaccessible à cause de la largeur du robot)
 };
 
 typedef enum field_map_etat FIELD_MAP_ETAT;

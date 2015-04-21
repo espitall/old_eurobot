@@ -7,6 +7,32 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+double _astar_angle (PATHFINDER_POINT point)
+{
+    ASTAR_MAP_POINT parent = astar_map [point.x][point.y];
+    int parent_x = parent.parent_x;
+    int parent_y = parent.parent_y;
+
+    double angle;
+    if (parent_x == -1 && parent_y == -1)
+    {
+        // On commence juste le parcours
+        // Il faut donc regarder l'angle du robot
+        angle = posGetAdeg ();
+    }
+    else
+    {
+        PATHFINDER_POINT parentPoint;
+        parentPoint.x = parent_x;
+        parentPoint.y = parent_y;
+        parentPoint.poids = 0;
+        parentPoint.malus = 0;
+        angle = pathfinderAngle (parentPoint, point);
+    }
+
+    return angle;
+}
+
 void _astar_init ()
 {
     int i, j = 0;
@@ -60,32 +86,42 @@ PATHFINDER_POINT _astar_getCurrentNode (PATHFINDER_POINT currentNode)
     double minF = -1;
     double minDistance = -1;
     double distance;
-    PATHFINDER_POINT point;
+    double angle2;
+    int memeAngle = 0;
+    PATHFINDER_POINT point, point2;
 
-    for (i = 0 ; i < FIELD_X / FIELD_RESOLUTION; i++)
+    // On récupère l'angle actuel du robot
+    double angle = _astar_angle (currentNode);
+
+    for (i = 0; i < FIELD_X / FIELD_RESOLUTION ; i++)
     {
         for (j = 0; j < FIELD_Y / FIELD_RESOLUTION; j++)
         {
             if (astar_map [i][j].liste == ASTAR_OPENLIST)
             {
-//                if (currentNode.x == 800 && currentNode.y == 333)
-//                    printf ("%d %d : %f : ", i, j, astar_map [i][j].f);
-
                 if (minF == -1 || astar_map [i][j].f <= minF)
                 {
-//                    if (currentNode.x == 800 && currentNode.y == 333)
-//                        printf ("<");
                     if (astar_map [i][j].f == minF)
                     {
-//                        if (currentNode.x == 800 && currentNode.y == 333)
-//                            printf ("=");
                         distance = pathfinderHeuristique (abs (currentNode.x - i), abs (currentNode.y - j));
-                        if (minDistance == -1 || distance < minDistance)
+                        if (minDistance == -1 || distance <= minDistance)
                         {
-                            minF = astar_map [i][j].f;
-                            point.x = i;
-                            point.y = j;
-                            minDistance = distance;
+                            if (memeAngle == 0)
+                            {
+                                minF = astar_map [i][j].f;
+                                point.x = i;
+                                point.y = j;
+                                minDistance = distance;
+
+                                point2.x = i;
+                                point2.y = j;
+                                angle2 = pathfinderAngle (currentNode, point2);
+                                if (angle == angle2)
+                                {
+                                    //printf ("%d %d, %d %d\n", currentNode.x, currentNode.y, point2.x, point2.y);
+                                    memeAngle = 1;
+                                }
+                            }
                         }
                     }
                     else
@@ -94,10 +130,9 @@ PATHFINDER_POINT _astar_getCurrentNode (PATHFINDER_POINT currentNode)
                         point.x = i;
                         point.y = j;
                         minDistance = -1;
+                        memeAngle = 0;
                     }
                 }
-//                if (currentNode.x == 800 && currentNode.y == 333)
-//                    printf ("\n");
             }
         }
     }
@@ -107,9 +142,6 @@ PATHFINDER_POINT _astar_getCurrentNode (PATHFINDER_POINT currentNode)
         point.x = -1;
         point.y = -1;
     }
-
-    if (currentNode.x == 800 && currentNode.y == 333)
-        printf ("=> %d %d\n", point.x, point.y);
 
     return point;
 }
@@ -121,28 +153,13 @@ void _astar_getNeighbours (PATHFINDER_POINT point, PATHFINDER_POINT neighbours [
 #endif
 {
     // On récupère l'angle actuel du robot
+    double angle = _astar_angle (point);
+
+    #ifdef ASTAR_DEBUG2
     ASTAR_MAP_POINT parent = astar_map [point.x][point.y];
     int parent_x = parent.parent_x;
     int parent_y = parent.parent_y;
 
-    double angle;
-    if (parent_x == -1 && parent_y == -1)
-    {
-        // On commence juste le parcours
-        // Il faut donc regarder l'angle du robot
-        angle = posGetAdeg ();
-    }
-    else
-    {
-        PATHFINDER_POINT parentPoint;
-        parentPoint.x = parent_x;
-        parentPoint.y = parent_y;
-        parentPoint.poids = 0;
-        parentPoint.malus = 0;
-        angle = pathfinderAngle (parentPoint, point);
-    }
-
-    #ifdef ASTAR_DEBUG2
     printf ("Angle par rapport au noeud précédent [%d, %d] : %f\n", parent_x, parent_y, angle);
     #endif
 
@@ -403,10 +420,10 @@ void astar (PATHFINDER_POINT start, PATHFINDER_POINT end)
         #endif
 
         cpt++;
-        if (cpt > 800 - 126 + 5)
-            return;
+//        if (cpt > 800 - 126 + 100)
+//            return;
 
-        //  stopper la boucle si n ajoute le noeud d'arrivée à la liste fermée
+        //  stopper la boucle si on ajoute le noeud d'arrivée à la liste fermée
         if (currentNode.x == end.x && currentNode.y == end.y)
             break;
 

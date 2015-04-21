@@ -66,6 +66,11 @@ void pathfinderMapDesine ()
                     couleur.vert = 0xff;
                     couleur.bleu = 0xff;
                     break;
+                case 2 : // Gris
+                    couleur.rouge = 0xa0;
+                    couleur.vert = 0xa0;
+                    couleur.bleu = 0xa0;
+                    break;
                 case 0 :
                 default : // Noir
                     couleur.rouge = 0x00;

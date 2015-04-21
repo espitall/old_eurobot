@@ -60,4 +60,9 @@ void fieldMapDesine ();
  */
 int fieldIsAccessible (int x, int y);
 
+/*
+ * Indique le malus de terrain
+ */
+int fieldMalusTerrain (int x, int y);
+
 #endif // FIELD_H

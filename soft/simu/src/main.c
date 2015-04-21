@@ -12,7 +12,7 @@ int main (void)
 
   pathfinderInit ();
   pathfinderMapDesine ();
-//  pathfinderGotoXYmm (2400, 500);
+  pathfinderGotoXYmm (2400, 500);
   screenPause ();
 
   screenStop ();

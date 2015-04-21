@@ -303,6 +303,8 @@ void fieldMapInit ()
 
     _fieldMapInitDangerInaccessible ();
     _fieldMapInitDanger ();
+
+    _fieldDrawRect (FIELD_X / 2, FIELD_Y / 2, 5, 5, 0, FIELD_MAP_ETAT_DANGER); // Test de zone de danger
 }
 
 /*
@@ -420,10 +422,33 @@ int fieldIsAccessible (int x, int y)
         case FIELD_MAP_ETAT_ELEMENT_EQUIPE_GAUCHE :
         case FIELD_MAP_ETAT_ELEMENT_EQUIPE_DROITE :
         case FIELD_MAP_ETAT_HIMSELF :
-            return 1;
         case FIELD_MAP_ETAT_DANGER :
-            return 2;
+            return 1;
         default :
             return 0;
+    }
+}
+
+/*
+ * Indique le malus de terrain
+ */
+int fieldMalusTerrain (int x, int y)
+{
+    switch (field_map[x][y].type)
+    {
+        case FIELD_MAP_ETAT_NEUTRE :
+        case FIELD_MAP_ETAT_NEUTRE_ACTION :
+        case FIELD_MAP_ETAT_EQUIPE_GAUCHE :
+        case FIELD_MAP_ETAT_EQUIPE_DROITE :
+        case FIELD_MAP_ETAT_ELEMENT_BALLE :
+        case FIELD_MAP_ETAT_ELEMENT_GOBELET :
+        case FIELD_MAP_ETAT_ELEMENT_EQUIPE_GAUCHE :
+        case FIELD_MAP_ETAT_ELEMENT_EQUIPE_DROITE :
+        case FIELD_MAP_ETAT_HIMSELF :
+            return 0;
+        case FIELD_MAP_ETAT_DANGER :
+            return FIELD_MALUS_TERRAIN;
+        default :
+            return -1;
     }
 }

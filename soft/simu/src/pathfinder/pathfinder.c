@@ -59,19 +59,19 @@ void pathfinderMapDesine ()
     {
         for (j = 0 ; j < FIELD_Y / FIELD_RESOLUTION; j++)
         {
-            switch (fieldIsAccessible (i, j))
+            switch (fieldMalusTerrain (i, j))
             {
-                case 1 : // Blanc
+                case 0 : // Blanc
                     couleur.rouge = 0xff;
                     couleur.vert = 0xff;
                     couleur.bleu = 0xff;
                     break;
-                case 2 : // Gris
+                case FIELD_MALUS_TERRAIN : // Gris
                     couleur.rouge = 0xa0;
                     couleur.vert = 0xa0;
                     couleur.bleu = 0xa0;
                     break;
-                case 0 :
+                case -1 :
                 default : // Noir
                     couleur.rouge = 0x00;
                     couleur.vert = 0x00;

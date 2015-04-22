@@ -7,6 +7,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/*
+ * La carte représentant le terrain
+ */
+ASTAR_MAP_POINT astar_map [FIELD_X / FIELD_RESOLUTION][FIELD_Y / FIELD_RESOLUTION];
+
 double _astar_angle (PATHFINDER_POINT point)
 {
     ASTAR_MAP_POINT parent = astar_map [point.x][point.y];

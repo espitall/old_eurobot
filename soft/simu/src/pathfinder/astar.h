@@ -32,11 +32,6 @@ struct astar_map_point
 typedef struct astar_map_point ASTAR_MAP_POINT;
 
 /*
- * La carte représentant le terrain
- */
-ASTAR_MAP_POINT astar_map [FIELD_X / FIELD_RESOLUTION][FIELD_Y / FIELD_RESOLUTION];
-
-/*
  * Lance l'algo A* pour atteindre les coordonnées [x, y] sur la carte
  */
 void astar (PATHFINDER_POINT start, PATHFINDER_POINT end);

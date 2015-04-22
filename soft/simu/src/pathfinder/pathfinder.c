@@ -38,7 +38,7 @@ void pathfinderGotoXYmm (double x, double y)
     if (fieldIsAccessible (end.x, end.y))
     {
         #if PATHFINDER_ALGO == ASTAR
-            astar(start, end);
+            astar (start, end);
         #elif PATHFINDER_ALGO == DIJKSTRA
             dijkstra (start, end);
         #endif

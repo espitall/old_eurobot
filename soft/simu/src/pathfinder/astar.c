@@ -476,7 +476,7 @@ void astar (PATHFINDER_POINT start, PATHFINDER_POINT end)
             #endif
 
             // on calcule le nouveau g
-            int malus_terrain = fieldMalusTerrain (currentNode.x, currentNode.y);
+            int malus_terrain = fieldMalusTerrain (neighbour.x, neighbour.y);
             double newG = astar_map [currentNode.x][currentNode.y].g + neighbour.poids + neighbour.malus + malus_terrain;
             #ifdef ASTAR_DEBUG2
             printf ("newG = %f\n", newG);

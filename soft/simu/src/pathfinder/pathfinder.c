@@ -149,6 +149,10 @@ double pathfinderAngle (PATHFINDER_POINT parent, PATHFINDER_POINT point)
     {
         angle = -135;
     }
+    else
+    {
+        angle = atan2 ((point.x - parent.x), (parent.y - point.y)) * 180 / 3.14159265358979323846;
+    }
 
     return angle;
 }
@@ -161,8 +165,8 @@ double pathfinderDeltaAngle (double angleCourant, double angleDestination)
     if (angleCourant == -1)
         return 0;
     else
-        return !(angleCourant == angleDestination);
-
+        return angleCourant != angleDestination;
+/*
     double delta;
     double sensHoraire, sensTrigo;
 
@@ -186,4 +190,5 @@ double pathfinderDeltaAngle (double angleCourant, double angleDestination)
     }
 
     return delta;
+*/
 }

@@ -14,11 +14,18 @@ ASTAR_MAP_POINT astar_map [FIELD_X / FIELD_RESOLUTION][FIELD_Y / FIELD_RESOLUTIO
 
 double _astar_angle (PATHFINDER_POINT point)
 {
+    double angle;
+
+    if (point.x == -1 && point.y == -1)
+    {
+        angle = posGetAdeg ();
+        return angle;
+    }
+
     ASTAR_MAP_POINT parent = astar_map [point.x][point.y];
     int parent_x = parent.parent_x;
     int parent_y = parent.parent_y;
 
-    double angle;
     if (parent_x == -1 && parent_y == -1)
     {
         // On commence juste le parcours
@@ -121,6 +128,7 @@ PATHFINDER_POINT _astar_getCurrentNode (PATHFINDER_POINT currentNode)
                                 point2.x = i;
                                 point2.y = j;
                                 angle2 = pathfinderAngle (currentNode, point2);
+
                                 if (angle == angle2)
                                 {
                                     //printf ("%d %d, %d %d\n", currentNode.x, currentNode.y, point2.x, point2.y);
@@ -379,6 +387,11 @@ void astar (PATHFINDER_POINT start, PATHFINDER_POINT end)
     PATHFINDER_POINT currentNode;
     int i;
 
+    currentNode.x = -1;
+    currentNode.y = -1;
+    currentNode.poids = 0;
+    currentNode.malus = 0;
+
     #ifdef ASTAR_DEBUG2
     printf ("Start : [%d, %d]\n", start.x, start.y);
     printf ("End : [%d, %d]\n", end.x, end.y);
@@ -418,7 +431,6 @@ void astar (PATHFINDER_POINT start, PATHFINDER_POINT end)
         printf ("\nItération n°%d : \n", cpt);
         #endif
         // a. Récupération du node avec le plus petit F contenu dans la liste ouverte. On le nommera CURRENT.
-        /* TODO : la 1ère fois, currentNode n'est pas initialisé */
         currentNode = _astar_getCurrentNode (currentNode);
         #ifdef ASTAR_DEBUG2
         printf ("Noeud étudié : [%d, %d] (f = %f)\n", currentNode.x, currentNode.y, astar_map [currentNode.x][currentNode.y].f);

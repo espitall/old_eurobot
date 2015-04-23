@@ -31,7 +31,7 @@
 
 #define DIJKSTRA_DEBUG
 #define ASTAR_DEBUG
-#define ASTAR_DEBUG2
+//#define ASTAR_DEBUG2
 
 #define FIELD_X 3000
 #define FIELD_Y 2000

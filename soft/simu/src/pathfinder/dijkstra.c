@@ -535,8 +535,15 @@ void dijkstra (PATHFINDER_POINT start, PATHFINDER_POINT end)
 
     // Soit on maintenant on construit le chemin à rebours;
     PATHFINDER_POINT lastNode = end;
+    double angle = -1;
+    double angle2;
     while (lastNode.x != start.x || lastNode.y != start.y)
     {
+        PATHFINDER_POINT point1, point2;
+
+        point1.x = lastNode.x;
+        point1.y = lastNode.y;
+
         DIJKSTRA_MAP_POINT point = dijkstra_map [lastNode.x][lastNode.y];
         #ifdef DIJKSTRA_DEBUG2
         printf ("[%d, %d]\n", lastNode.x * FIELD_RESOLUTION, lastNode.y * FIELD_RESOLUTION);
@@ -553,5 +560,17 @@ void dijkstra (PATHFINDER_POINT start, PATHFINDER_POINT end)
 
         lastNode.x = point.parent_x;
         lastNode.y = point.parent_y;
+
+        point2.x = lastNode.x;
+        point2.y = lastNode.y;
+
+        angle2 = pathfinderAngle (point1, point2);
+
+        if (angle == -1 || angle != angle2)
+        {
+            printf ("[%d, %d]\n", point1.x * FIELD_RESOLUTION, point1.y * FIELD_RESOLUTION);
+            angle = angle2;
+        }
     }
+    printf ("Checkpoint [%d, %d]\n", start.x * FIELD_RESOLUTION, start.y * FIELD_RESOLUTION);
 }

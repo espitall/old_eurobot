@@ -32,6 +32,14 @@ static const SPIConfig spi4cfg = {
   ((0x07 << 3) & SPI_CR1_BR) | SPI_CR1_SSM | SPI_CR1_SSI | SPI_CR1_MSTR | 0,
 };
 
+
+static const SPIConfig spi5cfg = {
+  NULL,
+  NULL,
+  0,
+  ((0x07 << 3) & SPI_CR1_BR) | SPI_CR1_SSM | SPI_CR1_SSI | SPI_CR1_MSTR | SPI_CR1_CPOL | SPI_CR1_CPHA,
+};
+
 static const I2CConfig i2c3cfg = {
   OPMODE_I2C,
   200000,
@@ -129,6 +137,11 @@ bool_t mmc_lld_is_write_protected(MMCDriver *mmcp) {
 
 void boardSetCS(unsigned int id)
 {
+  palClearPad(GPIOG, GPIOG_CS_SEL0);
+  palClearPad(GPIOG, GPIOG_CS_SEL1);
+  palClearPad(GPIOG, GPIOG_CS_SEL1);
+  palClearPad(GPIOC, GPIOC_CS_SEL3);
+
   if(id & (1 << 0))
   {
     palSetPad(GPIOG, GPIOG_CS_SEL0);
@@ -164,6 +177,7 @@ void boardSetCS(unsigned int id)
   {
     palClearPad(GPIOC, GPIOC_CS_SEL3);
   }
+
 }
 
 void boardInit(void) 
@@ -183,6 +197,9 @@ void boardInit(void)
 #endif
   
   boardSetCS(SPI_CS_NONE);
+
+  //init SPI5 bus
+  spiStart(&SPID5, &spi5cfg);
 
   //init SPI4 bus
   spiStart(&SPID4, &spi4cfg);

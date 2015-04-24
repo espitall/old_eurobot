@@ -3,12 +3,6 @@
 #include "max11628.h"
 #include "lcd.h"
 
-static const SPIConfig spi5cfg = {
-  NULL,
-  NULL,
-  0,
-  ((0x07 << 3) & SPI_CR1_BR) | SPI_CR1_SSM | SPI_CR1_SSI | SPI_CR1_MSTR | SPI_CR1_CPOL | SPI_CR1_CPHA,
-};
 
 static const int spimode = 3;
 
@@ -19,10 +13,6 @@ static const int spimode = 3;
 void max11628Init(void)
 {
   uint8_t tx[1];
-
-  boardSetCS(SPI_CS_NONE);
-  spiStart(&SPID5, &spi5cfg);
-
   tx[0] = (1 << 6) | (1 << 5) | (1 << 3);
 
   spiAcquireBus(&SPID5);
@@ -30,6 +20,8 @@ void max11628Init(void)
   boardSetCS(SPI_CS_ADC0);
   spiSend(&SPID5, 1, tx);
   boardSetCS(SPI_CS_NONE);
+
+  chThdSleepMilliseconds(5);
 
   boardSetCS(SPI_CS_ADC1);
   spiSend(&SPID5, 1, tx);
@@ -66,7 +58,7 @@ uint16_t max11628Read (int canal)
   boardSetCS(SPI_CS_NONE);
 
   // Attente
-  chThdSleepMilliseconds(1);
+  chThdSleepMilliseconds(5);
 
   //réception des données
   uint8_t bufferSend [2] = {0, 0};
@@ -78,7 +70,7 @@ uint16_t max11628Read (int canal)
 
   //suppression MSB
   uint16_t raw2receive;
-  raw2receive = ((bufferReceive [0] & 0xFF) << 8) | (bufferReceive [1] & 0xFF);
+  raw2receive = ((~bufferReceive [0] & 0xFF) << 8) | (~bufferReceive [1] & 0xFF);
   raw2receive = raw2receive & 0x0FFF;
 
   //libère les ressources

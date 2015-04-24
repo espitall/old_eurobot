@@ -5,6 +5,7 @@
 #include <field.h>
 #include <position.h>
 #include <trajectory.h>
+#include <strat.h>
 
 #include "lcd.h"
 #include "ili9341.h"
@@ -32,7 +33,7 @@ lcdPrintDriver_t topLine, console;
 uint8_t current_layer;
 static Mutex mutex;
 
-static WORKING_AREA(waLcdThread, 256);
+static WORKING_AREA(waLcdThread, 4096);
 
 
 static void lcdSetPixel(uint8_t layer, uint16_t x, uint16_t y, uint32_t color)
@@ -222,8 +223,9 @@ static msg_t lcdThread(void *arg)
     int32_t y_mm = posGetYmm();
     int32_t a_deg = posGetAdeg();
     int32_t arel_deg = a_deg % 360;
-    uint8_t pos_cor = -1;
-    uint8_t time = 90;
+    static uint8_t pos_cor = -1;
+    pos_cor += 1;
+    uint8_t time = stratGetTimeLeft();
     double bat = max11628ReadmV(15) * (5.1 + 1.0);
     uint16_t bat_decimal = (int) (bat / 1000.0);
     uint16_t bat_float = (int) (bat) % 1000;

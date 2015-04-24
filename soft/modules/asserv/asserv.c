@@ -1,5 +1,6 @@
 #include <position.h>
 #include <dc_motors.h>
+#include <strat.h>
 #include "asserv.h"
 #include "ramp.h"
 #include "pid.h"
@@ -13,8 +14,6 @@ static volatile int enabled;
 
 void asservSetEnable(int a)
 {
-  enabled = a;
-
   if(enabled == 0)
   {
     rampReset(&_dist_ramp, posGetDmm());
@@ -23,6 +22,8 @@ void asservSetEnable(int a)
     pidReset(&_dist_pid);
     pidReset(&_angu_pid);
   }
+
+  enabled = a;
 }
 
 int asservIsEnabled(void)
@@ -59,6 +60,14 @@ void asservInit(void)
 
 void asservCompute(void)
 {
+  if(enabled)
+  {
+    if(stratGetTimeLeft() <= 0)
+    {
+      asservSetEnable(0);
+    }
+  }
+
   pidSetFeedback(&_dist_pid, posGetDmm());
   pidSetFeedback(&_angu_pid, posGetAdeg());
 

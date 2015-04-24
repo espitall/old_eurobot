@@ -2,6 +2,7 @@
 #include <hal.h>
 #include <math.h>
 #include <lcd.h>
+#include <strat.h>
 #include "position.h"
 #include "config.h"
 #include "asserv.h"
@@ -12,7 +13,7 @@
 #define MM2TICK(mm)  ((((double)mm) * TICK_PER_1M) / 1000.0) 
 #define DEG2TICK(tick)  ((((double)tick) * TICK_PER_180DEG ) / 180.0) 
 
-static WORKING_AREA(waPosThread, 2048);
+static WORKING_AREA(waPosThread, 4096);
 
 static Mutex _mutex;
 
@@ -156,6 +157,11 @@ double posGetAdeg(void)
 
 void posSetAdeg(double a)
 {
+  if(stratGetColor() == STRAT_COLOR_GREEN)
+  {
+    a = 180 - a;
+  }
+
   int32_t atick = DEG2TICK(a);
   int ass = asservIsEnabled();
   asservSetEnable(0);
@@ -171,6 +177,11 @@ void posSetAdeg(double a)
 
 void posSetXmm(double x)
 {
+  if(stratGetColor() == STRAT_COLOR_GREEN)
+  {
+    x = -x;
+  }
+
   int ass = asservIsEnabled();
   asservSetEnable(0);
 

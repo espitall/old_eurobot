@@ -3,6 +3,7 @@
 #include <string.h>
 #include <math.h>
 #include <lcd.h>
+#include <strat.h>
 #include <max7317.h>
 #include "trajectory.h"
 #include "asserv.h"
@@ -39,7 +40,7 @@ typedef struct
 
 static MUTEX_DECL(mutex);
 static CONDVAR_DECL(condVar);
-static WORKING_AREA(waTrajThread, 256);
+static WORKING_AREA(waTrajThread, 2048);
 static trajectory_t orderList[TRAJECTORY_MAX_ORDER];
 static int writePosition;
 static int readPosition;
@@ -345,6 +346,12 @@ void _trajectoryNewOrder(trajectoryType_t type, double d, double a, double x, do
   traj.YSetPointmm = y;
   traj.TSetPointt = S2ST(t);
   traj.flags = flags;
+
+  if(stratGetColor() == STRAT_COLOR_GREEN)
+  {
+    traj.ASetPointdeg = 180 - traj.ASetPointdeg;
+    traj.XSetPointmm = - traj.XSetPointmm;
+  }
 
   trajectoryAddToOrderList(&traj);
 }

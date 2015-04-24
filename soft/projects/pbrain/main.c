@@ -12,8 +12,10 @@
 #include <gyro.h>
 #include <trajectory.h>
 #include <usir.h>
+#include <step.h>
 #include <pathfinder.h>
 #include "meca.h"
+#include "strat.h"
 
 void position_computed_hook(void)
 {
@@ -39,11 +41,46 @@ int main(void)
   trajectoryInit();
   asservInit();
   mecaInit();
-  usirInit();
+  //stepInit();
+  //usirInit();
   pathfinderInit();
   //gyroInit();
+  stratInit();
 
   lcdPrintln(LCD_WARNING, "Start: robot principal");
+
+  while(0)
+  {
+    while((max7317Read() & (1 << IO_SWITCH_BACK_LEFT)))
+    {
+      chThdSleepMilliseconds(100);
+    }
+    lcdPrintln(LCD_INFO, "Click !");
+    stepAction(STEP_ACTION_TAKE_RIGHT);
+    stepWait();
+    lcdPrintln(LCD_INFO, "Done !");
+
+    while(!(max7317Read() & (1 << IO_SWITCH_BACK_LEFT)))
+    {
+      chThdSleepMilliseconds(100);
+    }
+  }
+
+  
+  lcdPrintln(LCD_INFO, "Attente tirette (mise en place)");
+  while(!(max7317Read() & (1 << IO_SWITCH_STARTUP)))
+  {
+    chThdSleepMilliseconds(100);
+  }
+
+  lcdPrintln(LCD_INFO, "Attente du depart");
+
+  while(max7317Read() & (1 << IO_SWITCH_STARTUP))
+  {
+    chThdSleepMilliseconds(100);
+  }
+
+  stratStart();
 
 
   //chThdSleepMilliseconds(3000);
@@ -56,30 +93,6 @@ int main(void)
   //}
 
  
-  lcdPrintln(LCD_INFO, "Asserv: attente 3s");
-  chThdSleepMilliseconds(3000);
-  asservSetEnable(1);
-  lcdPrintln(LCD_INFO, "Asserv: ok");
-
-  //test depart callage
-  TRAJECTORY_WEDGING();
-  trajectoryWait();
-  posSetAdeg(0);
-  posSetXmm(-1500 + 105);
-
-  TRAJECTORY_D_MM(200);
-  TRAJECTORY_A_DEG(90);
-  TRAJECTORY_WEDGING();
-  trajectoryWait();
-  posSetAdeg(90);
-  posSetYmm(105);
-
-  TRAJECTORY_D_MM(100);
-  TRAJECTORY_XY_MM(-700, 1000);
-  TRAJECTORY_A_DEG(0);
-  TRAJECTORY_D_MM(-600);
-
-  
   //int i = 0;
   //int d = 400;
   //while (true)

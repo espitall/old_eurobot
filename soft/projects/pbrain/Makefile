@@ -79,6 +79,7 @@ include $(MODULES)/gyro/config.mk
 include $(MODULES)/usir/config.mk
 include $(MODULES)/pathfinder/config.mk
 include $(MODULES)/max7317/config.mk
+include $(MODULES)/step/config.mk
 
 CHIBIOS = $(MODULES)/ChibiOS/
 include $(CHIBIOS)/os/hal/platforms/STM32F4xx/platform.mk
@@ -99,7 +100,7 @@ CSRC = $(PORTSRC) \
        $(PLATFORMSRC) \
        $(CHIBIOS)/os/various/chprintf.c \
        $(MODULESSRC) \
-       main.c meca.c
+       main.c meca.c strat.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.

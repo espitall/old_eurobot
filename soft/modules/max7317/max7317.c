@@ -19,7 +19,7 @@ void max7317Init(void)
 
 uint16_t max7317Read(void)
 {
-  uint16_t value;
+  uint16_t value = 0;
 
   uint8_t tx[2];
   uint8_t rx[2];

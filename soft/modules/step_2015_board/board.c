@@ -60,7 +60,7 @@ void boardInit(void)
   //System timer setup
   TCD1.CTRLA = TC_CLKSEL_DIV64_gc;
   TCD1.CTRLB = TC_WGMODE_SS_gc;
-  TCD1.PER = 500;
+  TCD1.PER = 1000;
   TCD1.INTCTRLA = TC_OVFINTLVL_LO_gc;
 
   //enable interrupt

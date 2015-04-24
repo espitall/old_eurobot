@@ -1288,12 +1288,15 @@
 #define SPI_CS_NONE   0
 #define SPI_CS_ADC0   1
 #define SPI_CS_ADC1   2
+#define SPI_CS_EXT12 12
 #define SPI_CS_EXT13 13
 #define SPI_CS_IOE0  14 
 #define SPI_CS_IOE1  15 
 
+#define IO_SWITCH_STARTUP     0
 #define IO_SWITCH_BACK_LEFT   1
 #define IO_SWITCH_BACK_RIGHT  2
+#define IO_SWITCH_COLOR       4
 
 
 #if !defined(_FROM_ASM_)

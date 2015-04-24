@@ -33,18 +33,21 @@ static uint16_t usirRead16(uint8_t addr)
 
 void usirInit(void)
 {
-  //int i;
-  //for(i = 0; i < 5; i += 1)
-  //{
-  //  uint16_t board_id = usirRead16(USIR_BOARD_ID);
-  //  if(board_id == USIR_ID)
-  //  {
-  //    lcdPrintln(LCD_INFO, "Carte USIR ok");
-  //    return;
-  //  }
-  //  chThdSleepMilliseconds(1000);
-  //}
-  //lcdPrintln(LCD_ERROR, "Carte USIR hors service");
+  lcdPrintln(LCD_INFO, "USIR: initialisation");
+  int i;
+  uint16_t board_id = 0x42;
+
+  for(i = 0; i < 50; i += 1)
+  {
+    board_id = usirRead16(USIR_BOARD_ID);
+    if(board_id == USIR_ID)
+    {
+      lcdPrintln(LCD_INFO, "USIR: OK");
+      return;
+    }
+    chThdSleepMilliseconds(100);
+  }
+  lcdPrintln(LCD_ERROR, "USIR: HS (0x%04X, 0x%04X)", board_id, USIR_ID);
 }
 
 uint16_t usirGetDistancemm(int channel)

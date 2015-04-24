@@ -9,12 +9,6 @@
 #define ILI9341_CS_CLEAR() palClearPad(GPIOC, GPIOC_SPI5_LCD_CS)
 #define ILI9341_CS_SET() palSetPad(GPIOC, GPIOC_SPI5_LCD_CS)
 
-static const SPIConfig spi5cfg = {
-  NULL,
-  NULL,
-  0,
-  ((1 << 3) & SPI_CR1_BR) | SPI_CR1_SSM | SPI_CR1_SSI | SPI_CR1_MSTR
-};
 
 void ili9341SendCmd(uint8_t data) {
   ILI9341_WRX_CLEAR();
@@ -34,7 +28,6 @@ void ili9341Init(uint8_t * frame_buffer)
 {
   //init spi
   ILI9341_CS_SET();
-  spiStart(&SPID5, &spi5cfg);
 
   //init ili9341 chip
   ili9341SendCmd(0xCA);

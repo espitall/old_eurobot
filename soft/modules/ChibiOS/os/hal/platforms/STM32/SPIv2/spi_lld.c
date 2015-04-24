@@ -26,6 +26,7 @@
 #include "hal.h"
 
 #if HAL_USE_SPI || defined(__DOXYGEN__)
+#error "l2"
 
 /*===========================================================================*/
 /* Driver local definitions.                                                 */
@@ -288,7 +289,7 @@ void spi_lld_start(SPIDriver *spip) {
   /* SPI setup and enable.*/
   spip->spi->CR1  = 0;
   spip->spi->CR1  = spip->config->cr1 | SPI_CR1_MSTR | SPI_CR1_SSM |
-                    SPI_CR1_SSI;
+                    SPI_CR1_SSI | (7 << 3);
   spip->spi->CR2  = spip->config->cr2 | SPI_CR2_FRXTH | SPI_CR2_SSOE |
                     SPI_CR2_RXDMAEN | SPI_CR2_TXDMAEN;
   spip->spi->CR1 |= SPI_CR1_SPE;

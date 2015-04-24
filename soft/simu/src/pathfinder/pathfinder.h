@@ -30,6 +30,11 @@ void pathfinderGotoXYmm (double x, double y);
 void pathfinderMapDesine ();
 
 /*
+ * Affichage textuel de la carte
+ */
+void pathfinderMapDump ();
+
+/*
  * Calcul de la distance entre 2 poitns en utilisant une certaine heuristique
  */
 double pathfinderHeuristique (double dx, double dy);

@@ -7,15 +7,16 @@ int main (void)
 {
   fieldMapInit ();
 
-  fieldMapDesine ();
-  screenPause ();
+//  fieldMapDesine ();
+//  screenPause ();
 
   pathfinderInit ();
-  pathfinderMapDesine ();
-  pathfinderGotoXYmm (2400, 500);
-  screenPause ();
+  pathfinderMapDump ();
+//  pathfinderMapDesine ();
+//  pathfinderGotoXYmm (2400, 500);
+//  screenPause ();
 
-  screenStop ();
+//  screenStop ();
 
   return EXIT_SUCCESS;
 }

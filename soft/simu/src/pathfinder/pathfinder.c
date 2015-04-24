@@ -35,7 +35,7 @@ void pathfinderGotoXYmm (double x, double y)
     end.poids = 0;
     end.malus = 0;
 
-    if (fieldIsAccessible (end.x, end.y))
+    if (fieldIsAccessible (start.x, start.y) && fieldIsAccessible (end.x, end.y))
     {
         #if PATHFINDER_ALGO == ASTAR
             astar (start, end);
@@ -84,6 +84,24 @@ void pathfinderMapDesine ()
     }
 
     screenRefresh ();
+}
+
+/*
+ * Affichage textuel de la carte
+ */
+void pathfinderMapDump ()
+{
+    int i, j;
+
+    for (j = 0 ; j < FIELD_Y / FIELD_RESOLUTION; j++)
+    {
+        for (i = 0 ; i < FIELD_X / FIELD_RESOLUTION; i++)
+        {
+            printf ("%d ", fieldMalusTerrain (i, j));
+        }
+        printf ("\n");
+    }
+    printf ("\n");
 }
 
 /*

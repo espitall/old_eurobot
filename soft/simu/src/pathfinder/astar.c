@@ -69,12 +69,12 @@ void _astar_addToCloseList (PATHFINDER_POINT point)
     astar_map [point.x][point.y].liste = ASTAR_CLOSELIST;
 
     #ifdef ASTAR_DEBUG
-        SCREEN_COLOR couleur;
-        couleur.rouge = 0xff;
-        couleur.vert = 0xff;
-        couleur.bleu = 0x00;
-        screenSetPixel (point.x, point.y,  couleur);
-        screenRefresh ();
+    SCREEN_COLOR couleur;
+    couleur.rouge = 0xff;
+    couleur.vert = 0xff;
+    couleur.bleu = 0x00;
+    screenSetPixel (point.x, point.y,  couleur);
+    screenRefresh ();
     #endif
 }
 
@@ -83,12 +83,12 @@ void _astar_addToOpenList (PATHFINDER_POINT point)
     astar_map [point.x][point.y].liste = ASTAR_OPENLIST;
 
     #ifdef ASTAR_DEBUG
-        SCREEN_COLOR couleur;
-        couleur.rouge = 0x00;
-        couleur.vert = 0xff;
-        couleur.bleu = 0xff;
-        screenSetPixel (point.x, point.y,  couleur);
-        screenRefresh ();
+    SCREEN_COLOR couleur;
+    couleur.rouge = 0x00;
+    couleur.vert = 0xff;
+    couleur.bleu = 0xff;
+    screenSetPixel (point.x, point.y,  couleur);
+    screenRefresh ();
     #endif
 }
 
@@ -399,27 +399,27 @@ void astar (PATHFINDER_POINT start, PATHFINDER_POINT end)
     #endif
 
     #ifdef ASTAR_DEBUG
-        SCREEN_COLOR couleur;
+    SCREEN_COLOR couleur;
 
-        couleur.rouge = 0xff;
-        couleur.vert = 0x00;
-        couleur.bleu = 0x00;
-        screenSetPixel (start.x, start.y, couleur);
-        screenSetPixel (start.x + 1, start.y, couleur);
-        screenSetPixel (start.x - 1, start.y, couleur);
-        screenSetPixel (start.x, start.y + 1, couleur);
-        screenSetPixel (start.x, start.y - 1, couleur);
+    couleur.rouge = 0xff;
+    couleur.vert = 0x00;
+    couleur.bleu = 0x00;
+    screenSetPixel (start.x, start.y, couleur);
+    screenSetPixel (start.x + 1, start.y, couleur);
+    screenSetPixel (start.x - 1, start.y, couleur);
+    screenSetPixel (start.x, start.y + 1, couleur);
+    screenSetPixel (start.x, start.y - 1, couleur);
 
-        couleur.rouge = 0x00;
-        couleur.vert = 0xff;
-        couleur.bleu = 0x00;
-        screenSetPixel (end.x, end.y, couleur);
-        screenSetPixel (end.x + 1, end.y, couleur);
-        screenSetPixel (end.x - 1, end.y, couleur);
-        screenSetPixel (end.x, end.y + 1, couleur);
-        screenSetPixel (end.x, end.y - 1, couleur);
+    couleur.rouge = 0x00;
+    couleur.vert = 0xff;
+    couleur.bleu = 0x00;
+    screenSetPixel (end.x, end.y, couleur);
+    screenSetPixel (end.x + 1, end.y, couleur);
+    screenSetPixel (end.x - 1, end.y, couleur);
+    screenSetPixel (end.x, end.y + 1, couleur);
+    screenSetPixel (end.x, end.y - 1, couleur);
 
-        screenRefresh ();
+    screenRefresh ();
     #endif
 
     _astar_addToOpenList (start);
@@ -543,12 +543,12 @@ void astar (PATHFINDER_POINT start, PATHFINDER_POINT end)
         #endif
 
         #ifdef ASTAR_DEBUG
-            SCREEN_COLOR couleur;
-            couleur.rouge = 0xff;
-            couleur.vert = 0x00;
-            couleur.bleu = 0xff;
-            screenSetPixel (lastNode.x, lastNode.y,  couleur);
-            screenRefresh ();
+        SCREEN_COLOR couleur;
+        couleur.rouge = 0xff;
+        couleur.vert = 0x00;
+        couleur.bleu = 0xff;
+        screenSetPixel (lastNode.x, lastNode.y, couleur);
+        screenRefresh ();
         #endif
 
         lastNode.x = point.parent_x;

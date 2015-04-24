@@ -5,21 +5,34 @@
 #include "pathfinder.h"
 
 /*
+ * Les différentes listes nécessaire pour l'algorythme
+ */
+enum dijkstra_listes
+{
+    DIJKSTRA_NOLISTE,
+    DIJKSTRA_OPENLIST,
+    DIJKSTRA_CLOSELIST
+};
+
+typedef enum dijkstra_listes DIJKSTRA_LISTES;
+
+/*
  * La structure pour l'algo de Dijkstra
  */
 struct dijkstra_map_point
 {
+    DIJKSTRA_LISTES liste;
+    double f;
+    double g;
+    double h;
+    int parent_x;
+    int parent_y;
 };
 
 typedef struct dijkstra_map_point DIJKSTRA_MAP_POINT;
 
 /*
- * La carte représentant le terrain
- */
-DIJKSTRA_MAP_POINT dijkstra_map [FIELD_X / FIELD_RESOLUTION][FIELD_Y / FIELD_RESOLUTION];
-
-/*
- * Lance l'algo A* pour atteindre les coordonnées [x, y] sur la carte
+ * Lance l'algo Dijkstra pour atteindre le point end sur la carte à partir du point start
  */
 void dijkstra (PATHFINDER_POINT start, PATHFINDER_POINT end);
 

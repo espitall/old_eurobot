@@ -32,7 +32,7 @@ struct astar_map_point
 typedef struct astar_map_point ASTAR_MAP_POINT;
 
 /*
- * Lance l'algo A* pour atteindre les coordonnées [x, y] sur la carte
+ * Lance l'algo A* pour atteindre le point end sur la carte à partir du point start
  */
 void astar (PATHFINDER_POINT start, PATHFINDER_POINT end);
 

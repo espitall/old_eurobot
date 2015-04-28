@@ -93,15 +93,39 @@ void pathfinderMapDump ()
 {
     int i, j;
 
-    for (j = 0 ; j < FIELD_Y / FIELD_RESOLUTION; j++)
+    printf ("{\n");
+    for (i = 0 ; i < FIELD_X / FIELD_RESOLUTION; i++)
     {
-        for (i = 0 ; i < FIELD_X / FIELD_RESOLUTION; i++)
+        printf ("{");
+        for (j = 0 ; j < FIELD_Y / FIELD_RESOLUTION; j++)
         {
-            printf ("%d ", fieldMalusTerrain (i, j));
+            printf ("{");
+            switch (fieldMalusTerrain (i, j))
+            {
+                case (0):
+                    printf ("FIELD_MAP_ETAT_ACCESSIBLE");
+                    break;
+                case (FIELD_MALUS_TERRAIN):
+                    printf ("FIELD_MAP_ETAT_DANGER");
+                    break;
+                case (-1):
+                    printf ("FIELD_MAP_ETAT_INACCESSIBLE");
+                    break;
+            }
+            printf (", PATHFINDER_NOLISTE, 0, 0, 0, -1, -1}");
+            if (j != FIELD_Y / FIELD_RESOLUTION - 1)
+            {
+                printf (", ");
+            }
+        }
+        printf ("}");
+        if (i != FIELD_X / FIELD_RESOLUTION - 1)
+        {
+            printf (",");
         }
         printf ("\n");
     }
-    printf ("\n");
+    printf ("}\n");
 }
 
 /*

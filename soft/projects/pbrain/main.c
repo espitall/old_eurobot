@@ -42,6 +42,7 @@ int main(void)
   //gyroInit();
 
   lcdPrintln("Start: robot principal");
+  lcdPrintln("ok");
 
   pathfinderGotoXYmm(1200, 300);
 

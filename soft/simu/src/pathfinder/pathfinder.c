@@ -112,7 +112,7 @@ void pathfinderMapDump ()
                     printf ("FIELD_MAP_ETAT_INACCESSIBLE");
                     break;
             }
-            printf (", PATHFINDER_NOLISTE, 0, 0, 0, -1, -1}");
+            printf (", PATHFINDER_NOLISTE, 0, {-1, -1, 0, 0}}");
             if (j != FIELD_Y / FIELD_RESOLUTION - 1)
             {
                 printf (", ");

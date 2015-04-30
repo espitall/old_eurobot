@@ -3,6 +3,22 @@
 
 #include "../field_2015/field.h"
 
+#define PATHFINDER_MALUS_ROTATION 5
+#define PATHFINDER_MALUS_TERRAIN 1
+
+/*
+ * Structure d'un point
+ */
+struct pathfinder_point
+{
+    int x;
+    int y;
+    double poids;
+    double malus;
+};
+
+typedef struct pathfinder_point PATHFINDER_POINT;
+
 /*
  * Les différentes listes nécessaire pour l'algorythme
  */
@@ -22,18 +38,14 @@ struct pathfinder_map
 {
   FIELD_MAP_ETAT type;
   PATHFINDER_LISTES liste;
-  double f;
-  double g;
-  double h;
-  int parent_x;
-  int parent_y;
+  double score;
+  PATHFINDER_POINT parent;
 };
 
 typedef struct pathfinder_map PATHFINDER_MAP;
 
 void pathfinderInit(void);
 
-void pathfinderGotoXYmm(double x, double y);
-
+int pathfinderGotoXYmm(double x, double y);
 
 #endif // PATHFINDER_H

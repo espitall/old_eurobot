@@ -18,16 +18,6 @@ enum field_map_etat
 typedef enum field_map_etat FIELD_MAP_ETAT;
 
 /*
- * La structure des cases de la carte
- */
-struct field_map_point
-{
-    FIELD_MAP_ETAT type;
-};
-
-typedef struct field_map_point FIELD_MAP_POINT;
-
-/*
  * Initialization of the field module
  */
 void fieldInit(void);

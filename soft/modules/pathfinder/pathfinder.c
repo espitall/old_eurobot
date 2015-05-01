@@ -58,11 +58,13 @@ void pathfinderInit(void)
 
 int pathfinderGotoXYmm(double x, double y)
 {
-  PATHFINDER_POINT start = {_pathfinderConvertXReelToMap(posGetXmm()), _pathfinderConvertYReelToMap(posGetYmm()), 0, 0};
-  PATHFINDER_POINT end = {x, y, 0, 0};
+  PATHFINDER_POINT start = {_pathfinderConvertXReelToMap(posGetXmm()) / FIELD_RESOLUTION, _pathfinderConvertYReelToMap(posGetYmm()) / FIELD_RESOLUTION, 0, 0};
+  PATHFINDER_POINT end = {_pathfinderConvertXReelToMap(x) / FIELD_RESOLUTION, _pathfinderConvertYReelToMap(y) / FIELD_RESOLUTION, 0, 0};
 
-  if (!_pathfinderIsAccessible (start) || !_pathfinderIsAccessible (end))
+  if (!_pathfinderIsAccessible(start) || !_pathfinderIsAccessible(end))
+  {
     return 1;
+  }
 
   _pathfinderAddToList(start, PATHFINDER_OPENLIST);
 
@@ -105,7 +107,7 @@ int pathfinderGotoXYmm(double x, double y)
   }
 
   currentNode = _pathfinderGetNext();
-  if (currentNode.x != -1 || currentNode.y != -1)
+  if (currentNode.x == -1 || currentNode.y == -1)
   {
     return 1;
   }
@@ -151,7 +153,10 @@ int pathfinderGotoXYmm(double x, double y)
 
   for (i = TRAJECTORY_MAX_ORDER - 1; i >= 0; i--)
   {
-    TRAJECTORY_XY_MM(_pathfinderConvertXMapToReel(checkpoints[i].x), _pathfinderConvertYMapToReel(checkpoints[i].y));
+    if (checkpoints[i].x != -1 && checkpoints[i].y != -1)
+    {
+      TRAJECTORY_XY_MM(_pathfinderConvertXMapToReel(checkpoints[i].x), _pathfinderConvertYMapToReel(checkpoints[i].y));
+    }
   }
 
   return 0;

@@ -42,18 +42,19 @@ int main(void)
   //gyroInit();
 
   lcdPrintln("Start: robot principal");
-  lcdPrintln("ok");
 
   pathfinderGotoXYmm(1200, 300);
 
   while (true)
   {
     chThdSleepMilliseconds(200);
+    /*
     lcdPrintln("IR %d %d %d %d",
                usirGetDistancemm(USIR_IR_CH0),
                usirGetDistancemm(USIR_IR_CH1),
                usirGetDistancemm(USIR_IR_CH2),
                usirGetDistancemm(USIR_IR_CH3));
+    */
   }
   
   lcdPrintln("Asserv: attente 3s");

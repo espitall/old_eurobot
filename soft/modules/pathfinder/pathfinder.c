@@ -62,7 +62,7 @@ int pathfinderGotoXYmm(double x, double y)
   PATHFINDER_POINT start = {_pathfinderConvertXReelToMap(posGetXmm()) / FIELD_RESOLUTION, _pathfinderConvertYReelToMap(posGetYmm()) / FIELD_RESOLUTION, 0, 0};
   PATHFINDER_POINT end = {_pathfinderConvertXReelToMap(x) / FIELD_RESOLUTION, _pathfinderConvertYReelToMap(y) / FIELD_RESOLUTION, 0, 0};
 
-  lcdPrintln ("%d %d => %d %d", (int) posGetXmm(), (int) posGetYmm(), (int) x, (int) y);
+  lcdPrintln (LCD_INFO, "%d %d => %d %d", (int) posGetXmm(), (int) posGetYmm(), (int) x, (int) y);
 
   if (!_pathfinderIsAccessible(start) || !_pathfinderIsAccessible(end))
   {
@@ -158,7 +158,7 @@ int pathfinderGotoXYmm(double x, double y)
   {
     if (checkpoints[i].x != -1 && checkpoints[i].y != -1)
     {
-      lcdPrintln ("%d %d", (int) _pathfinderConvertXMapToReel(checkpoints[i].x), (int) _pathfinderConvertYMapToReel(checkpoints[i].y));
+      lcdPrintln (LCD_INFO, "%d %d", (int) _pathfinderConvertXMapToReel(checkpoints[i].x), (int) _pathfinderConvertYMapToReel(checkpoints[i].y));
       TRAJECTORY_XY_MM(_pathfinderConvertXMapToReel(checkpoints[i].x), _pathfinderConvertYMapToReel(checkpoints[i].y));
     }
   }

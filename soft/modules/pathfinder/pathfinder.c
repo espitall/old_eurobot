@@ -1,5 +1,6 @@
 #include <math.h>
 #include <trajectory.h>
+#include <lcd.h>
 #include "pathfinder.h"
 #include "../field_2015/field.h"
 #include "../position/position.h"
@@ -60,6 +61,8 @@ int pathfinderGotoXYmm(double x, double y)
 {
   PATHFINDER_POINT start = {_pathfinderConvertXReelToMap(posGetXmm()) / FIELD_RESOLUTION, _pathfinderConvertYReelToMap(posGetYmm()) / FIELD_RESOLUTION, 0, 0};
   PATHFINDER_POINT end = {_pathfinderConvertXReelToMap(x) / FIELD_RESOLUTION, _pathfinderConvertYReelToMap(y) / FIELD_RESOLUTION, 0, 0};
+
+  lcdPrintln ("%d %d => %d %d", (int) posGetXmm(), (int) posGetYmm(), (int) x, (int) y);
 
   if (!_pathfinderIsAccessible(start) || !_pathfinderIsAccessible(end))
   {
@@ -148,13 +151,14 @@ int pathfinderGotoXYmm(double x, double y)
       angle = angle2;
     }
   }
-  PATHFINDER_POINT point = {start.x * FIELD_RESOLUTION, start.y * FIELD_RESOLUTION, 0, 0};
-  checkpoints [cpt++] = point;
+  //PATHFINDER_POINT point = {start.x * FIELD_RESOLUTION, start.y * FIELD_RESOLUTION, 0, 0};
+  //checkpoints [cpt++] = point;
 
   for (i = TRAJECTORY_MAX_ORDER - 1; i >= 0; i--)
   {
     if (checkpoints[i].x != -1 && checkpoints[i].y != -1)
     {
+      lcdPrintln ("%d %d", (int) _pathfinderConvertXMapToReel(checkpoints[i].x), (int) _pathfinderConvertYMapToReel(checkpoints[i].y));
       TRAJECTORY_XY_MM(_pathfinderConvertXMapToReel(checkpoints[i].x), _pathfinderConvertYMapToReel(checkpoints[i].y));
     }
   }

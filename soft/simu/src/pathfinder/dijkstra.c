@@ -395,7 +395,7 @@ void dijkstra (PATHFINDER_POINT start, PATHFINDER_POINT end)
     #ifdef DIJKSTRA_DEBUG2
     printf ("Start : [%d, %d]\n", start.x, start.y);
     printf ("End : [%d, %d]\n", end.x, end.y);
-    printf ("Distance : %f\n\n", 0/*pathfinderHeuristique (abs (end.x - start.x), abs (end.y - start.y))*/);
+    printf ("Distance : %f\n\n", (double) 0/*pathfinderHeuristique (abs (end.x - start.x), abs (end.y - start.y))*/);
     #endif
 
     #ifdef DIJKSTRA_DEBUG

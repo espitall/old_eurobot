@@ -35,6 +35,8 @@ void pathfinderGotoXYmm (double x, double y)
     end.poids = 0;
     end.malus = 0;
 
+    printf ("%d %d => %d %d\n", (int) posGetXmm (), (int) posGetYmm (), (int) x, (int) y);
+
     if (fieldIsAccessible (start.x, start.y) && fieldIsAccessible (end.x, end.y))
     {
         #if PATHFINDER_ALGO == ASTAR

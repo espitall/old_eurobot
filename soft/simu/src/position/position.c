@@ -83,6 +83,7 @@ int posPlotDroite8Y = 1400;
  */
 double posGetXmm(void)
 {
+    return 1500;
     #if ROBOT == PRINCIPAL
         #if EQUIPE == GAUCHE
             return posRobotGauchePrincipalX;
@@ -103,6 +104,7 @@ double posGetXmm(void)
  */
 double posGetYmm(void)
 {
+    return 1000;
     #if ROBOT == PRINCIPAL
         #if EQUIPE == GAUCHE
             return posRobotGauchePrincipalY;

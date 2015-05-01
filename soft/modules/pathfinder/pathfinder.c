@@ -52,6 +52,7 @@ double _pathfinderConvertXReelToMap(double x);
 double _pathfinderConvertXMapToReel(double x);
 double _pathfinderConvertYReelToMap(double y);
 double _pathfinderConvertYMapToReel(double y);
+int _pathfinderIsEmptyOpenList (void);
 
 void pathfinderInit(void)
 {
@@ -75,7 +76,9 @@ int pathfinderGotoXYmm(double x, double y)
   while (currentNode.x != -1 || currentNode.y != -1)
   {
     if (currentNode.x == end.x && currentNode.y == end.y)
+    {
       break;
+    }
 
     _pathfinderAddToList(currentNode, PATHFINDER_CLOSELIST);
 
@@ -109,8 +112,7 @@ int pathfinderGotoXYmm(double x, double y)
     currentNode = _pathfinderGetNext();
   }
 
-  currentNode = _pathfinderGetNext();
-  if (currentNode.x == -1 || currentNode.y == -1)
+  if (_pathfinderIsEmptyOpenList())
   {
     return 1;
   }
@@ -491,4 +493,20 @@ double _pathfinderConvertYReelToMap(double y)
 double _pathfinderConvertYMapToReel(double y)
 {
   return FIELD_Y - y;
+}
+
+int _pathfinderIsEmptyOpenList ()
+{
+  int i, j;
+
+  for (i = 0 ; i < FIELD_X / FIELD_RESOLUTION; i++)
+  {
+    for (j = 0; j < FIELD_Y / FIELD_RESOLUTION; j++)
+    {
+      if (pathfinder_map[i][j].liste == PATHFINDER_OPENLIST)
+        return 0;
+    }
+  }
+
+  return 1;
 }

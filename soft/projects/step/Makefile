@@ -6,6 +6,7 @@
 # Compiler options here.
 ifeq ($(USE_OPT),)
   USE_OPT = -O2 -ggdb -fomit-frame-pointer -falign-functions=16
+  USE_OPT = -O2
 endif
 
 # C specific options here (added to USE_OPT).
@@ -33,23 +34,6 @@ ifeq ($(USE_VERBOSE_COMPILE),)
   USE_VERBOSE_COMPILE = yes
 endif
 
-#
-# Build global options
-##############################################################################
-
-##############################################################################
-# Architecture or project specific options
-#
-
-# Enables the use of FPU on Cortex-M4.
-ifeq ($(USE_FPU),)
-  USE_FPU = no
-endif
-
-# Enable this if you really want to use the STM FWLib.
-ifeq ($(USE_FWLIB),)
-  USE_FWLIB = no
-endif
 
 #
 # Architecture or project specific options
@@ -66,29 +50,18 @@ PROJECT = ch
 MODULES = ../../modules
 MODULESSRC = 
 MODULESINC = 
-include $(MODULES)/eurobot_2015_board/config.mk
-include $(MODULES)/lcd/config.mk
-include $(MODULES)/field_2015/config.mk
-include $(MODULES)/dc_motors/config.mk
-include $(MODULES)/position/config.mk
-include $(MODULES)/trajectory/config.mk
-include $(MODULES)/asserv/config.mk
-include $(MODULES)/pcm9685/config.mk
-include $(MODULES)/max11628/config.mk
-include $(MODULES)/gyro/config.mk
-include $(MODULES)/usir/config.mk
-include $(MODULES)/pathfinder/config.mk
-include $(MODULES)/max7317/config.mk
+include $(MODULES)/step_2015_board/config.mk
+include $(MODULES)/step/config.mk
 
 CHIBIOS = $(MODULES)/ChibiOS/
-include $(CHIBIOS)/os/hal/platforms/STM32F4xx/platform.mk
+include $(CHIBIOS)/os/hal/platforms/XAVR/platform.mk
 include $(CHIBIOS)/os/hal/hal.mk
-include $(CHIBIOS)/os/ports/GCC/ARMCMx/STM32F4xx/port.mk
+include $(CHIBIOS)/os/ports/GCC/XAVR/port.mk
 include $(CHIBIOS)/os/kernel/kernel.mk
 #include $(CHIBIOS)/test/test.mk
 
 # Define linker script file here
-LDSCRIPT= $(MODULES)/eurobot_2015_board/STM32f429xI_sdram.ld
+# LDSCRIPT= $(MODULES)/eurobot_2015_board/STM32f429xI_sdram.ld
 
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
@@ -97,9 +70,8 @@ CSRC = $(PORTSRC) \
        $(TESTSRC) \
        $(HALSRC) \
        $(PLATFORMSRC) \
-       $(CHIBIOS)/os/various/chprintf.c \
        $(MODULESSRC) \
-			 main.c strat.c
+			 main.c servo.c stepper.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
@@ -129,13 +101,13 @@ TCPPSRC =
 ASMSRC = $(PORTASM)
 
 INCDIR = $(PORTINC) $(KERNINC) $(TESTINC) \
-         $(HALINC) $(PLATFORMINC) $(BOARDINC) \
+			 $(HALINC) $(PLATFORMINC) $(BOARDINC) \
          $(CHIBIOS)/os/various/devices_lib/accel \
          $(CHIBIOS)/os/various/devices_lib/accel \
          $(CHIBIOS)/os/various \
          $(CHIBIOS)/os/various \
 				 $(MODULESINC)
-				 
+
 #
 # Project, sources and paths
 ##############################################################################
@@ -144,16 +116,16 @@ INCDIR = $(PORTINC) $(KERNINC) $(TESTINC) \
 # Compiler settings
 #
 
-MCU  = cortex-m4
+MCU  = atxmega16a4
 
-#TRGT = arm-elf-
-TRGT = arm-none-eabi-
+TRGT = avr-
 CC   = $(TRGT)gcc
 CPPC = $(TRGT)g++
 # Enable loading with g++ only if you need C++ runtime support.
 # NOTE: You can use C++ even without C++ support if you are careful. C++
 #       runtime support makes code size explode.
 LD   = $(TRGT)gcc
+SIZE = $(TRGT)size
 #LD   = $(TRGT)g++
 CP   = $(TRGT)objcopy
 AS   = $(TRGT)gcc -x assembler-with-cpp
@@ -165,7 +137,7 @@ BIN  = $(CP) -O binary -R ".sdram"
 AOPT =
 
 # THUMB-specific options here
-TOPT = -mthumb -DTHUMB
+# TOPT = -mthumb -DTHUMB
 
 # Define C warning options here
 CWARN = -Wall -Wextra -Wstrict-prototypes -Werror
@@ -223,18 +195,5 @@ ULIBS =
 # End of user defines
 ##############################################################################
 
-ifeq ($(USE_FPU),yes)
-  USE_OPT += -mfloat-abi=softfp -mfpu=fpv4-sp-d16 -fsingle-precision-constant
-  DDEFS += -DCORTEX_USE_FPU=TRUE
-else
-  DDEFS += -DCORTEX_USE_FPU=FALSE
-endif
 
-ifeq ($(USE_FWLIB),yes)
-  include $(CHIBIOS)/ext/stm32lib/stm32lib.mk
-  CSRC += $(STM32SRC)
-  INCDIR += $(STM32INC)
-  USE_OPT += -DUSE_STDPERIPH_DRIVER
-endif
-
-include $(CHIBIOS)/os/ports/GCC/ARMCMx/rules.mk
+include $(CHIBIOS)/os/ports/GCC/XAVR/rules.mk

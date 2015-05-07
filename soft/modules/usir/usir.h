@@ -29,8 +29,13 @@ void usirSetUSRaw(int channel, uint16_t raw);
 #if defined(USIR_MASTER)
 
 uint16_t usirGetDistancemm(int channel);
+uint16_t usirSetSafetymm(int dist);
 
 #elif defined(USIR_SLAVE)
+
+uint16_t usirSetIRRaw(int channel);
+uint16_t usirSetUSRaw(int channel);
+
 #else
 # error "No master/slave usir configuration selected"
 #endif

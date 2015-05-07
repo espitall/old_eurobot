@@ -18,6 +18,7 @@ typedef enum
 void trajectoryInit(void);
 void trajectoryWait(void);
 void trajectoryPrint(void);
+void trajevtorySetSafetymm(double d);
 
 void _trajectoryNewOrder(trajectoryType_t type, double d, double a, double x, double y, double t, unsigned int flags);
 

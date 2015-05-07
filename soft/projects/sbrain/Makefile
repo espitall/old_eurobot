@@ -99,7 +99,7 @@ CSRC = $(PORTSRC) \
        $(PLATFORMSRC) \
        $(CHIBIOS)/os/various/chprintf.c \
        $(MODULESSRC) \
-			 main.c strat.c
+			 main.c strat.c meca.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.

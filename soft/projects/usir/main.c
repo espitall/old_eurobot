@@ -129,6 +129,7 @@ int main(void)
   TCC1.INTCTRLB = TC_CCAINTLVL_LO_gc;
   TCC1.PER = 0xFFFF;
 
+  int32_t alert = 20;
   volatile uint32_t i;
   while(1)
   {
@@ -155,6 +156,10 @@ int main(void)
     palClearPad(GPIOC, GPIOC_US_TRIG_CH3);
     ADCA.CH3.CTRL |= ADC_CH_START_bm;
     chThdSleepMilliseconds(20);
+
+    if(alert > 0)
+    {
+    }
   }
 
   return 0;

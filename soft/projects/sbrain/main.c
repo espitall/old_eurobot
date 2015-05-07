@@ -14,6 +14,7 @@
 #include <usir.h>
 #include <pathfinder.h>
 #include "strat.h"
+#include "meca.h"
 
 void position_computed_hook(void)
 {
@@ -41,22 +42,51 @@ int main(void)
   //mecaInit();
   //usirInit();
   pathfinderInit();
+  mecaInit();
   //gyroInit();
   stratInit();
 
   lcdPrintln(LCD_WARNING, "Start: robot secondaire");
 
-  pcm9685SetChannel(8, 0, 220);
-  pcm9685SetChannel(9, 0, 500);
-  pcm9685SetChannel(10, 0, 400);
-  pcm9685SetChannel(11, 0, 550);
+  while(true)
+  {
+    uint16_t read = max7317Read();
+    lcdPrintln(LCD_WARNING, "info : 0x%04X", read);
+    chThdSleepMilliseconds(100);
+  }
+
+  lcdPrintln(LCD_INFO, "Attente tapis");
+  uint8_t left = 0;
+  uint8_t right = 0;
+  while(!left || !right)
+  {
+    uint16_t read = max7317Read();
+    if(read & (1 << IO_SWITCH_BACK_LEFT))
+    {
+      mecaSetLeftCarpetState(MECA_CARPET_OPEN_1);
+    }
+
+    if(read & (1 << IO_SWITCH_BACK_RIGHT))
+    {
+      mecaSetRightCarpetState(MECA_CARPET_OPEN_1);
+    }
+    chThdSleepMilliseconds(100);
+  }
+
+  lcdPrintln(LCD_INFO, "Attente tirette (mise en place)");
+
+  //pcm9685SetChannel(8, 0, 220);
+  //pcm9685SetChannel(9, 0, 500);
+  //pcm9685SetChannel(10, 0, 400);
+  //pcm9685SetChannel(11, 0, 550);
   while (true)
   {
-    lcdPrintln(LCD_WARNING, "p1");
-    pcm9685SetChannel(9, 0, 350);
+    lcdPrintln(LCD_WARNING, "High");
+    mecaSetBackFoot(MECA_FOOT_HIGH);
     chThdSleepMilliseconds(5000);
-    lcdPrintln(LCD_WARNING, "p2");
-    pcm9685SetChannel(9, 0, 500);
+
+    lcdPrintln(LCD_WARNING, "Low");
+    mecaSetBackFoot(MECA_FOOT_LOW);
     chThdSleepMilliseconds(5000);
   }
 }

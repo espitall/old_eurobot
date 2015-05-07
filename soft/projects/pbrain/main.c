@@ -49,6 +49,8 @@ int main(void)
 
   lcdPrintln(LCD_WARNING, "Start: robot principal");
 
+  usirSetSafetymm(20);
+
   while(0)
   {
     while((max7317Read() & (1 << IO_SWITCH_BACK_LEFT)))
@@ -73,6 +75,8 @@ int main(void)
     chThdSleepMilliseconds(100);
   }
 
+  stratStart();
+
   lcdPrintln(LCD_INFO, "Attente du depart");
 
   while(max7317Read() & (1 << IO_SWITCH_STARTUP))
@@ -80,7 +84,6 @@ int main(void)
     chThdSleepMilliseconds(100);
   }
 
-  stratStart();
 
 
   //chThdSleepMilliseconds(3000);

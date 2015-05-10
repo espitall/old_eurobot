@@ -23,18 +23,20 @@ typedef enum
 } usir_registers_t;
 
 void usirInit(void);
-void usirSetIRRaw(int channel, uint16_t raw);
-void usirSetUSRaw(int channel, uint16_t raw);
 
 #if defined(USIR_MASTER)
 
 uint16_t usirGetDistancemm(int channel);
 uint16_t usirSetSafetymm(int dist);
+void usirDebug(void);
 
 #elif defined(USIR_SLAVE)
 
-uint16_t usirSetIRRaw(int channel);
-uint16_t usirSetUSRaw(int channel);
+void usirSetIRRaw(int channel, uint16_t raw);
+void usirSetUSRaw(int channel, uint16_t raw);
+uint16_t usirGetIRRaw(int channel);
+uint16_t usirGetUSRaw(int channel);
+uint16_t getAlert(void);
 
 #else
 # error "No master/slave usir configuration selected"

@@ -21,6 +21,21 @@ void position_computed_hook(void)
   asservCompute();
 }
 
+void testInput(void)
+{
+  while(true)
+  {
+    uint16_t read = max7317Read();
+    lcdPrintln(LCD_INFO, "0x%04x tirette:%d swg:%d swd:%d color%d", 
+               read,
+               !!(read & (1 << IO_SWITCH_STARTUP)),
+               !!(read & (1 << IO_SWITCH_BACK_LEFT)),
+               !!(read & (1 << IO_SWITCH_BACK_RIGHT)),
+               !!(read & (1 << IO_SWITCH_COLOR)));
+    chThdSleepMilliseconds(100);
+  }
+}
+
 int main(void) 
 {
   //RTOS initialization
@@ -48,12 +63,8 @@ int main(void)
 
   lcdPrintln(LCD_WARNING, "Start: robot secondaire");
 
-  while(true)
-  {
-    uint16_t read = max7317Read();
-    lcdPrintln(LCD_WARNING, "info : 0x%04X", read);
-    chThdSleepMilliseconds(100);
-  }
+  testInput();
+  
 
   lcdPrintln(LCD_INFO, "Attente tapis");
   uint8_t left = 0;

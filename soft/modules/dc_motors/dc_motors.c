@@ -67,11 +67,12 @@ void dcmSetWidth(unsigned int channel, int width)
       {
         width = -width;
         width = 10000 - width;
-        palSetPad(GPIOC, GPIOC_DIR_M0);
+        palClearPad(GPIOC, GPIOC_DIR_M0);
       }
       else
       {
-        palClearPad(GPIOC, GPIOC_DIR_M0);
+        width = 10000 - width;
+        palSetPad(GPIOC, GPIOC_DIR_M0);
       }
 #endif
       pwmEnableChannel(&PWMD2, 0, PWM_PERCENTAGE_TO_WIDTH(&PWMD2, width)); 
@@ -95,13 +96,13 @@ void dcmSetWidth(unsigned int channel, int width)
 #else
       if(width < 0)
       {
-    //    width = -width;
-        palSetPad(GPIOC, GPIOC_DIR_M1);
+        width = -width;
+        palClearPad(GPIOC, GPIOC_DIR_M1);
       }
       else
       {
-  //      width = 10000 - width;
-        palClearPad(GPIOC, GPIOC_DIR_M1);
+        width = 10000 - width;
+        palSetPad(GPIOC, GPIOC_DIR_M1);
       }
       pwmEnableChannel(&PWMD1, 2, PWM_PERCENTAGE_TO_WIDTH(&PWMD1, width)); 
 #endif

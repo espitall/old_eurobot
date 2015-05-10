@@ -319,6 +319,7 @@ void trajectoryInit(void)
   writePosition = 0;
   readPosition = 0;
 
+  chMtxInit(&mutex);
   chCondInit(&condVar);
 
   chThdCreateStatic(waTrajThread, sizeof(waTrajThread), POSITION_TRAJECTORY_PRIO, trajectoryThread, NULL);

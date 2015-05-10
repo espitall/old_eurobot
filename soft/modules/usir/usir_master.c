@@ -31,6 +31,22 @@ static uint16_t usirRead16(uint8_t addr)
   return data;
 }
 
+//static void usirWrite16(uint8_t addr, uint16_t value)
+//{
+//  addr &= 0x7F;
+//
+//  uint8_t buffer[3];
+//
+//  spiAcquireBus(&SPID5);
+//  boardSetCS(SPI_CS_EXT13);
+//  buffer[0] = addr & 0x7F;
+//  buffer[0] = value & 0xff;
+//  buffer[1] = (value >> 8 ) & 0xff;
+//  spiSend(&SPID5, 3, buffer);
+//  boardSetCS(SPI_CS_NONE);
+//  spiReleaseBus(&SPID5);
+//}
+
 void usirInit(void)
 {
   lcdPrintln(LCD_INFO, "USIR: initialisation");
@@ -53,6 +69,23 @@ void usirInit(void)
 uint16_t usirGetDistancemm(int channel)
 {
   return usirRead16(channel);
+}
+
+void usirDebug(void)
+{
+  while(true)
+  {
+    lcdPrintln(LCD_INFO, "fr: %d %d, fl %d %d, br %d %d, bl %d %d",
+               usirGetDistancemm(USIR_US_CH0),
+               usirGetDistancemm(USIR_IR_CH0),
+               usirGetDistancemm(USIR_US_CH1),
+               usirGetDistancemm(USIR_IR_CH1),
+               usirGetDistancemm(USIR_US_CH2),
+               usirGetDistancemm(USIR_IR_CH2),
+               usirGetDistancemm(USIR_US_CH3),
+               usirGetDistancemm(USIR_IR_CH3));
+    chThdSleepMilliseconds(100);
+  }
 }
 
 #endif

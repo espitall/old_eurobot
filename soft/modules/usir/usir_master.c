@@ -31,21 +31,29 @@ static uint16_t usirRead16(uint8_t addr)
   return data;
 }
 
-//static void usirWrite16(uint8_t addr, uint16_t value)
-//{
-//  addr &= 0x7F;
-//
-//  uint8_t buffer[3];
-//
-//  spiAcquireBus(&SPID5);
-//  boardSetCS(SPI_CS_EXT13);
-//  buffer[0] = addr & 0x7F;
-//  buffer[0] = value & 0xff;
-//  buffer[1] = (value >> 8 ) & 0xff;
-//  spiSend(&SPID5, 3, buffer);
-//  boardSetCS(SPI_CS_NONE);
-//  spiReleaseBus(&SPID5);
-//}
+static void usirWrite16(uint8_t addr, uint16_t value)
+{
+  addr &= 0x7F;
+
+  uint8_t buffer[3];
+
+  spiAcquireBus(&SPID5);
+  boardSetCS(SPI_CS_EXT13);
+  buffer[0] = addr & 0x7F;
+  buffer[1] = value & 0xff;
+  buffer[2] = (value >> 8 ) & 0xff;
+  spiSend(&SPID5, 3, buffer);
+  boardSetCS(SPI_CS_NONE);
+  spiReleaseBus(&SPID5);
+}
+
+
+void usirSetSafetymm(int ids, int dist)
+{
+  uint16_t raw = ((ids & 0x0F) << 12) | (dist & 0xFFF);
+  usirWrite16(0, raw);
+}
+
 
 void usirInit(void)
 {

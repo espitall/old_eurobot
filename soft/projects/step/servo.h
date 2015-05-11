@@ -5,6 +5,8 @@ typedef enum
 {
   SERVO_CLAMP_LEFT,
   SERVO_CLAMP_RIGHT,
+  SERVO_SLIDER_LEFT,
+  SERVO_SLIDER_RIGHT,
 } servo_t;
 
 void servoInit(void);

@@ -1,5 +1,7 @@
 #include <ch.h>
 #include <hal.h>
+#include <usir.h>
+#include <hal.h>
 #include <string.h>
 #include <math.h>
 #include <lcd.h>
@@ -35,6 +37,7 @@ typedef struct
   double YStartmm;
   systime_t TStartt;
 
+  double DSafetymm;
 } trajectory_t;
 
 
@@ -44,6 +47,7 @@ static WORKING_AREA(waTrajThread, 2048);
 static trajectory_t orderList[TRAJECTORY_MAX_ORDER];
 static int writePosition;
 static int readPosition;
+static double safety;
 
 static trajectoryResult_t trajectory_handle_type_no_move(trajectory_t * traj)
 {
@@ -56,11 +60,47 @@ static trajectoryResult_t trajectory_handle_type_no_move(trajectory_t * traj)
 
 static trajectoryResult_t trajectory_handle_type_d(trajectory_t * traj)
 {
+  if(traj->flags & TRAJECTORY_FLAGS_JUST_INIT)
+  {
+    traj->flags  &= ~TRAJECTORY_FLAGS_JUST_INIT;
+    if(safety > 0)
+    {
+      if(traj->DSetPointmm >= 0)
+      {
+        usirSetSafetymm(0x03, safety);
+      }
+      else
+      {
+        usirSetSafetymm(0x0C, safety);
+      }
+    }
+  }
 
-  if(fabs(traj->DStartmm + traj->DSetPointmm - posGetDmm()) < 1.0)
+ double l = fabs(traj->DStartmm + traj->DSetPointmm - posGetDmm());
+  if(l < 3.0)
   {
     return TRAJECTORY_RESULT_REMOVE;
   }
+
+  if(safety > 0)
+  {
+    if(palReadPad(GPIOD, GPIOD_PIN5))
+    {
+      if(!(traj->flags & TRAJECTORY_FLAGS_SAFETY))
+      {
+        traj->flags = TRAJECTORY_FLAGS_SAFETY;
+        traj->DSafetymm = posGetDmm();
+      }
+
+      asservSetDistanceSetPoint(traj->DSafetymm);
+      return TRAJECTORY_RESULT_NOTHING;
+    }
+    else
+    {
+        traj->flags  &= ~TRAJECTORY_FLAGS_SAFETY;
+    }
+  }
+
 
   asservSetDistanceSetPoint(traj->DStartmm + traj->DSetPointmm);
 
@@ -105,12 +145,40 @@ static trajectoryResult_t trajectory_handle_type_xy(trajectory_t * traj)
   double dy = traj->YSetPointmm - posGetYmm();
   double dd = dx*dx + dy*dy;
 
+  if(traj->flags & TRAJECTORY_FLAGS_JUST_INIT)
+  {
+    traj->flags  &= ~TRAJECTORY_FLAGS_JUST_INIT;
+    if(safety > 0)
+    {
+      usirSetSafetymm(0x03, safety);
+    }
+  }
+
   if(dd < 25) 
   {
     return TRAJECTORY_RESULT_REMOVE;
   }
   else
   {
+    if(safety > 0)
+    {
+      if(palReadPad(GPIOD, GPIOD_PIN5))
+      {
+        if(!(traj->flags & TRAJECTORY_FLAGS_SAFETY))
+        {
+          traj->flags = TRAJECTORY_FLAGS_SAFETY;
+          traj->DSafetymm = posGetDmm();
+        }
+
+        asservSetDistanceSetPoint(traj->DSafetymm);
+        return TRAJECTORY_RESULT_NOTHING;
+      }
+      else
+      {
+        traj->flags  &= ~TRAJECTORY_FLAGS_SAFETY;
+      }
+    }
+
     double cur = posGetAdeg();
     double target_deg = atan2(dy, dx) * 180.0 / M_PI;
 
@@ -237,6 +305,7 @@ static msg_t trajectoryThread(void *arg)
         traj->XStartmm = posGetXmm();
         traj->YStartmm = posGetYmm();
         traj->TStartt = chTimeNow();
+        traj->flags = TRAJECTORY_FLAGS_JUST_INIT;
       }
 
       switch(traj->type)
@@ -318,6 +387,7 @@ void trajectoryInit(void)
 {
   writePosition = 0;
   readPosition = 0;
+  safety = 0;
 
   chMtxInit(&mutex);
   chCondInit(&condVar);
@@ -381,4 +451,9 @@ void trajectoryPrint(void)
     i += 1;
     i %= TRAJECTORY_MAX_ORDER;
   }
+}
+
+void trajectorySetSafetymm(double d)
+{
+  safety = d;
 }

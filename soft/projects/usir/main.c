@@ -98,7 +98,7 @@ int main(void)
   chThdCreateStatic(waHeartbeatThread, sizeof(waHeartbeatThread), NORMALPRIO, heartbeatThread, NULL);
 
   PORTB.DIRSET = (1 << 0);
-  PORTB.OUTSET = (1 << 0);
+  PORTB.OUTCLR = (1 << 0);
 
   //init event system
   EVSYS.CH0MUX = EVSYS_CHMUX_PORTC_PIN7_gc;
@@ -160,6 +160,7 @@ int main(void)
 
     uint8_t stop = 0;
     int32_t alert = getAlert();
+    
     if(alert > 0)
     {
       uint8_t ids = alert >> 12;

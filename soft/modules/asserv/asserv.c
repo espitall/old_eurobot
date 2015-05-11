@@ -31,6 +31,12 @@ int asservIsEnabled(void)
   return enabled;
 }
 
+
+void asservSlow(void)
+{
+  rampSetMaxAccel(&_angu_ramp, ASSERV_ANGU_MAX_ACCEL / 5);
+}
+
 void asservInit(void)
 {
   enabled = 0;

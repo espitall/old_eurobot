@@ -4,6 +4,8 @@
 #define TRAJECTORY_MAX_ORDER 15
 
 #define TRAJECTORY_FLAGS_T_REL (1 << 0)
+#define TRAJECTORY_FLAGS_JUST_INIT (1 << 1)
+#define TRAJECTORY_FLAGS_SAFETY (1 << 2)
 
 typedef enum
 {
@@ -18,7 +20,7 @@ typedef enum
 void trajectoryInit(void);
 void trajectoryWait(void);
 void trajectoryPrint(void);
-void trajevtorySetSafetymm(double d);
+void trajectorySetSafetymm(double d);
 
 void _trajectoryNewOrder(trajectoryType_t type, double d, double a, double x, double y, double t, unsigned int flags);
 

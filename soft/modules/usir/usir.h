@@ -27,7 +27,7 @@ void usirInit(void);
 #if defined(USIR_MASTER)
 
 uint16_t usirGetDistancemm(int channel);
-uint16_t usirSetSafetymm(int dist);
+void usirSetSafetymm(int ids, int dist);
 void usirDebug(void);
 
 #elif defined(USIR_SLAVE)

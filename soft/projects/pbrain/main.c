@@ -41,41 +41,61 @@ int main(void)
   trajectoryInit();
   asservInit();
   mecaInit();
-  //stepInit();
-  //usirInit();
+  stepInit();
+  usirInit();
   pathfinderInit();
   //gyroInit();
   stratInit();
 
   lcdPrintln(LCD_WARNING, "Start: robot principal");
 
-  usirSetSafetymm(20);
 
-  while(0)
+  trajectorySetSafetymm(400);
+
+  stepAction(STEP_ACTION_RESET);
+  if(1) 
   {
-    while((max7317Read() & (1 << IO_SWITCH_BACK_LEFT)))
-    {
-      chThdSleepMilliseconds(100);
-    }
-    lcdPrintln(LCD_INFO, "Click !");
-    stepAction(STEP_ACTION_TAKE_RIGHT);
     stepWait();
-    lcdPrintln(LCD_INFO, "Done !");
+    stepAction(STEP_ACTION_PREP_SPOT_RIGHT);
+    stepWait();
+    asservSetEnable(1);
 
-    while(!(max7317Read() & (1 << IO_SWITCH_BACK_LEFT)))
+    while(1)
     {
-      chThdSleepMilliseconds(100);
+      while((max7317Read() & (1 << IO_SWITCH_BACK_LEFT)))
+      {
+        chThdSleepMilliseconds(100);
+      }
+      lcdPrintln(LCD_INFO, "Click !");
+      stepAction(STEP_ACTION_PRETAKE_SPOT_RIGHT);
+      stepWait();
+      TRAJECTORY_D_MM(50);
+      trajectoryWait();
+
+      TRAJECTORY_D_MM(-50);
+      trajectoryWait();
+
+      stepAction(STEP_ACTION_TAKE_SPOT_RIGHT);
+      stepWait();
+      lcdPrintln(LCD_INFO, "Done !");
+
+      while(!(max7317Read() & (1 << IO_SWITCH_BACK_LEFT)))
+      {
+        chThdSleepMilliseconds(100);
+      }
     }
   }
 
-  
   lcdPrintln(LCD_INFO, "Attente tirette (mise en place)");
   while(!(max7317Read() & (1 << IO_SWITCH_STARTUP)))
   {
     chThdSleepMilliseconds(100);
   }
 
-  stratStart();
+  lcdPrintln(LCD_INFO, "Asserv: go");
+  asservSetEnable(1);
+  stratWedging();
+  stepWait();
 
   lcdPrintln(LCD_INFO, "Attente du depart");
 
@@ -83,7 +103,14 @@ int main(void)
   {
     chThdSleepMilliseconds(100);
   }
+  trajectorySetSafetymm(400);
+  stratStart();
 
+
+
+
+
+  
 
 
   //chThdSleepMilliseconds(3000);

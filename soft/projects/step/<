@@ -15,8 +15,8 @@
 
 #define STEP_LEFT_LIFT_INIT           350
 #define STEP_RIGHT_LIFT_INIT            0
-#define STEP_LEFT_SLIDER_INIT           -1000
-#define STEP_RIGHT_SLIDER_INIT            1300
+#define STEP_LEFT_SLIDER_INIT           -300
+#define STEP_RIGHT_SLIDER_INIT            300
 
 #define SERVO_CLAMP_LEFT_CLOSE  800
 #define SERVO_CLAMP_LEFT_ALMOST_CLOSE  1300

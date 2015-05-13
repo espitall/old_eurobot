@@ -55,7 +55,7 @@ void pathfinderMapDesine ()
     int i, j;
     SCREEN_COLOR couleur;
 
-    screenInit (FIELD_X / FIELD_RESOLUTION, FIELD_Y / FIELD_RESOLUTION);
+    screenInit (FIELD_X / FIELD_RESOLUTION_AFFICHAGE, FIELD_Y / FIELD_RESOLUTION_AFFICHAGE);
 
     for (i = 0 ; i < FIELD_X / FIELD_RESOLUTION; i++)
     {
@@ -69,6 +69,11 @@ void pathfinderMapDesine ()
                     couleur.bleu = 0xff;
                     break;
                 case FIELD_MALUS_TERRAIN : // Gris
+                    couleur.rouge = 0x85;
+                    couleur.vert = 0x85;
+                    couleur.bleu = 0x85;
+                    break;
+                case FIELD_MALUS_TERRAIN2 : // Gris clair
                     couleur.rouge = 0xa0;
                     couleur.vert = 0xa0;
                     couleur.bleu = 0xa0;
@@ -81,7 +86,7 @@ void pathfinderMapDesine ()
                     break;
             }
 
-            screenSetPixel (i, j, couleur);
+           fieldSetPixel (i, j, couleur);
         }
     }
 
@@ -110,6 +115,9 @@ void pathfinderMapDump ()
                 case (FIELD_MALUS_TERRAIN):
                     printf ("FIELD_MAP_ETAT_DANGER");
                     break;
+                case (FIELD_MALUS_TERRAIN2):
+                    printf ("FIELD_MAP_ETAT_DANGER2");
+                    break;
                 case (-1):
                     printf ("FIELD_MAP_ETAT_INACCESSIBLE");
                     break;
@@ -128,6 +136,24 @@ void pathfinderMapDump ()
         printf ("\n");
     }
     printf ("}\n");
+}
+
+/*
+ * Affichage textuel de la carte
+ */
+void pathfinderMapDump2 ()
+{
+    int i, j;
+
+    for (i = 0 ; i < FIELD_X / FIELD_RESOLUTION; i++)
+    {
+        for (j = 0 ; j < FIELD_Y / FIELD_RESOLUTION; j++)
+        {
+            printf (" %d", fieldMalusTerrain (i, j));
+        }
+        printf ("\n");
+    }
+    printf ("\n");
 }
 
 /*

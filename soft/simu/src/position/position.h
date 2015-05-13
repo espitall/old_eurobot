@@ -96,4 +96,19 @@ double posGetYmm (void);
  */
 double posGetAdeg (void);
 
+/*
+ * Coordonnée X en mm
+ */
+void posSetXmm (int x);
+
+/*
+ * Coordonnée Y en mm
+ */
+void posSetYmm (int y);
+
+/*
+ * Angle en degrés
+ */
+void posSetAdeg (int a);
+
 #endif // POSITION_H

@@ -3,6 +3,7 @@
 
 #include "../config.h"
 #include "../pathfinder/pathfinder.h"
+#include "../screen/screen.h"
 
 /*
  * Les états que peuvent prendre une case de la carte
@@ -25,6 +26,7 @@ enum field_map_etat
     FIELD_MAP_ETAT_ELEMENT_EQUIPE_GAUCHE, // Plot de l'équipe gauche
     FIELD_MAP_ETAT_ELEMENT_EQUIPE_DROITE, // Plot de l'équipe droite
     FIELD_MAP_ETAT_DANGER, // Zone de danger (trop près des obstacles)
+    FIELD_MAP_ETAT_DANGER2, // Zone de danger 2 (trop près des obstacles mais ça peut aller quand même)
     FIELD_MAP_ETAT_DANGER_INACCESSIBLE // Zone de danger (inaccessible à cause de la largeur du robot)
 };
 
@@ -64,5 +66,7 @@ int fieldIsAccessible (int x, int y);
  * Indique le malus de terrain
  */
 int fieldMalusTerrain (int x, int y);
+
+void fieldSetPixel (int x, int y, SCREEN_COLOR color);
 
 #endif // FIELD_H

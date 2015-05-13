@@ -19,7 +19,7 @@ void _fieldDrawRect (double x, double y, double largeur, double profondeur, doub
             int i_rot = x / FIELD_RESOLUTION + (i - x / FIELD_RESOLUTION) * cos (ang_rad) - (j - y / FIELD_RESOLUTION) * sin (ang_rad);
             int j_rot = y / FIELD_RESOLUTION - (i - x / FIELD_RESOLUTION) * sin (ang_rad) + (j - y / FIELD_RESOLUTION) * cos (ang_rad);
 
-            if (field_map [i_rot][j_rot].type == FIELD_MAP_ETAT_NEUTRE)
+            if (i_rot >= 0 && j_rot >= 0 && i_rot < FIELD_X / FIELD_RESOLUTION && j_rot < FIELD_Y / FIELD_RESOLUTION && field_map [i_rot][j_rot].type == FIELD_MAP_ETAT_NEUTRE)
             {
                 field_map[i_rot][j_rot].type = type;
             }
@@ -39,21 +39,30 @@ void _fieldDrawCircle (double x, double y, double r, FIELD_MAP_ETAT type)
         double j = sqrt (r*r - i*i);
         for (int k = -j ; k <= j ; k++)
         {
-            if (field_map [(int) (x - k) / FIELD_RESOLUTION][(int) (y + i) / FIELD_RESOLUTION].type == FIELD_MAP_ETAT_NEUTRE)
+            int a, b;
+            a = (int) (x - k) / FIELD_RESOLUTION;
+            b = (int) (y + i) / FIELD_RESOLUTION;
+            if (a >= 0 && b >= 0 && a < FIELD_X / FIELD_RESOLUTION && b < FIELD_Y / FIELD_RESOLUTION && field_map [a][b].type == FIELD_MAP_ETAT_NEUTRE)
             {
-                field_map[(int) (x - k) / FIELD_RESOLUTION][(int) (y + i) / FIELD_RESOLUTION].type = type;
+                field_map[a][b].type = type;
             }
-            if (field_map [(int) (x - k) / FIELD_RESOLUTION][(int) (y - i) / FIELD_RESOLUTION].type == FIELD_MAP_ETAT_NEUTRE)
+            a = (int) (x - k) / FIELD_RESOLUTION;
+            b = (int) (y - i) / FIELD_RESOLUTION;
+            if (a >= 0 && b >= 0 && a < FIELD_X / FIELD_RESOLUTION && b < FIELD_Y / FIELD_RESOLUTION && field_map [a][b].type == FIELD_MAP_ETAT_NEUTRE)
             {
-                field_map [(int) (x - k) / FIELD_RESOLUTION][(int) (y - i) / FIELD_RESOLUTION].type = type;
+                field_map [a][b].type = type;
             }
-            if (field_map [(int) (x + i) / FIELD_RESOLUTION][(int) (y + k) / FIELD_RESOLUTION].type == FIELD_MAP_ETAT_NEUTRE)
+            a = (int) (x + i) / FIELD_RESOLUTION;
+            b = (int) (y + k) / FIELD_RESOLUTION;
+            if (a >= 0 && b >= 0 && a < FIELD_X / FIELD_RESOLUTION && b < FIELD_Y / FIELD_RESOLUTION && field_map [a][b].type == FIELD_MAP_ETAT_NEUTRE)
             {
-                field_map [(int) (x + i) / FIELD_RESOLUTION][(int) (y + k) / FIELD_RESOLUTION].type = type;
+                field_map [a][b].type = type;
             }
-            if (field_map [(int) (x - i) / FIELD_RESOLUTION][(int) (y - k) / FIELD_RESOLUTION].type == FIELD_MAP_ETAT_NEUTRE)
+            a = (int) (x - i) / FIELD_RESOLUTION;
+            b = (int) (y - k) / FIELD_RESOLUTION;
+            if (a >= 0 && b >= 0 && a < FIELD_X / FIELD_RESOLUTION && b < FIELD_Y / FIELD_RESOLUTION && field_map [a][b].type == FIELD_MAP_ETAT_NEUTRE)
             {
-                field_map [(int) (x - i) / FIELD_RESOLUTION][(int) (y - k) / FIELD_RESOLUTION].type = type;
+                field_map [a][b].type = type;
             }
         }
     }
@@ -111,8 +120,8 @@ void _fieldMapInitDanger ()
     _fieldDrawRect (FIELD_X / 2 - 1066 / 2 - FIELD_DANGER_INACCESSIBLE - FIELD_DANGER / 2, (580 + FIELD_DANGER_INACCESSIBLE) / 2, FIELD_DANGER, 580 + FIELD_DANGER_INACCESSIBLE, 0, FIELD_MAP_ETAT_DANGER); // Escalier gauche
     _fieldDrawRect (FIELD_X / 2 + 1066 / 2 + FIELD_DANGER_INACCESSIBLE + FIELD_DANGER / 2, (580 + FIELD_DANGER_INACCESSIBLE) / 2, FIELD_DANGER, 580 + FIELD_DANGER_INACCESSIBLE, 0, FIELD_MAP_ETAT_DANGER); // Escalier droite
     _fieldDrawRect (FIELD_X / 2, 580 + FIELD_DANGER_INACCESSIBLE + FIELD_DANGER / 2, 1066 + FIELD_DANGER_INACCESSIBLE * 2, FIELD_DANGER, 0, FIELD_MAP_ETAT_DANGER); // Escalier bas
-    _fieldDrawRect (FIELD_X / 2 - 1066 / 2 - FIELD_DANGER_INACCESSIBLE, 580 + FIELD_DANGER_INACCESSIBLE, FIELD_DANGER, FIELD_DANGER, 0, FIELD_MAP_ETAT_DANGER); // Escalier gauche coin gauche
-    _fieldDrawRect (FIELD_X / 2 + 1066 / 2 + FIELD_DANGER_INACCESSIBLE, 580 + FIELD_DANGER_INACCESSIBLE, FIELD_DANGER, FIELD_DANGER, 0, FIELD_MAP_ETAT_DANGER); // Escalier droite coin gauche
+    _fieldDrawRect (FIELD_X / 2 - 1066 / 2 - FIELD_DANGER_INACCESSIBLE, 580 + FIELD_DANGER_INACCESSIBLE, FIELD_DANGER, FIELD_DANGER, 0, FIELD_MAP_ETAT_DANGER); // Escalier gauche coin
+    _fieldDrawRect (FIELD_X / 2 + 1066 / 2 + FIELD_DANGER_INACCESSIBLE, 580 + FIELD_DANGER_INACCESSIBLE, FIELD_DANGER, FIELD_DANGER, 0, FIELD_MAP_ETAT_DANGER); // Escalier droite coin
 
     _fieldDrawRect (1200 + 600 / 2, 2000 - 100 + 100 / 2 - FIELD_DANGER_INACCESSIBLE / 2 - FIELD_DANGER / 2, 600 + FIELD_DANGER_INACCESSIBLE * 2 + FIELD_DANGER * 2, 100 + FIELD_DANGER_INACCESSIBLE + FIELD_DANGER, 0, FIELD_MAP_ETAT_DANGER); // Estrade
 
@@ -129,9 +138,43 @@ void _fieldMapInitDanger ()
     _fieldDrawRect (3000 - 400 + 400 / 2 - FIELD_DANGER_INACCESSIBLE / 2 - FIELD_DANGER / 2, 800 - 22 + 22 / 2, 400 + FIELD_DANGER_INACCESSIBLE + FIELD_DANGER, 22 + FIELD_DANGER_INACCESSIBLE * 2 + FIELD_DANGER * 2, 0, FIELD_MAP_ETAT_DANGER); // Arrête du haut
     _fieldDrawRect (3000 - 400 + 400 / 2 - FIELD_DANGER_INACCESSIBLE / 2 - FIELD_DANGER / 2, 800 - 22 + 444 - 22 + 22 / 2, 400 + FIELD_DANGER_INACCESSIBLE + FIELD_DANGER, 22 + FIELD_DANGER_INACCESSIBLE * 2 + FIELD_DANGER * 2, 0, FIELD_MAP_ETAT_DANGER); // Arrête du bas
 
-
     _fieldDrawCircle (450, 1000, 200 + FIELD_DANGER, FIELD_MAP_ETAT_DANGER); // Terrain de départ gauche - cercle
     _fieldDrawCircle (3000 - 450, 1000, 200 + FIELD_DANGER, FIELD_MAP_ETAT_DANGER); // Terrain de départ droit - cercle
+}
+
+/*
+ * Zones de sécurité pour éviter les obstacles
+ */
+void _fieldMapInitDanger2 ()
+{
+    _fieldDrawRect (FIELD_X / 2, FIELD_DANGER_INACCESSIBLE / 2 + FIELD_DANGER / 2 + FIELD_DANGER2 / 2, FIELD_X, FIELD_DANGER_INACCESSIBLE + FIELD_DANGER + FIELD_DANGER2, 0, FIELD_MAP_ETAT_DANGER2); // Bordure haute
+    _fieldDrawRect (FIELD_X / 2, FIELD_Y - FIELD_DANGER_INACCESSIBLE / 2 - FIELD_DANGER / 2 - FIELD_DANGER2 / 2, FIELD_X, FIELD_DANGER_INACCESSIBLE + FIELD_DANGER + FIELD_DANGER2, 0, FIELD_MAP_ETAT_DANGER2); // Bordure bas
+    _fieldDrawRect (0 + FIELD_DANGER_INACCESSIBLE / 2 + FIELD_DANGER / 2 + FIELD_DANGER2 / 2, FIELD_Y / 2, FIELD_DANGER_INACCESSIBLE + FIELD_DANGER + FIELD_DANGER2, FIELD_Y, 0, FIELD_MAP_ETAT_DANGER2); // Bordure gauche
+    _fieldDrawRect (FIELD_X - FIELD_DANGER_INACCESSIBLE / 2 - FIELD_DANGER / 2 - FIELD_DANGER2 / 2, FIELD_Y / 2, FIELD_DANGER_INACCESSIBLE + FIELD_DANGER + FIELD_DANGER2, FIELD_Y, 0, FIELD_MAP_ETAT_DANGER2); // Bordure droite
+
+    _fieldDrawRect (FIELD_X / 2 - 1066 / 2 - FIELD_DANGER_INACCESSIBLE - FIELD_DANGER - FIELD_DANGER2 / 2, (580 + FIELD_DANGER_INACCESSIBLE + FIELD_DANGER) / 2, FIELD_DANGER2, 580 + FIELD_DANGER_INACCESSIBLE + FIELD_DANGER, 0, FIELD_MAP_ETAT_DANGER2); // Escalier gauche
+    _fieldDrawRect (FIELD_X / 2 + 1066 / 2 + FIELD_DANGER_INACCESSIBLE + FIELD_DANGER + FIELD_DANGER2 / 2, (580 + FIELD_DANGER_INACCESSIBLE + FIELD_DANGER) / 2, FIELD_DANGER2, 580 + FIELD_DANGER_INACCESSIBLE + FIELD_DANGER, 0, FIELD_MAP_ETAT_DANGER2); // Escalier droite
+    _fieldDrawRect (FIELD_X / 2, 580 + FIELD_DANGER_INACCESSIBLE + FIELD_DANGER + FIELD_DANGER2 / 2, 1066 + FIELD_DANGER_INACCESSIBLE * 2 + FIELD_DANGER * 2, FIELD_DANGER2, 0, FIELD_MAP_ETAT_DANGER2); // Escalier bas
+    _fieldDrawRect (FIELD_X / 2 - 1066 / 2 - FIELD_DANGER_INACCESSIBLE - FIELD_DANGER / 2, 580 + FIELD_DANGER_INACCESSIBLE + FIELD_DANGER / 2, FIELD_DANGER + FIELD_DANGER2, FIELD_DANGER + FIELD_DANGER2, 0, FIELD_MAP_ETAT_DANGER2); // Escalier gauche coin
+    _fieldDrawRect (FIELD_X / 2 + 1066 / 2 + FIELD_DANGER_INACCESSIBLE + FIELD_DANGER / 2, 580 + FIELD_DANGER_INACCESSIBLE + FIELD_DANGER / 2, FIELD_DANGER + FIELD_DANGER2, FIELD_DANGER + FIELD_DANGER2, 0, FIELD_MAP_ETAT_DANGER2); // Escalier droite coin
+
+    _fieldDrawRect (1200 + 600 / 2, 2000 - 100 + 100 / 2 - FIELD_DANGER_INACCESSIBLE / 2 - FIELD_DANGER / 2 - FIELD_DANGER2 / 2, 600 + FIELD_DANGER_INACCESSIBLE * 2 + FIELD_DANGER * 2 + FIELD_DANGER2 * 2, 100 + FIELD_DANGER_INACCESSIBLE + FIELD_DANGER + FIELD_DANGER2, 0, FIELD_MAP_ETAT_DANGER2); // Estrade
+
+    _fieldDrawRect (300, 0 + 70 / 2 + FIELD_DANGER_INACCESSIBLE / 2 + FIELD_DANGER / 2 + FIELD_DANGER2 / 2, 70 + FIELD_DANGER_INACCESSIBLE * 2 + FIELD_DANGER * 2 + FIELD_DANGER2 * 2, 70 + FIELD_DANGER_INACCESSIBLE + FIELD_DANGER + FIELD_DANGER2, 0, FIELD_MAP_ETAT_DANGER2); // Distributeur 1
+    _fieldDrawRect (600, 0 + 70 / 2 + FIELD_DANGER_INACCESSIBLE / 2 + FIELD_DANGER / 2 + FIELD_DANGER2 / 2, 70 + FIELD_DANGER_INACCESSIBLE * 2 + FIELD_DANGER * 2 + FIELD_DANGER2 * 2, 70 + FIELD_DANGER_INACCESSIBLE + FIELD_DANGER + FIELD_DANGER2, 0, FIELD_MAP_ETAT_DANGER2); // Distributeur 2
+    _fieldDrawRect (2400, 0 + 70 / 2 + FIELD_DANGER_INACCESSIBLE / 2 + FIELD_DANGER / 2 + FIELD_DANGER2 / 2, 70 + FIELD_DANGER_INACCESSIBLE * 2 + FIELD_DANGER * 2 + FIELD_DANGER2 * 2, 70 + FIELD_DANGER_INACCESSIBLE + FIELD_DANGER + FIELD_DANGER2, 0, FIELD_MAP_ETAT_DANGER2); // Distributeur 3
+    _fieldDrawRect (2700, 0 + 70 / 2 + FIELD_DANGER_INACCESSIBLE / 2 + FIELD_DANGER / 2 + FIELD_DANGER2 / 2, 70 + FIELD_DANGER_INACCESSIBLE * 2 + FIELD_DANGER * 2 + FIELD_DANGER2 * 2, 70 + FIELD_DANGER_INACCESSIBLE + FIELD_DANGER + FIELD_DANGER2, 0, FIELD_MAP_ETAT_DANGER2); // Distributeur 4
+
+    _fieldDrawRect (70 - 22 + 22 / 2 + FIELD_DANGER_INACCESSIBLE / 2 + FIELD_DANGER / 2 + FIELD_DANGER2 / 2, 800 + 400 / 2, 22 + FIELD_DANGER_INACCESSIBLE + FIELD_DANGER + FIELD_DANGER2, 400, 0, FIELD_MAP_ETAT_DANGER2); // Arrête du font
+    _fieldDrawRect (0 + 400 / 2 + FIELD_DANGER_INACCESSIBLE / 2 + FIELD_DANGER / 2 + FIELD_DANGER2 / 2, 800 - 22 + 22 / 2, 400 + FIELD_DANGER_INACCESSIBLE + FIELD_DANGER + FIELD_DANGER2, 22 + FIELD_DANGER_INACCESSIBLE * 2 + FIELD_DANGER * 2 + FIELD_DANGER2 * 2, 0, FIELD_MAP_ETAT_DANGER2); // Arrête du haut
+    _fieldDrawRect (0 + 400 / 2 + FIELD_DANGER_INACCESSIBLE / 2 + FIELD_DANGER / 2 + FIELD_DANGER2 / 2, 800 - 22 + 444 - 22 + 22 / 2, 400 + FIELD_DANGER_INACCESSIBLE + FIELD_DANGER + FIELD_DANGER2, 22 + FIELD_DANGER_INACCESSIBLE * 2 + FIELD_DANGER * 2 + FIELD_DANGER2 * 2, 0, FIELD_MAP_ETAT_DANGER2); // Arrête du bas
+
+    _fieldDrawRect (3000 - 70 + 22 / 2 - FIELD_DANGER_INACCESSIBLE / 2 - FIELD_DANGER / 2 - FIELD_DANGER2 / 2, 800 + 400 / 2, 22 + FIELD_DANGER_INACCESSIBLE + FIELD_DANGER + FIELD_DANGER2, 400, 0, FIELD_MAP_ETAT_DANGER2); // Arrête du font
+    _fieldDrawRect (3000 - 400 + 400 / 2 - FIELD_DANGER_INACCESSIBLE / 2 - FIELD_DANGER / 2 - FIELD_DANGER2 / 2, 800 - 22 + 22 / 2, 400 + FIELD_DANGER_INACCESSIBLE + FIELD_DANGER + FIELD_DANGER2, 22 + FIELD_DANGER_INACCESSIBLE * 2 + FIELD_DANGER * 2 + FIELD_DANGER2 * 2, 0, FIELD_MAP_ETAT_DANGER2); // Arrête du haut
+    _fieldDrawRect (3000 - 400 + 400 / 2 - FIELD_DANGER_INACCESSIBLE / 2 - FIELD_DANGER / 2 - FIELD_DANGER2 / 2, 800 - 22 + 444 - 22 + 22 / 2, 400 + FIELD_DANGER_INACCESSIBLE + FIELD_DANGER + FIELD_DANGER2, 22 + FIELD_DANGER_INACCESSIBLE * 2 + FIELD_DANGER * 2 + FIELD_DANGER2 * 2, 0, FIELD_MAP_ETAT_DANGER2); // Arrête du bas
+
+    _fieldDrawCircle (450, 1000, 200 + FIELD_DANGER + FIELD_DANGER2, FIELD_MAP_ETAT_DANGER2); // Terrain de départ gauche - cercle
+    _fieldDrawCircle (3000 - 450, 1000, 200 + FIELD_DANGER + FIELD_DANGER2, FIELD_MAP_ETAT_DANGER2); // Terrain de départ droit - cercle
 }
 
 /*
@@ -283,6 +326,19 @@ void _fieldMapInitPlots ()
 //    _fieldDrawCircle (posPlotDroite8X, posPlotDroite8Y, 60 / 2, FIELD_MAP_ETAT_ELEMENT_EQUIPE_DROITE); // Spot équipe droite 8
 }
 
+void fieldSetPixel (int x, int y, SCREEN_COLOR color)
+{
+    int k, l;
+
+    for (k = 0; k < FIELD_RESOLUTION / FIELD_RESOLUTION_AFFICHAGE; k++)
+    {
+        for (l = 0; l < FIELD_RESOLUTION / FIELD_RESOLUTION_AFFICHAGE; l++)
+        {
+            screenSetPixel((x * FIELD_RESOLUTION / FIELD_RESOLUTION_AFFICHAGE) + k, (y * FIELD_RESOLUTION / FIELD_RESOLUTION_AFFICHAGE) + l, color);
+        }
+    }
+}
+
 /*
  * Initialisation de la carte
  */
@@ -313,6 +369,7 @@ void fieldMapInit ()
 
     _fieldMapInitDangerInaccessible ();
     _fieldMapInitDanger ();
+    _fieldMapInitDanger2 ();
 }
 
 /*
@@ -323,7 +380,7 @@ void fieldMapDesine ()
     int i, j;
     SCREEN_COLOR couleur;
 
-    screenInit (FIELD_X / FIELD_RESOLUTION, FIELD_Y / FIELD_RESOLUTION);
+    screenInit (FIELD_X / FIELD_RESOLUTION_AFFICHAGE, FIELD_Y / FIELD_RESOLUTION_AFFICHAGE);
 
     for (i = 0 ; i < FIELD_X / FIELD_RESOLUTION; i++)
     {
@@ -388,6 +445,11 @@ void fieldMapDesine ()
                     couleur.bleu = 0xe5;
                     break;
                 case FIELD_MAP_ETAT_DANGER : // Gris
+                    couleur.rouge = 0x85;
+                    couleur.vert = 0x85;
+                    couleur.bleu = 0x85;
+                    break;
+                case FIELD_MAP_ETAT_DANGER2 : // Gris clair
                     couleur.rouge = 0xa0;
                     couleur.vert = 0xa0;
                     couleur.bleu = 0xa0;
@@ -407,7 +469,7 @@ void fieldMapDesine ()
                     break;
             }
 
-            screenSetPixel (i, j, couleur);
+            fieldSetPixel (i, j, couleur);
         }
     }
 
@@ -431,6 +493,7 @@ int fieldIsAccessible (int x, int y)
         case FIELD_MAP_ETAT_ELEMENT_EQUIPE_DROITE :
         case FIELD_MAP_ETAT_HIMSELF :
         case FIELD_MAP_ETAT_DANGER :
+        case FIELD_MAP_ETAT_DANGER2 :
             return 1;
         default :
             return 0;
@@ -456,6 +519,8 @@ int fieldMalusTerrain (int x, int y)
             return 0;
         case FIELD_MAP_ETAT_DANGER :
             return FIELD_MALUS_TERRAIN;
+        case FIELD_MAP_ETAT_DANGER2 :
+            return FIELD_MALUS_TERRAIN2;
         default :
             return -1;
     }

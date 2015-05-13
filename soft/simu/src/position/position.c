@@ -83,7 +83,6 @@ int posPlotDroite8Y = 1400;
  */
 double posGetXmm(void)
 {
-    return 1500;
     #if ROBOT == PRINCIPAL
         #if EQUIPE == GAUCHE
             return posRobotGauchePrincipalX;
@@ -104,7 +103,6 @@ double posGetXmm(void)
  */
 double posGetYmm(void)
 {
-    return 1000;
     #if ROBOT == PRINCIPAL
         #if EQUIPE == GAUCHE
             return posRobotGauchePrincipalY;
@@ -116,6 +114,40 @@ double posGetYmm(void)
             return posRobotGaucheSecondaireY;
         #else
             return posRobotDroiteSecondaireY;
+        #endif
+    #endif
+}
+
+void posSetXmm(int x)
+{
+    #if ROBOT == PRINCIPAL
+        #if EQUIPE == GAUCHE
+            posRobotGauchePrincipalX = x;
+        #else
+            posRobotDroitePrincipalX = x;
+        #endif
+    #else
+        #if EQUIPE == GAUCHE
+            posRobotGaucheSecondaireX = x;
+        #else
+            posRobotDroiteSecondaireX = x;
+        #endif
+    #endif
+}
+
+void posSetYmm(int y)
+{
+    #if ROBOT == PRINCIPAL
+        #if EQUIPE == GAUCHE
+            posRobotGauchePrincipalY = y;
+        #else
+            posRobotDroitePrincipalY = y;
+        #endif
+    #else
+        #if EQUIPE == GAUCHE
+            posRobotGaucheSecondaireY = y;
+        #else
+            posRobotDroiteSecondaireY = y;
         #endif
     #endif
 }
@@ -136,6 +168,23 @@ double posGetAdeg(void)
             return posRobotGaucheSecondaireA;
         #else
             return posRobotDroiteSecondaireA;
+        #endif
+    #endif
+}
+
+void posSetAdeg(int a)
+{
+    #if ROBOT == PRINCIPAL
+        #if EQUIPE == GAUCHE
+            posRobotGauchePrincipalA = a;
+        #else
+            posRobotDroitePrincipalA = a;
+        #endif
+    #else
+        #if EQUIPE == GAUCHE
+            posRobotGaucheSecondaireA = a;
+        #else
+            posRobotDroiteSecondaireA = a;
         #endif
     #endif
 }

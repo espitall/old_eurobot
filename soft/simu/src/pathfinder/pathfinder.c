@@ -45,6 +45,18 @@ void pathfinderGotoXYmm (double x, double y)
             dijkstra (start, end);
         #endif
     }
+    else
+    {
+      if (!fieldIsAccessible (start.x, start.y))
+      {
+	printf ("Départ non accessible\n");
+      }
+      
+      if (!fieldIsAccessible (end.x, end.y))
+      {
+	printf ("Arrivée non accessible\n");
+      }
+    }
 }
 
 /*

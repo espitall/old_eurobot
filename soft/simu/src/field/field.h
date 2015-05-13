@@ -51,6 +51,7 @@ FIELD_MAP_POINT field_map [FIELD_X / FIELD_RESOLUTION][FIELD_Y / FIELD_RESOLUTIO
  * Initialisation de la carte
  */
 void fieldMapInit ();
+void fieldMapInit2 ();
 
 /*
  * Affichage graphique de la carte

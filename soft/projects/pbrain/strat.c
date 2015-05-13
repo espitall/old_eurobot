@@ -57,7 +57,7 @@ void stratInit(void)
   {
     _color = STRAT_COLOR_YELLOW;
   }
-
+  _color = STRAT_COLOR_YELLOW;
   switch(_color)
   {
     case STRAT_COLOR_GREEN:
@@ -96,7 +96,7 @@ void stratStart(void)
   lcdPrintln(LCD_INFO, "Asserv: go");
   asservSetEnable(1);
 
- // stratWedging();
+  stratWedging();
 }
 
 strat_color_t stratGetColor(void)

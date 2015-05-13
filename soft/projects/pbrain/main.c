@@ -48,7 +48,15 @@ int main(void)
   stratInit();
 
   lcdPrintln(LCD_WARNING, "Start: robot principal");
+  /*
+  posSetXmm(-500);
+  posSetYmm(1000);
 
+  pathfinderGotoXYmm(950, 250); // 250x950, 950x250
+  */  //pathfinderGotoXYmm(850, 1650);
+  //pathfinderGotoXYmm(-850, 1650);
+  //pathfinderGotoXYmm(-950, 250);
+  
   while(0)
   {
     while((max7317Read() & (1 << IO_SWITCH_BACK_LEFT)))
@@ -81,8 +89,14 @@ int main(void)
   }
 
   stratStart();
-
-
+  
+  TRAJECTORY_D_MM(800);
+  trajectoryWait();
+  pathfinderGotoXYmm(950, 250);
+  /*pathfinderGotoXYmm(850, 1650);
+  pathfinderGotoXYmm(-850, 1650);
+  pathfinderGotoXYmm(-950, 250);
+  */
   //chThdSleepMilliseconds(3000);
   //  dcmSetWidth(0, 500);
   //  dcmSetWidth(1, -500);

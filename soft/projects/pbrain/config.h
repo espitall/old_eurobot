@@ -27,7 +27,7 @@
 
 #define DC_MOTORS_TYPE DC_MOTORS_TYPE_LMD18200T
 
-#define ROBOT_X 195
+#define ROBOT_X 370
 #define ROBOT_Y 360
 #define ROBOT_WEDGING_BACK_OFFSET 105
 
@@ -36,5 +36,10 @@
 
 #define USIR_MASTER
 #define STEP_MASTER
+
+#define PRINCIPAL 0
+#define SECONDAIRE 1
+
+#define ROBOT PRINCIPAL
 
 #endif// CONFIG_H

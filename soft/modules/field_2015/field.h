@@ -12,7 +12,8 @@ enum field_map_etat
 {
     FIELD_MAP_ETAT_INACCESSIBLE,
     FIELD_MAP_ETAT_ACCESSIBLE,
-    FIELD_MAP_ETAT_DANGER
+    FIELD_MAP_ETAT_DANGER,
+    FIELD_MAP_ETAT_DANGER2
 };
 
 typedef enum field_map_etat FIELD_MAP_ETAT;

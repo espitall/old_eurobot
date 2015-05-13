@@ -4,7 +4,8 @@
 #include "../field_2015/field.h"
 
 #define PATHFINDER_MALUS_ROTATION 5
-#define PATHFINDER_MALUS_TERRAIN 1
+#define PATHFINDER_MALUS_TERRAIN 10
+#define PATHFINDER_MALUS_TERRAIN2 5
 
 /*
  * Structure d'un point

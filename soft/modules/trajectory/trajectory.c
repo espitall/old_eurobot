@@ -71,7 +71,7 @@ static trajectoryResult_t trajectory_handle_type_d(trajectory_t * traj)
       }
       else
       {
-        usirSetSafetymm(0x0C, safety);
+        usirSetSafetymm(0x0c, safety);
       }
     }
   }
@@ -92,7 +92,7 @@ static trajectoryResult_t trajectory_handle_type_d(trajectory_t * traj)
         traj->DSafetymm = posGetDmm();
       }
 
-      asservSetDistanceSetPoint(traj->DSafetymm);
+      asservSetDistanceSetPointSafety(traj->DSafetymm);
       return TRAJECTORY_RESULT_NOTHING;
     }
     else
@@ -114,6 +114,10 @@ static trajectoryResult_t trajectory_handle_type_wedging(trajectory_t * traj)
   asservSetDistanceSetPoint(posGetDmm() - 10);
   uint16_t switchs = ~max7317Read();
 
+#ifdef PMI
+  switchs = ~switchs;
+#endif
+
   switch(switchs & ((1 << IO_SWITCH_BACK_LEFT) | (1 << IO_SWITCH_BACK_RIGHT)))
   {
     case ((1 << IO_SWITCH_BACK_LEFT) | (1 << IO_SWITCH_BACK_RIGHT)):
@@ -122,11 +126,11 @@ static trajectoryResult_t trajectory_handle_type_wedging(trajectory_t * traj)
       return TRAJECTORY_RESULT_REMOVE;
 
     case (1 << IO_SWITCH_BACK_LEFT):
-      asservSetAngularSetPoint(posGetAdeg() - 1);
+      asservSetAngularSetPoint(posGetAdeg() - 3);
       break;
 
     case (1 << IO_SWITCH_BACK_RIGHT):
-      asservSetAngularSetPoint(posGetAdeg() + 1);
+      asservSetAngularSetPoint(posGetAdeg() + 3);
       break;
 
     default:
@@ -170,7 +174,7 @@ static trajectoryResult_t trajectory_handle_type_xy(trajectory_t * traj)
           traj->DSafetymm = posGetDmm();
         }
 
-        asservSetDistanceSetPoint(traj->DSafetymm);
+        asservSetDistanceSetPointSafety(traj->DSafetymm);
         return TRAJECTORY_RESULT_NOTHING;
       }
       else
@@ -228,6 +232,97 @@ static trajectoryResult_t trajectory_handle_type_xy(trajectory_t * traj)
   return TRAJECTORY_RESULT_NOTHING;
 }
 
+static trajectoryResult_t trajectory_handle_type_xy_back(trajectory_t * traj)
+{
+  (void) traj;
+
+  double dx = traj->XSetPointmm - posGetXmm();
+  double dy = traj->YSetPointmm - posGetYmm();
+  double dd = dx*dx + dy*dy;
+
+  if(traj->flags & TRAJECTORY_FLAGS_JUST_INIT)
+  {
+    traj->flags  &= ~TRAJECTORY_FLAGS_JUST_INIT;
+    if(safety > 0)
+    {
+      usirSetSafetymm(0x0C, safety);
+    }
+  }
+
+  if(dd < 25) 
+  {
+    return TRAJECTORY_RESULT_REMOVE;
+  }
+  else
+  {
+    if(safety > 0)
+    {
+      if(palReadPad(GPIOD, GPIOD_PIN5))
+      {
+        if(!(traj->flags & TRAJECTORY_FLAGS_SAFETY))
+        {
+          traj->flags = TRAJECTORY_FLAGS_SAFETY;
+          traj->DSafetymm = posGetDmm();
+        }
+
+        asservSetDistanceSetPointSafety(traj->DSafetymm);
+        return TRAJECTORY_RESULT_NOTHING;
+      }
+      else
+      {
+        traj->flags  &= ~TRAJECTORY_FLAGS_SAFETY;
+      }
+    }
+
+    double cur = posGetAdeg();
+    double target_deg = atan2(dy, dx) * 180.0 / M_PI + 180.0;
+
+    double abase = floor(cur / 360.0) * 360.0;
+
+    while(target_deg > 180.0) {
+      target_deg -= 360.0;
+    }
+    while(target_deg < -180.0) {
+      target_deg += 360.0;
+    }
+
+    double t1 = abase + target_deg;
+    double t2 = abase + target_deg + 360.0;
+    double t3 = abase + target_deg - 360.0;
+
+    double dt1 = fabs(t1 - cur);
+    double dt2 = fabs(t2 - cur);
+    double dt3 = fabs(t3 - cur);
+
+    double target = t1;
+    if(dt2 < dt1)
+    {
+      target = t2;
+      if(dt3 < dt2)
+      {
+        target = t3;
+      }
+    }
+    else if(dt3 < dt1)
+    {
+      target = t3;
+    }
+    if(fabs(target - cur) < 60) 
+    {
+      asservSetDistanceSetPoint(posGetDmm() - sqrt(dd));
+    }
+    else
+    {
+      asservSetDistanceSetPoint(posGetDmm());
+    }
+
+    asservSetAngularSetPoint(target);
+  }
+
+
+  return TRAJECTORY_RESULT_NOTHING;
+}
+
 static trajectoryResult_t trajectory_handle_type_a(trajectory_t * traj)
 {
   double abase = floor(traj->AStartdeg / 360.0) * 360.0;
@@ -261,7 +356,7 @@ static trajectoryResult_t trajectory_handle_type_a(trajectory_t * traj)
     target = t3;
   }
 
-  if(fabs(target - posGetAdeg()) < 2.0)
+  if(fabs(target - posGetAdeg()) < 3.0)
   {
     return TRAJECTORY_RESULT_REMOVE;
   }
@@ -324,6 +419,10 @@ static msg_t trajectoryThread(void *arg)
 
         case TRAJECTORY_TYPE_T:
           result = trajectory_handle_type_t(traj);
+          break;
+
+        case TRAJECTORY_TYPE_XY_BACK:
+          result = trajectory_handle_type_xy_back(traj);
           break;
 
         case TRAJECTORY_TYPE_XY:
@@ -436,6 +535,7 @@ void trajectoryPrint(void)
     switch(traj->type)
     {
       case TRAJECTORY_TYPE_XY:
+      case TRAJECTORY_TYPE_XY_BACK:
         {
           lcd2DPoint_t tmp;
           tmp.x = traj->XSetPointmm;

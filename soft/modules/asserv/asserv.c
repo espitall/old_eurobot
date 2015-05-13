@@ -11,6 +11,8 @@ static ramp_t _angu_ramp;
 static pid_t _dist_pid;
 static pid_t _angu_pid;
 static volatile int enabled;
+static double motor0;
+static double motor1;
 
 void asservSetEnable(int a)
 {
@@ -94,29 +96,29 @@ void asservCompute(void)
 
   if(enabled)
   {
-    double moteur0 = d_out + a_out;
-    double moteur1 = d_out - a_out;
+    motor0 = d_out + a_out;
+    motor1 = d_out - a_out;
     
-    if (moteur0 < -10000)
+    if (motor0 < -10000)
     {
-      moteur0 = -10000;
+      motor0 = -10000;
     }
-    else if(moteur0 > 10000)
+    else if(motor0 > 10000)
     {
-      moteur0 = 10000;
-    }
-    
-    if (moteur1 < -10000)
-    {
-      moteur1 = -10000;
-    }
-    else if(moteur1 > 10000)
-    {
-      moteur1 = 10000;
+      motor0 = 10000;
     }
     
-    dcmSetWidth(0, moteur0);
-    dcmSetWidth(1, moteur1);
+    if (motor1 < -10000)
+    {
+      motor1 = -10000;
+    }
+    else if(motor1 > 10000)
+    {
+      motor1 = 10000;
+    }
+    
+    dcmSetWidth(0, motor0);
+    dcmSetWidth(1, motor1);
   }
   else
   {
@@ -125,6 +127,8 @@ void asservCompute(void)
 
     pidReset(&_dist_pid);
     pidReset(&_angu_pid);
+
+    motor0 = motor1 = 0;
 
     dcmSetWidth(0, 0);
     dcmSetWidth(1, 0);
@@ -137,7 +141,31 @@ void asservSetDistanceSetPoint(double set_point)
   rampSetSetPoint(&_dist_ramp,set_point);
 }
 
+void asservSetDistanceSetPointSafety(double set_point)
+{
+  rampSetSetPointNow(&_dist_ramp,set_point);
+}
+
 void asservSetAngularSetPoint(double set_point)
 {
   rampSetSetPoint(&_angu_ramp,set_point);
+}
+
+int asservGetM0(void)
+{
+  return motor0;
+}
+
+int asservGetM1(void)
+{
+  return motor1;
+}
+
+int asservGetAOutput(void)
+{
+  return  pidGetOutput(&_angu_pid);
+}
+int asservGetDOutput(void)
+{
+  return  pidGetOutput(&_dist_pid);
 }

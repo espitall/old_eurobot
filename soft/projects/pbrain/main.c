@@ -50,11 +50,13 @@ int main(void)
   lcdPrintln(LCD_WARNING, "Start: robot principal");
 
 
-  trajectorySetSafetymm(400);
+  trajectorySetSafetymm(0);
 
   stepAction(STEP_ACTION_RESET);
-  if(1) 
+  if(0) 
   {
+    stepWait();
+ //   stepAction(STEP_ACTION_TAKE_FIRST_BALL_LEFT);
     stepWait();
     stepAction(STEP_ACTION_PREP_SPOT_RIGHT);
     stepWait();
@@ -86,6 +88,7 @@ int main(void)
     }
   }
 
+  trajectorySetSafetymm(0);
   lcdPrintln(LCD_INFO, "Attente tirette (mise en place)");
   while(!(max7317Read() & (1 << IO_SWITCH_STARTUP)))
   {
@@ -103,7 +106,7 @@ int main(void)
   {
     chThdSleepMilliseconds(100);
   }
-  trajectorySetSafetymm(400);
+  trajectorySetSafetymm(470);
   stratStart();
 
 

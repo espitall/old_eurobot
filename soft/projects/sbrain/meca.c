@@ -7,9 +7,9 @@
 #define MECA_CARPET_RIGHT_FRONT_CLAMP_ID        15
 #define MECA_CARPET_RIGHT_BACK_CLAMP_ID         14
 
-#define MECA_CARPET_LEFT_ROTATION_ID            0
+#define MECA_CARPET_LEFT_ROTATION_ID            2
 #define MECA_CARPET_LEFT_FRONT_CLAMP_ID         0
-#define MECA_CARPET_LEFT_BACK_CLAMP_ID          0
+#define MECA_CARPET_LEFT_BACK_CLAMP_ID          1
 
 #define MECA_CARPET_RIGHT_ROTATION_CLOSE        220
 #define MECA_CARPET_RIGHT_ROTATION_OPEN         430
@@ -18,12 +18,12 @@
 #define MECA_CARPET_RIGHT_BACK_CLAMP_CLOSE      535
 #define MECA_CARPET_RIGHT_BACK_CLAMP_OPEN       350
 
-#define MECA_CARPET_LEFT_ROTATION_CLOSE         350
-#define MECA_CARPET_LEFT_ROTATION_OPEN          350
-#define MECA_CARPET_LEFT_FRONT_CLAMP_CLOSE      350
-#define MECA_CARPET_LEFT_FRONT_CLAMP_OPEN       350
-#define MECA_CARPET_LEFT_BACK_CLAMP_CLOSE       350
-#define MECA_CARPET_LEFT_BACK_CLAMP_OPEN        350
+#define MECA_CARPET_LEFT_ROTATION_CLOSE         400
+#define MECA_CARPET_LEFT_ROTATION_OPEN          200
+#define MECA_CARPET_LEFT_FRONT_CLAMP_CLOSE      390
+#define MECA_CARPET_LEFT_FRONT_CLAMP_OPEN       200
+#define MECA_CARPET_LEFT_BACK_CLAMP_CLOSE       305
+#define MECA_CARPET_LEFT_BACK_CLAMP_OPEN        450
 
 #define MECA_PUMP_ID                            8
 #define MECA_SUCKER_0_ID                        3
@@ -39,10 +39,18 @@
 #define MECA_FOOT_BACK_LEFT_HIGH                490
 #define MECA_FOOT_BACK_RIGHT_HIGH               480
 
-#define MECA_FOOT_FRONT_LEFT_LOW                350
-#define MECA_FOOT_FRONT_RIGHT_LOW               410
+#define MECA_FOOT_BACK_LEFT_LOW                430
+#define MECA_FOOT_BACK_RIGHT_LOW               430
+//#define MECA_FOOT_BACK_LEFT_LOW                300
+//#define MECA_FOOT_BACK_RIGHT_LOW               300
 
-static WORKING_AREA(waMeca, 2048);
+#define MECA_FOOT_FRONT_LEFT_LOW                280
+#define MECA_FOOT_FRONT_RIGHT_LOW               445
+
+#define MECA_FOOT_FRONT_LEFT_HIGH                600
+#define MECA_FOOT_FRONT_RIGHT_HIGH               250
+
+static WORKING_AREA(waMeca, 4096);
 static meca_sucker_t sucker_state[3];
 static MUTEX_DECL(mutex_sucker);
 
@@ -56,8 +64,8 @@ void mecaSetFrontFoot(meca_foot_t pos)
       break;
 
     case MECA_FOOT_HIGH:
-//      pcm9685SetChannel(MECA_FOOT_FRONT_LEFT_ID, 0, MECA_FOOT_FRONT_LEFT_HIGH);
-//      pcm9685SetChannel(MECA_FOOT_FRONT_RIGHT_ID, 0, MECA_FOOT_FRONT_LEFT_HIGH);
+      pcm9685SetChannel(MECA_FOOT_FRONT_LEFT_ID, 0, MECA_FOOT_FRONT_LEFT_HIGH);
+      pcm9685SetChannel(MECA_FOOT_FRONT_RIGHT_ID, 0, MECA_FOOT_FRONT_RIGHT_HIGH);
       break;
 
     case MECA_FOOT_LOW:
@@ -83,8 +91,8 @@ void mecaSetBackFoot(meca_foot_t pos)
       break;
 
     case MECA_FOOT_LOW:
-      //pcm9685SetChannel(9, 0, 425);
-      //pcm9685SetChannel(11, 0, 425);
+      pcm9685SetChannel(MECA_FOOT_BACK_LEFT_ID, 0, MECA_FOOT_BACK_LEFT_LOW);
+      pcm9685SetChannel(MECA_FOOT_BACK_RIGHT_ID, 0, MECA_FOOT_BACK_RIGHT_LOW);
       break;
 
   }
@@ -166,36 +174,58 @@ static msg_t mecaThread(void *arg)
 {
   (void)arg;
 
+  int offset = 0;
   while(1)
   {
     chMtxLock(&mutex_sucker);
     if((sucker_state[0] == MECA_SUCKER_ON) || (sucker_state[1] == MECA_SUCKER_ON) || (sucker_state[2] == MECA_SUCKER_ON)) 
     {
       pcm9685SetChannel(MECA_PUMP_ID, 0, 4095);
-      chThdSleepMilliseconds(100);
+      chThdSleepMilliseconds(500);
+      int i;
+      for(i = 0; i < 3; i += 1)
+      {
+        int j = i + offset;
+        j %= 3;
+        if(sucker_state[j] == MECA_SUCKER_ON)
+        {
+          lcdPrintln(LCD_INFO, "s%d",j);
+          pcm9685SetChannel(MECA_SUCKER_0_ID + j, 0, 4095);
+          chThdSleepMilliseconds(500);
+          pcm9685SetChannel(MECA_SUCKER_0_ID + j, 0, 0);
+          chThdSleepMilliseconds(500);
+        }
+      }
+      offset += 1;
+
+      /*
       if(sucker_state[0] == MECA_SUCKER_ON)
       {
+        lcdPrintln(LCD_INFO, "s0");
         pcm9685SetChannel(MECA_SUCKER_0_ID, 0, 4095);
-        chThdSleepMilliseconds(250);
+        chThdSleepMilliseconds(500);
         pcm9685SetChannel(MECA_SUCKER_0_ID, 0, 0);
-        chThdSleepMilliseconds(50);
+        chThdSleepMilliseconds(500);
       }
       if(sucker_state[1] == MECA_SUCKER_ON)
       {
+        lcdPrintln(LCD_INFO, "s1");
         pcm9685SetChannel(MECA_SUCKER_1_ID, 0, 4095);
-        chThdSleepMilliseconds(250);
+        chThdSleepMilliseconds(500);
         pcm9685SetChannel(MECA_SUCKER_1_ID, 0, 0);
-        chThdSleepMilliseconds(50);
+        chThdSleepMilliseconds(500);
       }
       if(sucker_state[2] == MECA_SUCKER_ON)
       {
+        lcdPrintln(LCD_INFO, "s2");
         pcm9685SetChannel(MECA_SUCKER_2_ID, 0, 4095);
-        chThdSleepMilliseconds(250);
+        chThdSleepMilliseconds(500);
         pcm9685SetChannel(MECA_SUCKER_2_ID, 0, 0);
-        chThdSleepMilliseconds(50);
+        chThdSleepMilliseconds(500);
       }
-      chThdSleepMilliseconds(100);
+      */
       pcm9685SetChannel(MECA_PUMP_ID, 0, 0);
+      chThdSleepMilliseconds(100);
     }
     chMtxUnlock();
 
@@ -208,24 +238,20 @@ static msg_t mecaThread(void *arg)
       if(sucker_state[0] == MECA_SUCKER_OFF)
       {
         pcm9685SetChannel(MECA_SUCKER_0_ID, 0, 4095);
-        chThdSleepMilliseconds(250);
-        pcm9685SetChannel(MECA_SUCKER_0_ID, 0, 0);
-        chThdSleepMilliseconds(50);
       }
       if(sucker_state[1] == MECA_SUCKER_OFF)
       {
         pcm9685SetChannel(MECA_SUCKER_1_ID, 0, 4095);
-        chThdSleepMilliseconds(250);
-        pcm9685SetChannel(MECA_SUCKER_1_ID, 0, 0);
-        chThdSleepMilliseconds(50);
       }
       if(sucker_state[2] == MECA_SUCKER_OFF)
       {
         pcm9685SetChannel(MECA_SUCKER_2_ID, 0, 4095);
-        chThdSleepMilliseconds(250);
-        pcm9685SetChannel(MECA_SUCKER_2_ID, 0, 0);
-        chThdSleepMilliseconds(50);
       }
+      chThdSleepMilliseconds(200);
+
+      pcm9685SetChannel(MECA_SUCKER_0_ID, 0, 0);
+      pcm9685SetChannel(MECA_SUCKER_2_ID, 0, 0);
+      pcm9685SetChannel(MECA_SUCKER_1_ID, 0, 0);
       pcm9685SetChannel(MECA_SUCKER_AIR_ID, 0, 0);
     }
     chMtxUnlock();
@@ -238,33 +264,36 @@ static msg_t mecaThread(void *arg)
 void mecaSetSuckerState(int id, meca_sucker_t state)
 {
   sucker_state[id] = state;
+  return;
 
   chMtxLock(&mutex_sucker);
   
   if(state == MECA_SUCKER_ON)
   {
-    pcm9685SetChannel(MECA_PUMP_ID, 0, 4095);
     pcm9685SetChannel(MECA_SUCKER_AIR_ID, 0, 0);
     chThdSleepMilliseconds(100);
     switch(id)
     {
       case 0:
         pcm9685SetChannel(MECA_SUCKER_0_ID, 0, 4095);
-        chThdSleepMilliseconds(750);
+        pcm9685SetChannel(MECA_PUMP_ID, 0, 4095);
+        chThdSleepMilliseconds(2000);
         pcm9685SetChannel(MECA_SUCKER_0_ID, 0, 0);
         chThdSleepMilliseconds(50);
         break;
 
       case 1:
         pcm9685SetChannel(MECA_SUCKER_1_ID, 0, 4095);
-        chThdSleepMilliseconds(750);
+    pcm9685SetChannel(MECA_PUMP_ID, 0, 4095);
+        chThdSleepMilliseconds(2000);
         pcm9685SetChannel(MECA_SUCKER_1_ID, 0, 0);
         chThdSleepMilliseconds(50);
         break;
 
       case 2:
         pcm9685SetChannel(MECA_SUCKER_2_ID, 0, 4095);
-        chThdSleepMilliseconds(750);
+    pcm9685SetChannel(MECA_PUMP_ID, 0, 4095);
+        chThdSleepMilliseconds(2000);
         pcm9685SetChannel(MECA_SUCKER_2_ID, 0, 0);
         chThdSleepMilliseconds(50);
         break;
@@ -321,11 +350,11 @@ void mecaInit(void)
     sucker_state[i] = MECA_SUCKER_OFF;
   }
 
-  mecaSetBackFoot(MECA_FOOT_IDLE);
-  mecaSetFrontFoot(MECA_FOOT_IDLE);
+  mecaSetBackFoot(MECA_FOOT_HIGH);
+  mecaSetFrontFoot(MECA_FOOT_LOW);
 
-  mecaSetLeftCarpetState(MECA_CARPET_OPEN_3);
   mecaSetRightCarpetState(MECA_CARPET_OPEN_3);
+  mecaSetLeftCarpetState(MECA_CARPET_OPEN_3);
 
   chThdCreateStatic(waMeca, sizeof(waMeca), NORMALPRIO, mecaThread, NULL);
 }

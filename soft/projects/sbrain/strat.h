@@ -10,6 +10,7 @@ typedef enum
 void stratInit(void);
 int stratGetTimeLeft(void);
 void stratStart(void);
+void stratWedging(void);
 strat_color_t stratGetColor(void);
 
 

@@ -134,6 +134,7 @@ void usirInit(void)
 void usirSetIRRaw(int channel, uint16_t raw)
 {
   raw = 1.0 / (((double)raw) * 0.0000057 - 0.001);
+  (void)channel;
   cli();
   dist_ir[channel] = raw;
   sei();
@@ -143,6 +144,7 @@ void usirSetUSRaw(int channel, uint16_t raw)
 {
   raw /= 4;
   raw = ((double)raw) / 5.8;
+  (void)channel;
   cli();
   dist_us[channel] = raw;
   sei();

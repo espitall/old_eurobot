@@ -92,10 +92,11 @@ int main(void)
   //RTOS initialization
   halInit();
   chSysInit();
+  
+  chThdCreateStatic(waHeartbeatThread, sizeof(waHeartbeatThread), NORMALPRIO, heartbeatThread, NULL);
   usirInit();
   adcInit();
 
-  chThdCreateStatic(waHeartbeatThread, sizeof(waHeartbeatThread), NORMALPRIO, heartbeatThread, NULL);
 
   PORTB.DIRSET = (1 << 0);
   PORTB.OUTCLR = (1 << 0);

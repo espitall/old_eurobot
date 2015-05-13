@@ -55,7 +55,7 @@ int main(void)
   trajectoryInit();
   asservInit();
   //mecaInit();
-  //usirInit();
+  usirInit();
   pathfinderInit();
   mecaInit();
   //gyroInit();
@@ -63,8 +63,9 @@ int main(void)
 
   lcdPrintln(LCD_WARNING, "Start: robot secondaire");
 
-  testInput();
-  
+
+  trajectorySetSafetymm(400);
+  asservSetEnable(1);
 
   lcdPrintln(LCD_INFO, "Attente tapis");
   uint8_t left = 0;
@@ -75,29 +76,49 @@ int main(void)
     if(read & (1 << IO_SWITCH_BACK_LEFT))
     {
       mecaSetLeftCarpetState(MECA_CARPET_OPEN_1);
+      lcdPrintln(LCD_INFO, "Tapis gauche: OK");
+      left = 1;
     }
 
     if(read & (1 << IO_SWITCH_BACK_RIGHT))
     {
       mecaSetRightCarpetState(MECA_CARPET_OPEN_1);
+      lcdPrintln(LCD_INFO, "Tapis droit: OK");
+      right = 1;
     }
     chThdSleepMilliseconds(100);
   }
 
   lcdPrintln(LCD_INFO, "Attente tirette (mise en place)");
 
-  //pcm9685SetChannel(8, 0, 220);
-  //pcm9685SetChannel(9, 0, 500);
-  //pcm9685SetChannel(10, 0, 400);
-  //pcm9685SetChannel(11, 0, 550);
-  while (true)
+  while(!(max7317Read() & (1 << IO_SWITCH_STARTUP)))
   {
-    lcdPrintln(LCD_WARNING, "High");
-    mecaSetBackFoot(MECA_FOOT_HIGH);
-    chThdSleepMilliseconds(5000);
-
-    lcdPrintln(LCD_WARNING, "Low");
-    mecaSetBackFoot(MECA_FOOT_LOW);
-    chThdSleepMilliseconds(5000);
+    chThdSleepMilliseconds(100);
   }
+  mecaSetLeftCarpetState(MECA_CARPET_CLOSE);
+  mecaSetRightCarpetState(MECA_CARPET_CLOSE);
+
+  lcdPrintln(LCD_INFO, "Asserv: go");
+  //asservSetEnable(1);
+  //stratWedging();
+
+  posSetYmm(1000);
+  posSetXmm(-1100 + 90);
+  posSetAdeg(0);
+
+  lcdPrintln(LCD_INFO, "Attente du depart");
+
+  while(max7317Read() & (1 << IO_SWITCH_STARTUP))
+  {
+    chThdSleepMilliseconds(100);
+  }
+  trajectorySetSafetymm(400);
+  stratStart();
+
+  while(true)
+  {
+    chThdSleepMilliseconds(3000);
+  }
+
+  return 0;
 }

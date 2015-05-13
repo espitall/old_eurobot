@@ -52,13 +52,12 @@ void stratInit(void)
 
   if(max7317Read() & (1 << IO_SWITCH_COLOR))
   {
-    _color = STRAT_COLOR_GREEN;
+    _color = STRAT_COLOR_YELLOW;
   }
   else
   {
-    _color = STRAT_COLOR_YELLOW;
+    _color = STRAT_COLOR_GREEN;
   }
-  _color = STRAT_COLOR_YELLOW;
 
   switch(_color)
   {
@@ -190,12 +189,36 @@ void stratStart(void)
 {
   _startTime = chTimeNow();
 
+  switch(_color)
+  {
+    case STRAT_COLOR_YELLOW:
+      stepAction(STEP_ACTION_TAKE_FIRST_BALL_LEFT);
+      break;
 
-  stepAction(STEP_ACTION_TAKE_FIRST_BALL_LEFT);
+    case STRAT_COLOR_GREEN:
+      stepAction(STEP_ACTION_TAKE_FIRST_BALL_RIGHT);
+      break;
+  }
   stepWait();
   TRAJECTORY_D_MM(-500);
-  stepAction(STEP_ACTION_PREP_SPOT_LEFT);
+  switch(_color)
+  {
+    case STRAT_COLOR_YELLOW:
+      stepAction(STEP_ACTION_PREP_SPOT_LEFT);
+      break;
+
+    case STRAT_COLOR_GREEN:
+      stepAction(STEP_ACTION_PREP_SPOT_RIGHT);
+      break;
+  }
   trajectoryWait();
+
+  TRAJECTORY_XY_MM(-630, 645);
+  TRAJECTORY_XY_MM(-400, 230);
+  TRAJECTORY_D_MM(-500);
+  trajectoryWait();
+
+  asservSetEnable(0);
 
   if(1)
   {

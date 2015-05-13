@@ -117,41 +117,36 @@ void handleStepActionPreTakeSpot(int right)
   {
     servoSet(SERVO_SLIDER_LEFT, SERVO_SLIDER_LEFT_CLOSE);
     servoSet(SERVO_SLIDER_RIGHT, SERVO_SLIDER_RIGHT_CLOSE);
-    stepperSetRel(STEP_LEFT_SLIDER_ID, -3000);
-    stepperSetRel(STEP_RIGHT_SLIDER_ID, -3000);
+    stepperSetTarget(STEP_LEFT_SLIDER_ID, -1900);
+    stepperSetTarget(STEP_RIGHT_SLIDER_ID, 0);
 
     stepperWait(STEP_LEFT_SLIDER_ID);
     stepperWait(STEP_RIGHT_SLIDER_ID);
-    stepperSetRel(STEP_LEFT_SLIDER_ID, 150);
-    stepperSetRel(STEP_RIGHT_SLIDER_ID, 150);
-    stepperWait(STEP_LEFT_SLIDER_ID);
-    stepperWait(STEP_RIGHT_SLIDER_ID);
-    stepperSetRel(STEP_RIGHT_SLIDER_ID, -100);
+
+    chThdSleepMilliseconds(1500);
 
     servoSet(SERVO_SLIDER_LEFT, SERVO_SLIDER_LEFT_OPEN);
     servoSet(SERVO_SLIDER_RIGHT, SERVO_SLIDER_RIGHT_OPEN);
-    stepperSetRel(STEP_LEFT_SLIDER_ID, 350);
 
+    stepperSetTarget(STEP_LEFT_SLIDER_ID, STEP_LEFT_SLIDER_INIT);
 
   }
   else
   {
     servoSet(SERVO_SLIDER_LEFT, SERVO_SLIDER_LEFT_CLOSE);
     servoSet(SERVO_SLIDER_RIGHT, SERVO_SLIDER_RIGHT_CLOSE);
-    stepperSetRel(STEP_LEFT_SLIDER_ID, 3000);
-    stepperSetRel(STEP_RIGHT_SLIDER_ID, 3000);
+    stepperSetTarget(STEP_LEFT_SLIDER_ID, -100);
+    stepperSetTarget(STEP_RIGHT_SLIDER_ID, 2300);
 
     stepperWait(STEP_LEFT_SLIDER_ID);
     stepperWait(STEP_RIGHT_SLIDER_ID);
-    stepperSetRel(STEP_LEFT_SLIDER_ID, -250);
-    stepperSetRel(STEP_RIGHT_SLIDER_ID, -250);
-    stepperWait(STEP_LEFT_SLIDER_ID);
-    stepperWait(STEP_RIGHT_SLIDER_ID);
-    stepperSetRel(STEP_LEFT_SLIDER_ID, 100);
+
+    chThdSleepMilliseconds(1500);
 
     servoSet(SERVO_SLIDER_LEFT, SERVO_SLIDER_LEFT_OPEN);
     servoSet(SERVO_SLIDER_RIGHT, SERVO_SLIDER_RIGHT_OPEN);
-    stepperSetRel(STEP_RIGHT_SLIDER_ID, -350);
+
+    stepperSetTarget(STEP_RIGHT_SLIDER_ID, STEP_RIGHT_SLIDER_INIT);
   }
 }
 
@@ -163,6 +158,13 @@ void handleStepActionTakeSpot(int right)
 
     stepperSetTarget(STEP_RIGHT_LIFT_ID, -1200);
     stepperWait(STEP_RIGHT_LIFT_ID);
+    
+    int i;
+    for(i = 0; i < 10; i += 1)
+    {
+      servoSet(SERVO_CLAMP_RIGHT, SERVO_CLAMP_RIGHT_ALMOST_CLOSE - 50 * i);
+      chThdSleepMilliseconds(75);
+    }
     servoSet(SERVO_CLAMP_RIGHT, SERVO_CLAMP_RIGHT_CLOSE);
     chThdSleepMilliseconds(250);
     servoSet(SERVO_CLAMP_RIGHT, SERVO_CLAMP_RIGHT_ALMOST_CLOSE);
@@ -178,8 +180,15 @@ void handleStepActionTakeSpot(int right)
   {
     servoSet(SERVO_CLAMP_LEFT, SERVO_CLAMP_LEFT_ALMOST_CLOSE);
 
-    stepperSetTarget(STEP_LEFT_LIFT_ID, 1050);
+    stepperSetTarget(STEP_LEFT_LIFT_ID, 1200);
     stepperWait(STEP_LEFT_LIFT_ID);
+    
+    int i;
+    for(i = 0; i < 10; i += 1)
+    {
+      servoSet(SERVO_CLAMP_LEFT, SERVO_CLAMP_LEFT_ALMOST_CLOSE - 50 * i);
+      chThdSleepMilliseconds(75);
+    }
     servoSet(SERVO_CLAMP_LEFT, SERVO_CLAMP_LEFT_CLOSE);
     chThdSleepMilliseconds(250);
     servoSet(SERVO_CLAMP_LEFT, SERVO_CLAMP_LEFT_ALMOST_CLOSE);
@@ -190,6 +199,22 @@ void handleStepActionTakeSpot(int right)
     chThdSleepMilliseconds(250);
 
     stepperSetTarget(STEP_LEFT_LIFT_ID, 550);
+
+
+    //servoSet(SERVO_CLAMP_LEFT, SERVO_CLAMP_LEFT_ALMOST_CLOSE);
+
+    //stepperSetTarget(STEP_LEFT_LIFT_ID, 1050);
+    //stepperWait(STEP_LEFT_LIFT_ID);
+    //servoSet(SERVO_CLAMP_LEFT, SERVO_CLAMP_LEFT_CLOSE);
+    //chThdSleepMilliseconds(250);
+    //servoSet(SERVO_CLAMP_LEFT, SERVO_CLAMP_LEFT_ALMOST_CLOSE);
+
+    //stepperSetTarget(STEP_LEFT_LIFT_ID, 1400);
+    //stepperWait(STEP_LEFT_LIFT_ID);
+    //servoSet(SERVO_CLAMP_LEFT, SERVO_CLAMP_LEFT_CLOSE);
+    //chThdSleepMilliseconds(250);
+
+    //stepperSetTarget(STEP_LEFT_LIFT_ID, 550);
   }
 }
 
@@ -221,87 +246,76 @@ void handleStepActionPrepSpot(int right)
   }
   else
   {
-    stepperSetPosition(STEP_LEFT_SLIDER_ID, 0);
-    stepperSetTarget(STEP_LEFT_SLIDER_ID, STEP_LEFT_SLIDER_RESET_OFFSET);
     servoSet(SERVO_SLIDER_LEFT, SERVO_SLIDER_LEFT_OPEN);
-
-    stepperSetPosition(STEP_RIGHT_SLIDER_ID, 0);
-    stepperSetTarget(STEP_RIGHT_SLIDER_ID, STEP_RIGHT_SLIDER_RESET_OFFSET);
     servoSet(SERVO_SLIDER_RIGHT, SERVO_SLIDER_RIGHT_OPEN);
 
+    stepperSetTarget(STEP_LEFT_SLIDER_ID, 0);
+    stepperSetTarget(STEP_RIGHT_SLIDER_ID, STEP_RIGHT_SLIDER_INIT);
+
     stepperWait(STEP_LEFT_SLIDER_ID);
-    stepperSetPosition(STEP_LEFT_SLIDER_ID, 0);
     stepperWait(STEP_RIGHT_SLIDER_ID);
-    stepperSetPosition(STEP_RIGHT_SLIDER_ID, 0);
-    stepperSetTarget(STEP_RIGHT_SLIDER_ID, -350);
+    //stepperSetPosition(STEP_LEFT_SLIDER_ID, 0);
+    //stepperSetTarget(STEP_LEFT_SLIDER_ID, STEP_LEFT_SLIDER_RESET_OFFSET);
+    //servoSet(SERVO_SLIDER_LEFT, SERVO_SLIDER_LEFT_OPEN);
+
+    //stepperSetPosition(STEP_RIGHT_SLIDER_ID, 0);
+    //stepperSetTarget(STEP_RIGHT_SLIDER_ID, STEP_RIGHT_SLIDER_RESET_OFFSET);
+    //servoSet(SERVO_SLIDER_RIGHT, SERVO_SLIDER_RIGHT_OPEN);
+
+    //stepperWait(STEP_LEFT_SLIDER_ID);
+    //stepperSetPosition(STEP_LEFT_SLIDER_ID, 0);
+    //stepperWait(STEP_RIGHT_SLIDER_ID);
+    //stepperSetPosition(STEP_RIGHT_SLIDER_ID, 0);
+    //stepperSetTarget(STEP_RIGHT_SLIDER_ID, -350);
   }
 }
 
 void handleStepActionTakeFirstBall(int right)
 {
-  (void)right;
-
-  servoSet(SERVO_CLAMP_LEFT, SERVO_CLAMP_LEFT_OPEN);
-  stepperSetTarget(STEP_LEFT_SLIDER_ID, STEP_LEFT_SLIDER_INIT);
-  stepperSetTarget(STEP_RIGHT_SLIDER_ID, STEP_RIGHT_SLIDER_INIT);
-  stepperWait(STEP_LEFT_SLIDER_ID);
-  stepperWait(STEP_RIGHT_SLIDER_ID);
-
-  servoSet(SERVO_SLIDER_LEFT, SERVO_SLIDER_LEFT_CLOSE);
-  servoSet(SERVO_SLIDER_RIGHT, SERVO_SLIDER_RIGHT_CLOSE);
-
   if(right)
   {
-    stepperSetTarget(STEP_LEFT_SLIDER_ID, 4500);
-    stepperSetTarget(STEP_RIGHT_SLIDER_ID, -500);
-  }
-  else
-  {
-    stepperSetTarget(STEP_LEFT_SLIDER_ID, -500);
-    stepperSetTarget(STEP_RIGHT_SLIDER_ID, 2000);
-
-  }
-  stepperWait(STEP_LEFT_SLIDER_ID);
-  stepperWait(STEP_RIGHT_SLIDER_ID);
-
-  stepperWait(STEP_LEFT_SLIDER_ID);
-  stepperWait(STEP_RIGHT_SLIDER_ID);
-
-  
-  if(right)
-  {
-    stepperSetTarget(STEP_RIGHT_LIFT_ID, -830);
-    stepperWait(STEP_RIGHT_LIFT_ID);
-    servoSet(SERVO_CLAMP_RIGHT, SERVO_CLAMP_RIGHT_CLOSE);
+    servoSet(SERVO_CLAMP_RIGHT, SERVO_CLAMP_RIGHT_OPEN);
+    servoSet(SERVO_SLIDER_LEFT, SERVO_SLIDER_LEFT_CLOSE);
+    servoSet(SERVO_SLIDER_RIGHT, SERVO_SLIDER_RIGHT_CLOSE);
+    chThdSleepMilliseconds(500);
+    stepperSetTarget(STEP_RIGHT_SLIDER_ID, 0);
+    stepperSetTarget(STEP_LEFT_SLIDER_ID, -1900);
+    stepperWait(STEP_LEFT_SLIDER_ID);
+    stepperSetTarget(STEP_LEFT_SLIDER_ID, STEP_LEFT_SLIDER_INIT);
     servoSet(SERVO_SLIDER_RIGHT, SERVO_SLIDER_RIGHT_OPEN);
-    servoSet(SERVO_SLIDER_RIGHT, SERVO_SLIDER_RIGHT_OPEN);
-    chThdSleepMilliseconds(250);
-    servoSet(SERVO_CLAMP_RIGHT, SERVO_CLAMP_RIGHT_ALMOST_CLOSE);
+    servoSet(SERVO_SLIDER_LEFT, SERVO_SLIDER_LEFT_OPEN);
+
+    chThdSleepMilliseconds(500);
+
     stepperSetTarget(STEP_RIGHT_LIFT_ID, -1200);
     stepperWait(STEP_RIGHT_LIFT_ID);
     servoSet(SERVO_CLAMP_RIGHT, SERVO_CLAMP_RIGHT_CLOSE);
     chThdSleepMilliseconds(250);
 
-    stepperSetTarget(STEP_RIGHT_LIFT_ID, -300);
-    stepperWait(STEP_RIGHT_LIFT_ID);
+    stepperSetTarget(STEP_RIGHT_LIFT_ID, -550);
 
   }
   else
   {
-    stepperSetTarget(STEP_LEFT_LIFT_ID, 830);
-    stepperWait(STEP_LEFT_LIFT_ID);
-    servoSet(SERVO_CLAMP_LEFT, SERVO_CLAMP_LEFT_CLOSE);
-    servoSet(SERVO_SLIDER_LEFT, SERVO_SLIDER_LEFT_OPEN);
+    servoSet(SERVO_CLAMP_LEFT, SERVO_CLAMP_LEFT_OPEN);
+    servoSet(SERVO_SLIDER_LEFT, SERVO_SLIDER_LEFT_CLOSE);
+    servoSet(SERVO_SLIDER_RIGHT, SERVO_SLIDER_RIGHT_CLOSE);
+    chThdSleepMilliseconds(500);
+    stepperSetTarget(STEP_RIGHT_SLIDER_ID, 2100);
+    stepperSetTarget(STEP_LEFT_SLIDER_ID, 0);
+    stepperWait(STEP_LEFT_SLIDER_ID);
+    stepperSetTarget(STEP_RIGHT_SLIDER_ID, STEP_RIGHT_SLIDER_INIT);
     servoSet(SERVO_SLIDER_RIGHT, SERVO_SLIDER_RIGHT_OPEN);
-    chThdSleepMilliseconds(250);
-    servoSet(SERVO_CLAMP_LEFT, SERVO_CLAMP_LEFT_ALMOST_CLOSE);
-    stepperSetTarget(STEP_LEFT_LIFT_ID, 1100);
+    servoSet(SERVO_SLIDER_LEFT, SERVO_SLIDER_LEFT_OPEN);
+
+    chThdSleepMilliseconds(500);
+
+    stepperSetTarget(STEP_LEFT_LIFT_ID, 1200);
     stepperWait(STEP_LEFT_LIFT_ID);
     servoSet(SERVO_CLAMP_LEFT, SERVO_CLAMP_LEFT_CLOSE);
     chThdSleepMilliseconds(250);
 
-    stepperSetTarget(STEP_LEFT_LIFT_ID, 400);
-    stepperWait(STEP_LEFT_LIFT_ID);
+    stepperSetTarget(STEP_LEFT_LIFT_ID, 550);
   }
 }
 

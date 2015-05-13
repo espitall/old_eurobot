@@ -1,4 +1,5 @@
 #include <ch.h>
+#include <lcd.h>
 #include <hal.h>
 #include <stdint.h>
 #include "pwm.h"
@@ -57,7 +58,19 @@ void pcm9685SetChannel(uint8_t id, uint16_t delay, uint16_t width)
   switch(id / 16)
   {
     case 0:
-      i2cMasterTransmitTimeout(&I2CD3,PCM9685_ADDR,txbuf,5,NULL,0,MS2ST(I2C_TIMEOUT_MS));
+      {
+        int i;
+        for(i = 0; i < 4; i += 1)
+        {
+          if(i2cMasterTransmitTimeout(&I2CD3,PCM9685_ADDR,txbuf,5,NULL,0,MS2ST(I2C_TIMEOUT_MS)) != RDY_OK)
+          {
+            lcdPrintln(LCD_ERROR, "i2c error");
+          }
+        }
+        if(i == 4)
+        {
+        }
+      }
       break;
   }
   chMtxUnlock();

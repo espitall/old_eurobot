@@ -92,11 +92,14 @@ int main(void)
   //RTOS initialization
   halInit();
   chSysInit();
+  
+  chThdCreateStatic(waHeartbeatThread, sizeof(waHeartbeatThread), NORMALPRIO, heartbeatThread, NULL);
   usirInit();
   adcInit();
 
-  chThdCreateStatic(waHeartbeatThread, sizeof(waHeartbeatThread), NORMALPRIO, heartbeatThread, NULL);
 
+  PORTB.DIRSET = (1 << 0);
+  PORTB.OUTCLR = (1 << 0);
 
   //init event system
   EVSYS.CH0MUX = EVSYS_CHMUX_PORTC_PIN7_gc;
@@ -155,6 +158,37 @@ int main(void)
     palClearPad(GPIOC, GPIOC_US_TRIG_CH3);
     ADCA.CH3.CTRL |= ADC_CH_START_bm;
     chThdSleepMilliseconds(20);
+
+    uint8_t stop = 0;
+    int32_t alert = getAlert();
+    
+    if(alert > 0)
+    {
+      uint8_t ids = alert >> 12;
+      alert = alert & 0xFFF;
+      for(i = 0; i < 4; i += 1)
+      {
+        if(ids & (1 << i))
+        {
+          if(usirGetUSRaw(i) < alert)
+          {
+            if(usirGetIRRaw(i) < alert * 1.30)
+            {
+              stop = 1;
+            }
+          }
+        }
+      }
+    }
+
+    if(stop)
+    {
+      PORTB.OUTSET = (1 << 0);
+    }
+    else
+    {
+      PORTB.OUTCLR = (1 << 0);
+    }
   }
 
   return 0;

@@ -9,11 +9,13 @@
 static volatile int regaddr;
 static volatile uint8_t * regptr;
 static volatile uint8_t * nextregptr;
+static volatile uint8_t * writeptr;
 static volatile uint8_t nextByte;
 
 static volatile uint16_t dist_ir[8];
 static volatile uint16_t dist_us[4];
 static const uint16_t board_id = USIR_ID;
+static volatile uint16_t alert;
 
 ISR(PORTD_INT0_vect)
 {
@@ -27,6 +29,7 @@ ISR(PORTD_INT0_vect)
     SPID.DATA = 0x00;
     nextByte = 0x00;
   }
+  writeptr = NULL;
   regptr = nextregptr;
   regaddr = 0;
 }
@@ -38,6 +41,11 @@ ISR(SPID_INT_vect)
 
   if(regaddr == 0)
   {
+    if(!(read & 0x80))
+    {
+      writeptr = (uint8_t *)&alert;
+    }
+
     switch(read & 0x7F)
     {
       case USIR_BOARD_ID:
@@ -77,9 +85,21 @@ ISR(SPID_INT_vect)
         break;
     }
   }
+  else
+  {
+    if(writeptr != NULL)
+    {
+      writeptr[regaddr - 1] = read;
+    }
+  }
 
   regaddr += 1;
   nextByte = regptr[regaddr + 1];
+}
+
+uint16_t getAlert(void)
+{
+  return alert;
 }
 
 void usirInit(void)
@@ -87,6 +107,7 @@ void usirInit(void)
   int i;
 
   //init vars
+  alert = 0;
   regaddr = 0;
   regptr = NULL;
   nextregptr = NULL;
@@ -113,6 +134,7 @@ void usirInit(void)
 void usirSetIRRaw(int channel, uint16_t raw)
 {
   raw = 1.0 / (((double)raw) * 0.0000057 - 0.001);
+  (void)channel;
   cli();
   dist_ir[channel] = raw;
   sei();
@@ -122,9 +144,32 @@ void usirSetUSRaw(int channel, uint16_t raw)
 {
   raw /= 4;
   raw = ((double)raw) / 5.8;
+  (void)channel;
   cli();
   dist_us[channel] = raw;
   sei();
+}
+
+uint16_t usirGetIRRaw(int channel)
+{
+  uint16_t r;
+
+  cli();
+  r = dist_ir[channel];
+  sei();
+
+  return r;
+}
+
+uint16_t usirGetUSRaw(int channel)
+{
+  uint16_t r;
+
+  cli();
+  r = dist_us[channel];
+  sei();
+
+  return r;
 }
 
 #endif

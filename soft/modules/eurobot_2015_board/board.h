@@ -1296,7 +1296,7 @@
 #define IO_SWITCH_STARTUP     0
 #define IO_SWITCH_BACK_LEFT   1
 #define IO_SWITCH_BACK_RIGHT  2
-#define IO_SWITCH_COLOR       4
+#define IO_SWITCH_COLOR       3
 
 
 #if !defined(_FROM_ASM_)

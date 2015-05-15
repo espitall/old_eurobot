@@ -28,4 +28,6 @@ double rampGetOutput(ramp_t * ramp);
 
 void rampReset(ramp_t * ramp, double preset);
 
+void rampSetSetPointNow(ramp_t * ramp, double set_point);
+
 #endif// RAMP_H

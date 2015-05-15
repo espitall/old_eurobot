@@ -3,11 +3,13 @@
 
 typedef enum
 {
-  MECA_CLAMP_OPEN,
-  MECA_CLAMP_CLOSE,
-} mecaClamp_t;
+  MECA_ARM_UP,
+  MECA_ARM_DOWN,
+} mecaArm_t;
 
 void mecaInit(void);
-void mecaSetHorizontalClamp(mecaClamp_t status);
+void mecaSetLeftArm(mecaArm_t status);
+void mecaSetRightArm(mecaArm_t status);
+void mecaDisable(void);
 
 #endif// MECA_H

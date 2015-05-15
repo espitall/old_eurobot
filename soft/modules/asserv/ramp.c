@@ -33,6 +33,14 @@ void rampSetSetPoint(ramp_t * ramp, double set_point)
   chMtxUnlock();
 }
 
+void rampSetSetPointNow(ramp_t * ramp, double set_point)
+{
+  chMtxLock(&ramp->mutex);
+  ramp->set_point = set_point;
+  ramp->speed_set_point = 0;
+  chMtxUnlock();
+}
+
 double rampGetOutput(ramp_t * ramp)
 {
   double output;

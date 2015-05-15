@@ -1,4 +1,5 @@
 #include <ch.h>
+#include <lcd.h>
 #include <hal.h>
 #include <stdint.h>
 #include "pwm.h"
@@ -11,6 +12,8 @@
 #define PCA9685_MODE1_REGISTER_SLEEP_bp 4
 #define PCA9685_LED0_ON_L_REGISTER 0x06
 #define PCA9685_PRE_SCALE_REGISTER 0xFE
+
+static MUTEX_DECL(mutex);
 
 static void pcm9685SetSleep(uint8_t addr, uint8_t sleep)
 {
@@ -36,6 +39,7 @@ static void pcm9685SetFreq(uint8_t addr, uint32_t freq_Hz)
 
 void pcm9685Init(void)
 {
+  chMtxInit(&mutex);
   pcm9685SetSleep(PCM9685_ADDR, 1);
   pcm9685SetFreq(PCM9685_ADDR, PCM9685_FREQ_HZ);
   pcm9685SetSleep(PCM9685_ADDR, 0);
@@ -50,10 +54,24 @@ void pcm9685SetChannel(uint8_t id, uint16_t delay, uint16_t width)
   txbuf[3] = width & 0xff;
   txbuf[4] = (width >> 8) & 0xff;
 
+  chMtxLock(&mutex);
   switch(id / 16)
   {
     case 0:
-      i2cMasterTransmitTimeout(&I2CD3,PCM9685_ADDR,txbuf,5,NULL,0,MS2ST(I2C_TIMEOUT_MS));
+      {
+        int i;
+        for(i = 0; i < 4; i += 1)
+        {
+          if(i2cMasterTransmitTimeout(&I2CD3,PCM9685_ADDR,txbuf,5,NULL,0,MS2ST(I2C_TIMEOUT_MS)) != RDY_OK)
+          {
+            lcdPrintln(LCD_ERROR, "i2c error");
+          }
+        }
+        if(i == 4)
+        {
+        }
+      }
       break;
   }
+  chMtxUnlock();
 }

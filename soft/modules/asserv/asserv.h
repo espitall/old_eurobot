@@ -11,8 +11,17 @@ void asservInit(void);
  */
 void asservCompute(void);
 void asservSetEnable(int enable);
+void asservSlow(void);
+void asservNormal(void);
+void asservNoIntegral(int i);
 int asservIsEnabled(void);
 void asservSetDistanceSetPoint(double set_point);
+void asservSetDistanceSetPointSafety(double set_point);
 void asservSetAngularSetPoint(double set_point);
+
+int asservGetM0(void);
+int asservGetM1(void);
+int asservGetAOutput(void);
+int asservGetDOutput(void);
 
 #endif// ASSERV_H

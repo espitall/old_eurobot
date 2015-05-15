@@ -41,8 +41,8 @@ int main(void)
   trajectoryInit();
   asservInit();
   mecaInit();
-  //stepInit();
-  //usirInit();
+  stepInit();
+  usirInit();
   pathfinderInit();
   //gyroInit();
   stratInit();
@@ -52,34 +52,75 @@ int main(void)
   posSetXmm(-500);
   posSetYmm(1000);
 
-  pathfinderGotoXYmm(950, 250); // 250x950, 950x250
-  */  //pathfinderGotoXYmm(850, 1650);
-  //pathfinderGotoXYmm(-850, 1650);
-  //pathfinderGotoXYmm(-950, 250);
-  
-  while(0)
-  {
-    while((max7317Read() & (1 << IO_SWITCH_BACK_LEFT)))
-    {
-      chThdSleepMilliseconds(100);
-    }
-    lcdPrintln(LCD_INFO, "Click !");
-    stepAction(STEP_ACTION_TAKE_RIGHT);
-    stepWait();
-    lcdPrintln(LCD_INFO, "Done !");
 
-    while(!(max7317Read() & (1 << IO_SWITCH_BACK_LEFT)))
+  trajectorySetSafetymm(0);
+
+
+  switch(stratGetColor())
+  {
+    case STRAT_COLOR_GREEN:
+      stepAction(STEP_ACTION_RESET_GREEN);
+      break;
+
+    case STRAT_COLOR_YELLOW:
+      stepAction(STEP_ACTION_RESET_YELLOW);
+      break;
+  }
+  if(0) 
+  {
+    stepWait();
+    stepAction(STEP_ACTION_PRETAKE_FIRST_BALL_RIGHT);
+    stepWait();
+    asservSetEnable(1);
+    TRAJECTORY_D_MM(20);
+    TRAJECTORY_D_MM(-20);
+    trajectoryWait();
+    stepAction(STEP_ACTION_TAKE_FIRST_BALL_RIGHT);
+    stepWait();
+  //  stepAction(STEP_ACTION_PREP_SPOT_LEFT);
+    stepWait();
+
+    while(1)
     {
-      chThdSleepMilliseconds(100);
+      while((max7317Read() & (1 << IO_SWITCH_BACK_LEFT)))
+      {
+        chThdSleepMilliseconds(100);
+      }
+      lcdPrintln(LCD_INFO, "Click !");
+      stepAction(STEP_ACTION_PRETAKE_SPOT_LEFT);
+      stepWait();
+      TRAJECTORY_D_MM(50);
+      trajectoryWait();
+
+      TRAJECTORY_D_MM(-50);
+      trajectoryWait();
+
+      stepAction(STEP_ACTION_TAKE_SPOT_LEFT);
+      stepWait();
+      lcdPrintln(LCD_INFO, "Done !");
+
+      while(!(max7317Read() & (1 << IO_SWITCH_BACK_LEFT)))
+      {
+        chThdSleepMilliseconds(100);
+      }
     }
   }
 
-  
+  trajectorySetSafetymm(0);
   lcdPrintln(LCD_INFO, "Attente tirette (mise en place)");
   while(!(max7317Read() & (1 << IO_SWITCH_STARTUP)))
   {
     chThdSleepMilliseconds(100);
   }
+
+  lcdPrintln(LCD_INFO, "Asserv: go");
+  //asservSetEnable(1);
+  //stratWedging();
+  stepWait();
+
+  posSetAdeg(180);
+  posSetYmm(1000);
+  posSetXmm(-1500 + 105 + 90);
 
   lcdPrintln(LCD_INFO, "Attente du depart");
 
@@ -87,16 +128,16 @@ int main(void)
   {
     chThdSleepMilliseconds(100);
   }
-
+  trajectorySetSafetymm(470);
   stratStart();
+
+
+
+
+
   
-  TRAJECTORY_D_MM(800);
-  trajectoryWait();
-  pathfinderGotoXYmm(950, 250);
-  /*pathfinderGotoXYmm(850, 1650);
-  pathfinderGotoXYmm(-850, 1650);
-  pathfinderGotoXYmm(-950, 250);
-  */
+
+
   //chThdSleepMilliseconds(3000);
   //  dcmSetWidth(0, 500);
   //  dcmSetWidth(1, -500);

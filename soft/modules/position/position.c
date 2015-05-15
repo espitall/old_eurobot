@@ -15,7 +15,7 @@
 
 static WORKING_AREA(waPosThread, 4096);
 
-static Mutex _mutex;
+static MUTEX_DECL(_mutex);
 
 static int32_t _enc_value[2];
 static uint16_t _enc_last_angle[2];

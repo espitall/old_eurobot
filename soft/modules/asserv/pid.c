@@ -75,6 +75,16 @@ void pidCompute(pid_t * pid)
   double error = pid->set_point - pid->feedback;
 
   pid->integral += error;
+
+  if(pid->integral > pid->imax)
+  {
+    pid->integral = pid->imax;
+  }
+  else if(pid->integral < -pid->imax)
+  {
+    pid->integral = -pid->imax;
+  }
+
   double derivate = error - pid->error;
   pid->error = error;
 

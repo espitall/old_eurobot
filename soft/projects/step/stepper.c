@@ -2,10 +2,11 @@
 #include <hal.h>
 #include "stepper.h"
 
+static MUTEX_DECL(mutex);
 static WORKING_AREA(waStepperThread, 256);
-static uint16_t speed;
-static int32_t position[4];
-static int32_t target[4];
+static volatile uint16_t speed;
+static volatile int32_t position[4];
+static volatile int32_t target[4];
 
 msg_t stepperThread(void* arg) 
 {
@@ -13,6 +14,7 @@ msg_t stepperThread(void* arg)
 
   while (1)
   {
+    chMtxLock(&mutex);
     uint8_t set = 0;
     int j;
     for(j = 0; j < 4; j += 1)
@@ -28,6 +30,7 @@ msg_t stepperThread(void* arg)
         position[j] -= 1;
       }
     }
+    chMtxUnlock();
 
     PORTC.OUT = set;
     volatile int i;
@@ -42,6 +45,9 @@ msg_t stepperThread(void* arg)
 
 void stepperInit(void)
 {
+
+  chMtxInit(&mutex);
+
   palSetPad(GPIOB, GPIOB_MS1);
   palClearPad(GPIOB, GPIOB_MS2);
   palClearPad(GPIOB, GPIOB_MS3);
@@ -65,5 +71,46 @@ void stepperInit(void)
 
 void stepperSetTarget(int id, int32_t pos)
 {
+  chMtxLock(&mutex);
   target[id] = pos;
+  chMtxUnlock();
+}
+
+void stepperSetRel(int id, int32_t pos)
+{
+  chMtxLock(&mutex);
+  target[id] = pos + position[id];;
+  chMtxUnlock();
+}
+
+void stepperSetPosition(int id, int32_t pos)
+{
+  chMtxLock(&mutex);
+  position[id] = pos;
+  target[id] = pos;
+  chMtxUnlock();
+}
+
+void stepperWait(int id)
+{
+  int32_t t;
+  int32_t p;
+  do
+  {
+    chMtxLock(&mutex);
+    p = position[id];
+    t = target[id];
+    chMtxUnlock();
+    if(p != t)
+    {
+      chThdSleepMilliseconds(50);
+    }
+  }while(p != t);
+}
+
+void stepperDisable(void)
+{
+  palSetPad(GPIOA, GPIOA_ENABLE);
+  palClearPad(GPIOA, GPIOA_RESET);
+  palClearPad(GPIOA, GPIOA_SLEEP);
 }

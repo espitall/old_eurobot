@@ -52,15 +52,30 @@ int main(void)
 
   trajectorySetSafetymm(0);
 
-  stepAction(STEP_ACTION_RESET);
+
+  switch(stratGetColor())
+  {
+    case STRAT_COLOR_GREEN:
+      stepAction(STEP_ACTION_RESET_GREEN);
+      break;
+
+    case STRAT_COLOR_YELLOW:
+      stepAction(STEP_ACTION_RESET_YELLOW);
+      break;
+  }
   if(0) 
   {
     stepWait();
- //   stepAction(STEP_ACTION_TAKE_FIRST_BALL_LEFT);
-    stepWait();
-    stepAction(STEP_ACTION_PREP_SPOT_RIGHT);
+    stepAction(STEP_ACTION_PRETAKE_FIRST_BALL_RIGHT);
     stepWait();
     asservSetEnable(1);
+    TRAJECTORY_D_MM(20);
+    TRAJECTORY_D_MM(-20);
+    trajectoryWait();
+    stepAction(STEP_ACTION_TAKE_FIRST_BALL_RIGHT);
+    stepWait();
+  //  stepAction(STEP_ACTION_PREP_SPOT_LEFT);
+    stepWait();
 
     while(1)
     {
@@ -69,7 +84,7 @@ int main(void)
         chThdSleepMilliseconds(100);
       }
       lcdPrintln(LCD_INFO, "Click !");
-      stepAction(STEP_ACTION_PRETAKE_SPOT_RIGHT);
+      stepAction(STEP_ACTION_PRETAKE_SPOT_LEFT);
       stepWait();
       TRAJECTORY_D_MM(50);
       trajectoryWait();
@@ -77,7 +92,7 @@ int main(void)
       TRAJECTORY_D_MM(-50);
       trajectoryWait();
 
-      stepAction(STEP_ACTION_TAKE_SPOT_RIGHT);
+      stepAction(STEP_ACTION_TAKE_SPOT_LEFT);
       stepWait();
       lcdPrintln(LCD_INFO, "Done !");
 
@@ -96,9 +111,13 @@ int main(void)
   }
 
   lcdPrintln(LCD_INFO, "Asserv: go");
-  asservSetEnable(1);
-  stratWedging();
+  //asservSetEnable(1);
+  //stratWedging();
   stepWait();
+
+  posSetAdeg(180);
+  posSetYmm(1000);
+  posSetXmm(-1500 + 105 + 90);
 
   lcdPrintln(LCD_INFO, "Attente du depart");
 

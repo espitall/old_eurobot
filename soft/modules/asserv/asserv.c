@@ -33,6 +33,17 @@ int asservIsEnabled(void)
   return enabled;
 }
 
+void asservNormal(void)
+{
+  rampSetMaxAccel(&_angu_ramp, ASSERV_ANGU_MAX_ACCEL);
+}
+
+void asservNoIntegral(int i)
+{
+  (void)i;
+  pidReset(&_dist_pid);
+  pidReset(&_angu_pid);
+}
 
 void asservSlow(void)
 {

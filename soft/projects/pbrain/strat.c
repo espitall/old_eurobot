@@ -7,6 +7,9 @@
 #include <position.h>
 #include <step.h>
 #include "strat.h"
+#include "meca.h"
+
+//#define TAKE_2_BALL
 
 static systime_t _startTime;
 static strat_color_t _color;
@@ -39,6 +42,8 @@ static msg_t stratTimeThread(void *arg)
     if(stratGetTimeLeft() <= 1)
     {
       asservSetEnable(0);
+      mecaDisable();
+      stepAction(STEP_ACTION_DISABLE);
     }
   }
   return 0;
@@ -98,7 +103,7 @@ void stratTakeLeft(void)
   TRAJECTORY_D_MM(50);
   trajectoryWait();
 
-  TRAJECTORY_D_MM(-50);
+  TRAJECTORY_D_MM(-40);
   trajectoryWait();
 
   stepAction(STEP_ACTION_TAKE_SPOT_LEFT);
@@ -112,7 +117,7 @@ void stratTakeRight(void)
   TRAJECTORY_D_MM(50);
   trajectoryWait();
 
-  TRAJECTORY_D_MM(-50);
+  TRAJECTORY_D_MM(-40);
   trajectoryWait();
 
   stepAction(STEP_ACTION_TAKE_SPOT_RIGHT);
@@ -126,10 +131,16 @@ void stratLeaveLeft(void)
   TRAJECTORY_D_MM(50);
   trajectoryWait();
 
-  TRAJECTORY_D_MM(-40);
+  TRAJECTORY_D_MM(-50);
   trajectoryWait();
 
   stepAction(STEP_ACTION_LEAVE_SPOT_LEFT);
+  stepWait();
+}
+
+void stratLeaveSoftLeft(void)
+{
+  stepAction(STEP_ACTION_LEAVE_SOFT_SPOT_LEFT);
   stepWait();
 }
 
@@ -140,10 +151,16 @@ void stratLeaveRight(void)
   TRAJECTORY_D_MM(50);
   trajectoryWait();
 
-  TRAJECTORY_D_MM(-40);
+  TRAJECTORY_D_MM(-50);
   trajectoryWait();
 
   stepAction(STEP_ACTION_LEAVE_SPOT_RIGHT);
+  stepWait();
+}
+
+void stratLeaveSoftRight(void)
+{
+  stepAction(STEP_ACTION_LEAVE_SOFT_SPOT_RIGHT);
   stepWait();
 }
 
@@ -189,36 +206,90 @@ void stratStart(void)
 {
   _startTime = chTimeNow();
 
+  asservSetEnable(1);
+
+  trajectorySetSafetymm(0);
+#ifdef TAKE_2_BALL
   switch(_color)
   {
     case STRAT_COLOR_YELLOW:
-      stepAction(STEP_ACTION_TAKE_FIRST_BALL_LEFT);
+      stepWait();
+      stepAction(STEP_ACTION_PRETAKE_FIRST_2BALL_RIGHT);
+      stepWait();
+      asservSetEnable(1);
+      TRAJECTORY_D_MM_TEMP_S(20,2);
+      TRAJECTORY_D_MM(-20);
+      trajectoryWait();
+      stepAction(STEP_ACTION_TAKE_FIRST_2BALL_RIGHT);
+      stepWait();
       break;
 
     case STRAT_COLOR_GREEN:
-      stepAction(STEP_ACTION_TAKE_FIRST_BALL_RIGHT);
+      stepWait();
+      stepAction(STEP_ACTION_PRETAKE_FIRST_2BALL_LEFT);
+      stepWait();
+      asservSetEnable(1);
+      TRAJECTORY_D_MM_TEMP_S(20,2);
+      TRAJECTORY_D_MM(-20);
+      trajectoryWait();
+      stepAction(STEP_ACTION_TAKE_FIRST_2BALL_LEFT);
+      stepWait();
       break;
   }
+#else
+  switch(_color)
+  {
+    case STRAT_COLOR_YELLOW:
+      stepWait();
+      stepAction(STEP_ACTION_PRETAKE_FIRST_BALL_RIGHT);
+      stepWait();
+      asservSetEnable(1);
+      TRAJECTORY_D_MM(20);
+      TRAJECTORY_D_MM(-20);
+      trajectoryWait();
+      stepAction(STEP_ACTION_TAKE_FIRST_BALL_RIGHT);
+      stepWait();
+      break;
+
+    case STRAT_COLOR_GREEN:
+      stepWait();
+      stepAction(STEP_ACTION_PRETAKE_FIRST_BALL_LEFT);
+      stepWait();
+      asservSetEnable(1);
+      TRAJECTORY_D_MM(20);
+      TRAJECTORY_D_MM(-20);
+      trajectoryWait();
+      stepAction(STEP_ACTION_TAKE_FIRST_BALL_LEFT);
+      stepWait();
+      break;
+  }
+#endif
+  trajectorySetSafetymm(470);
+
   stepWait();
+  TRAJECTORY_TEMP_S(3);
   TRAJECTORY_D_MM(-500);
   switch(_color)
   {
     case STRAT_COLOR_YELLOW:
-      stepAction(STEP_ACTION_PREP_SPOT_LEFT);
-      break;
-
-    case STRAT_COLOR_GREEN:
       stepAction(STEP_ACTION_PREP_SPOT_RIGHT);
       break;
+
+    case STRAT_COLOR_GREEN:
+      stepAction(STEP_ACTION_PREP_SPOT_LEFT);
+      break;
   }
   trajectoryWait();
 
-  TRAJECTORY_XY_MM(-630, 645);
-  TRAJECTORY_XY_MM(-400, 230);
-  TRAJECTORY_D_MM(-500);
-  trajectoryWait();
+  /*
+  // homologation
+  //TRAJECTORY_XY_MM(-630, 645);
+  //TRAJECTORY_XY_MM(-400, 230);
+  //TRAJECTORY_D_MM(-500);
+  //trajectoryWait();
 
-  asservSetEnable(0);
+  //asservSetEnable(0);
+   */
 
   if(1)
   {
@@ -226,31 +297,175 @@ void stratStart(void)
     //take 1
     TRAJECTORY_XY_MM(-630, 645);
     trajectoryWait();
-    stratTakeLeft();
+    switch(_color)
+    {
+      case STRAT_COLOR_YELLOW:
+        stratTakeRight();
+        break;
+
+      case STRAT_COLOR_GREEN:
+        stratTakeLeft();
+        break;
+    }
 
     asservSlow();
     //take 2
-    TRAJECTORY_XY_MM(-200, 600);
-    trajectoryWait();
-    stratTakeLeft();
-    TRAJECTORY_D_MM(-200);
-    trajectoryWait();
+    //TRAJECTORY_XY_MM(-200, 600);
+    //trajectoryWait();
+    //stratTakeLeft();
+    //TRAJECTORY_D_MM(-200);
+    //trajectoryWait();
 
     //take 3
+    trajectorySetSafetymm(200);
     TRAJECTORY_XY_MM(-400, 300);
+    TRAJECTORY_D_MM(20);
     trajectoryWait();
-    stratLeaveLeft();
+    switch(_color)
+    {
+      case STRAT_COLOR_YELLOW:
+        stratLeaveRight();
+        break;
+
+      case STRAT_COLOR_GREEN:
+        stratLeaveLeft();
+        break;
+    }
+    trajectorySetSafetymm(470);
+    stepAction(STEP_ACTION_PREP_SPOT_CENTER);
     TRAJECTORY_D_MM(-500);
+    trajectoryWait();
   }
 
-  TRAJECTORY_XY_MM(-881, 400);
+ // asservSetEnable(0);
+
+  asservNormal();
+  TRAJECTORY_XY_BACK_MM(-1270, 230);
+  stepWait();
+  trajectoryWait();
+
+  trajectorySetSafetymm(300);
+ // TRAJECTORY_TEMP_S(2);
+  trajectoryWait();
+  double tempy = posGetYmm();
+  trajectorySetSafetymm(0);
+  asservSlow();
+  TRAJECTORY_A_DEG_TEMP_S(0, 1.5);
+  trajectoryStatus_t traj = trajectoryWait();
+  if(traj != TRAJECTORY_OK)
+  {
+
+    asservNormal();
+    TRAJECTORY_D_MM(400);
+    traj = trajectoryWait();
+    trajectorySetSafetymm(300);
+
+    switch(_color)
+    {
+      case STRAT_COLOR_YELLOW:
+        mecaSetRightArm(MECA_ARM_UP);
+        break;
+
+      case STRAT_COLOR_GREEN:
+        mecaSetLeftArm(MECA_ARM_UP);
+        break;
+    }
+
+  }
+  else
+  {
+    TRAJECTORY_D_MM_TEMP_S(-40, 1.5);
+    trajectoryStatus_t traj = trajectoryWait();
+    trajectorySetSafetymm(300);
+
+    switch(_color)
+    {
+      case STRAT_COLOR_YELLOW:
+        mecaSetRightArm(MECA_ARM_UP);
+        break;
+
+      case STRAT_COLOR_GREEN:
+        mecaSetLeftArm(MECA_ARM_UP);
+        break;
+    }
+
+    if(traj != TRAJECTORY_OK)
+    {
+      TRAJECTORY_D_MM(30);
+    }
+
+  }
+
+  asservNormal();
+  TRAJECTORY_XY_MM(-600, tempy);
+  trajectoryWait();
+
+  TRAJECTORY_XY_BACK_MM(-720, tempy);
   TRAJECTORY_A_DEG(90);
   trajectoryWait();
 
-  stratWedgingPreClap();
+  switch(_color)
+  {
+    case STRAT_COLOR_YELLOW:
+      mecaSetRightArm(MECA_ARM_DOWN);
+      break;
+
+    case STRAT_COLOR_GREEN:
+      mecaSetLeftArm(MECA_ARM_DOWN);
+      break;
+  }
+
+  trajectorySetSafetymm(470);
+  TRAJECTORY_XY_MM(-600, 600);
+  trajectoryWait();
+
+  switch(_color)
+  {
+    case STRAT_COLOR_YELLOW:
+      stepAction(STEP_ACTION_PREP_SPOT_LEFT);
+      break;
+
+    case STRAT_COLOR_GREEN:
+      stepAction(STEP_ACTION_PREP_SPOT_LEFT);
+      break;
+  }
+
+  TRAJECTORY_XY_MM(-200, 600);
+  trajectoryWait();
+  stepWait();
+
+  switch(_color)
+  {
+    case STRAT_COLOR_YELLOW:
+      stratTakeLeft();
+      break;
+
+    case STRAT_COLOR_GREEN:
+      stratTakeRight();
+      break;
+  }
+
+  asservSlow();
+  lcdPrintln(LCD_INFO,"Retour maison");
+  TRAJECTORY_XY_MM_TEMP_S(-800, 1000, 5);
+  trajectoryWait();
+  lcdPrintln(LCD_INFO,"Lache");
+  
+  switch(_color)
+  {
+    case STRAT_COLOR_YELLOW:
+      stratLeaveSoftLeft();
+      break;
+
+    case STRAT_COLOR_GREEN:
+      stratLeaveSoftRight();
+      break;
+  }
+
+  TRAJECTORY_D_MM(-100);
+  trajectoryWait();
+
   asservSetEnable(0);
-
-
 }
 
 strat_color_t stratGetColor(void)

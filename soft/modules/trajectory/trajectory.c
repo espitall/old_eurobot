@@ -48,6 +48,7 @@ static trajectory_t orderList[TRAJECTORY_MAX_ORDER];
 static int writePosition;
 static int readPosition;
 static double safety;
+static trajectoryStatus_t status;
 
 static trajectoryResult_t trajectory_handle_type_no_move(trajectory_t * traj)
 {
@@ -434,6 +435,15 @@ static msg_t trajectoryThread(void *arg)
           break;
       }
 
+      if((chTimeNow() - traj->TStartt) > traj->TSetPointt)
+      {
+        result = TRAJECTORY_RESULT_REMOVE;
+        if(traj->type != TRAJECTORY_TYPE_T)
+        {
+          status = TRAJECTORY_FAILED_TEMPO;
+        }
+      }
+
       if(result == TRAJECTORY_RESULT_REMOVE)
       {
         readPosition = (readPosition + 1) % TRAJECTORY_MAX_ORDER;
@@ -487,6 +497,7 @@ void trajectoryInit(void)
   writePosition = 0;
   readPosition = 0;
   safety = 0;
+  status = TRAJECTORY_OK;
 
   chMtxInit(&mutex);
   chCondInit(&condVar);
@@ -494,7 +505,7 @@ void trajectoryInit(void)
   chThdCreateStatic(waTrajThread, sizeof(waTrajThread), POSITION_TRAJECTORY_PRIO, trajectoryThread, NULL);
 }
 
-void trajectoryWait(void)
+trajectoryStatus_t trajectoryWait(void)
 {
   chMtxLock(&mutex);
   while(readPosition != writePosition)
@@ -502,12 +513,19 @@ void trajectoryWait(void)
     chCondWait(&condVar);
   }
   chMtxUnlock();
+
+  return status;
 }
 
 void _trajectoryNewOrder(trajectoryType_t type, double d, double a, double x, double y, double t, unsigned int flags)
 {
   trajectory_t traj;
   trajectoryInitializeStruct(&traj);
+
+  if(t <= 0.1)
+  {
+    t = 90;
+  }
 
   traj.type = type;
   traj.DSetPointmm = d;
@@ -523,6 +541,7 @@ void _trajectoryNewOrder(trajectoryType_t type, double d, double a, double x, do
     traj.XSetPointmm = - traj.XSetPointmm;
   }
 
+  status = TRAJECTORY_OK;
   trajectoryAddToOrderList(&traj);
 }
 

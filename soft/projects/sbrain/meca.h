@@ -11,6 +11,7 @@ typedef enum
 typedef enum 
 {
   MECA_SUCKER_OFF,
+  MECA_SUCKER_LOCKED,
   MECA_SUCKER_ON,
 } meca_sucker_t;
 
@@ -21,6 +22,13 @@ typedef enum
   MECA_CARPET_OPEN_2,
   MECA_CARPET_OPEN_2_BACK,
   MECA_CARPET_OPEN_3,
+
+  MECA_CARPET2_CLOSE,
+  MECA_CARPET2_OPEN_1,
+  MECA_CARPET2_OPEN_2,
+  MECA_CARPET2_OPEN_2_BACK,
+  MECA_CARPET2_OPEN_3,
+
 } meca_carpet_t;
 
 void mecaInit(void);

@@ -12,6 +12,8 @@ void asservInit(void);
 void asservCompute(void);
 void asservSetEnable(int enable);
 void asservSlow(void);
+void asservNormal(void);
+void asservNoIntegral(int i);
 int asservIsEnabled(void);
 void asservSetDistanceSetPoint(double set_point);
 void asservSetDistanceSetPointSafety(double set_point);

@@ -107,3 +107,10 @@ void stepperWait(int id)
     }
   }while(p != t);
 }
+
+void stepperDisable(void)
+{
+  palSetPad(GPIOA, GPIOA_ENABLE);
+  palClearPad(GPIOA, GPIOA_RESET);
+  palClearPad(GPIOA, GPIOA_SLEEP);
+}
